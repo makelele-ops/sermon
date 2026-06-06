@@ -1,0 +1,15 @@
+﻿# Generated backups
+index.backup*.html
+index.broken*.html
+index.overwritten*.html
+*.bak.html
+
+# Old Netlify artifact
+netlify-site.zip
+
+# Old nested working copy
+implement-this-figma-design-in-the/
+
+# OS/editor noise
+.DS_Store
+Thumbs.db
