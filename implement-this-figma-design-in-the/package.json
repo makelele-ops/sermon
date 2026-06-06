@@ -1,0 +1,12 @@
+{
+  "name": "interactive-daily-devotional",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "build": "node scripts/build-netlify.mjs",
+    "build:netlify": "node scripts/build-netlify.mjs",
+    "start": "node server.mjs",
+    "serve": "node server.mjs"
+  }
+}

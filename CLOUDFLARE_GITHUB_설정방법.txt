@@ -1,0 +1,27 @@
+Cloudflare Pages + GitHub 배포 방법
+
+1. GitHub에 새 저장소를 만듭니다.
+   예: sermon-devotion
+
+2. 이 폴더를 GitHub Desktop으로 열고 저장소에 올립니다.
+   올릴 폴더:
+   C:\Users\puran\OneDrive\개인\대전순복음\미디어\주일설교묵상
+
+3. Cloudflare Pages에서 GitHub 저장소를 연결합니다.
+
+4. Cloudflare Pages 설정값
+   Framework preset: None
+   Build command: 비워두기
+   Build output directory: public
+
+5. 매주 작업 순서
+   새본문.txt 수정
+   깃허브용_업데이트.bat 더블클릭
+   GitHub Desktop에서 changed files 확인
+   Commit
+   Push origin
+   Cloudflare Pages가 자동 배포
+
+주의:
+Cloudflare에는 netlify-site.zip을 올리지 않습니다.
+Cloudflare는 GitHub 저장소의 public 폴더를 자동 배포합니다.
