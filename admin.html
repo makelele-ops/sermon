@@ -1,0 +1,780 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="robots" content="noindex,nofollow">
+  <title>주일설교 묵상 관리자</title>
+  <style>
+    :root {
+      --bg: #f7f2e8;
+      --surface: #fffaf1;
+      --surface-strong: #ffffff;
+      --ink: #271f18;
+      --muted: #786b5e;
+      --line: #e4d6c2;
+      --line-strong: #cfb990;
+      --gold: #b47a28;
+      --green: #537663;
+      --green-dark: #2e5946;
+      --rose: #9b5e4f;
+      --shadow: 0 24px 70px rgba(66, 44, 22, 0.13);
+      --serif: "Noto Serif KR", "Nanum Myeongjo", "Apple SD Gothic Neo", Georgia, serif;
+      --sans: "Pretendard", "Noto Sans KR", "Apple SD Gothic Neo", system-ui, sans-serif;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      background:
+        linear-gradient(120deg, rgba(255, 251, 242, 0.94), rgba(246, 235, 214, 0.82)),
+        url("./assets/devotion/warm-open-bible.png") center / cover fixed;
+      color: var(--ink);
+      font-family: var(--sans);
+      letter-spacing: 0;
+    }
+
+    button,
+    input,
+    textarea {
+      font: inherit;
+    }
+
+    button {
+      cursor: pointer;
+    }
+
+    .page-shell {
+      width: min(1240px, calc(100% - 32px));
+      margin: 0 auto;
+      padding: 28px 0 42px;
+    }
+
+    .topbar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      margin-bottom: 24px;
+    }
+
+    .brand {
+      display: grid;
+      gap: 5px;
+    }
+
+    .eyebrow {
+      color: var(--gold);
+      font-size: 0.82rem;
+      font-weight: 800;
+      letter-spacing: 0;
+    }
+
+    h1 {
+      margin: 0;
+      font-family: var(--serif);
+      font-size: clamp(2rem, 4vw, 4rem);
+      font-weight: 700;
+      line-height: 1.06;
+    }
+
+    .home-link {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 42px;
+      padding: 0 17px;
+      border: 1px solid var(--line-strong);
+      border-radius: 999px;
+      background: rgba(255, 250, 241, 0.82);
+      color: var(--ink);
+      text-decoration: none;
+      font-weight: 800;
+      box-shadow: 0 10px 28px rgba(96, 64, 29, 0.1);
+    }
+
+    .intro {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) 340px;
+      gap: 20px;
+      align-items: stretch;
+      margin-bottom: 22px;
+    }
+
+    .intro-copy,
+    .guide-panel,
+    .form-panel,
+    .preview-panel,
+    .output-panel {
+      border: 1px solid rgba(196, 169, 122, 0.78);
+      background: rgba(255, 250, 241, 0.9);
+      box-shadow: var(--shadow);
+      backdrop-filter: blur(14px);
+    }
+
+    .intro-copy {
+      padding: clamp(22px, 4vw, 36px);
+      border-radius: 24px;
+    }
+
+    .intro-copy p {
+      max-width: 780px;
+      margin: 14px 0 0;
+      color: var(--muted);
+      font-size: 1.05rem;
+      line-height: 1.75;
+    }
+
+    .guide-panel {
+      display: grid;
+      align-content: center;
+      gap: 13px;
+      border-radius: 24px;
+      padding: 24px;
+    }
+
+    .step {
+      display: grid;
+      grid-template-columns: 32px 1fr;
+      gap: 12px;
+      align-items: start;
+    }
+
+    .step b {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 32px;
+      height: 32px;
+      border-radius: 999px;
+      background: var(--green-dark);
+      color: #fff8e8;
+      font-size: 0.85rem;
+    }
+
+    .step span {
+      color: var(--muted);
+      line-height: 1.5;
+    }
+
+    .workspace {
+      display: grid;
+      grid-template-columns: minmax(0, 0.96fr) minmax(360px, 0.74fr);
+      gap: 20px;
+      align-items: start;
+    }
+
+    .form-panel,
+    .preview-panel,
+    .output-panel {
+      border-radius: 22px;
+      padding: 22px;
+    }
+
+    .form-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 16px;
+    }
+
+    .field {
+      display: grid;
+      gap: 8px;
+    }
+
+    .field.full {
+      grid-column: 1 / -1;
+    }
+
+    label {
+      color: var(--ink);
+      font-size: 0.92rem;
+      font-weight: 900;
+    }
+
+    input,
+    textarea {
+      width: 100%;
+      border: 1px solid var(--line);
+      border-radius: 14px;
+      background: rgba(255, 255, 255, 0.86);
+      color: var(--ink);
+      outline: none;
+      transition: border-color 0.18s ease, box-shadow 0.18s ease, background 0.18s ease;
+    }
+
+    input {
+      min-height: 46px;
+      padding: 0 14px;
+    }
+
+    textarea {
+      min-height: 380px;
+      padding: 15px 16px;
+      line-height: 1.68;
+      resize: vertical;
+    }
+
+    input:focus,
+    textarea:focus {
+      border-color: var(--green);
+      background: #fff;
+      box-shadow: 0 0 0 4px rgba(83, 118, 99, 0.14);
+    }
+
+    .field-note {
+      color: var(--muted);
+      font-size: 0.84rem;
+      line-height: 1.45;
+    }
+
+    .actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-top: 18px;
+    }
+
+    .button {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 44px;
+      padding: 0 17px;
+      border: 1px solid transparent;
+      border-radius: 999px;
+      font-weight: 900;
+      transition: transform 0.18s ease, box-shadow 0.18s ease, background 0.18s ease;
+    }
+
+    .button:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 14px 30px rgba(66, 44, 22, 0.14);
+    }
+
+    .button.primary {
+      background: var(--green-dark);
+      color: #fff8e8;
+    }
+
+    .button.secondary {
+      border-color: var(--line-strong);
+      background: #fff9ec;
+      color: var(--ink);
+    }
+
+    .button.ghost {
+      background: transparent;
+      color: var(--green-dark);
+      border-color: rgba(83, 118, 99, 0.34);
+    }
+
+    .side-stack {
+      display: grid;
+      gap: 20px;
+    }
+
+    .panel-heading {
+      display: flex;
+      justify-content: space-between;
+      gap: 12px;
+      align-items: center;
+      margin-bottom: 16px;
+    }
+
+    h2 {
+      margin: 0;
+      font-family: var(--serif);
+      font-size: 1.55rem;
+      line-height: 1.22;
+    }
+
+    .status-pill {
+      display: inline-flex;
+      align-items: center;
+      min-height: 30px;
+      padding: 0 10px;
+      border-radius: 999px;
+      background: rgba(180, 122, 40, 0.12);
+      color: var(--gold);
+      font-size: 0.78rem;
+      font-weight: 900;
+      white-space: nowrap;
+    }
+
+    .warnings {
+      display: grid;
+      gap: 8px;
+      margin-bottom: 15px;
+    }
+
+    .warning {
+      border: 1px solid rgba(155, 94, 79, 0.32);
+      border-radius: 14px;
+      background: rgba(155, 94, 79, 0.08);
+      color: #65382f;
+      padding: 10px 12px;
+      font-size: 0.9rem;
+      line-height: 1.45;
+    }
+
+    .success {
+      border-color: rgba(83, 118, 99, 0.24);
+      background: rgba(83, 118, 99, 0.11);
+      color: var(--green-dark);
+    }
+
+    .day-preview {
+      display: grid;
+      gap: 10px;
+    }
+
+    .day-card {
+      display: grid;
+      gap: 7px;
+      padding: 14px 15px;
+      border: 1px solid rgba(207, 185, 144, 0.7);
+      border-radius: 16px;
+      background: rgba(255, 255, 255, 0.58);
+    }
+
+    .day-card small {
+      color: var(--gold);
+      font-weight: 900;
+    }
+
+    .day-card strong {
+      font-family: var(--serif);
+      font-size: 1.05rem;
+    }
+
+    .day-card p {
+      margin: 0;
+      color: var(--muted);
+      font-size: 0.9rem;
+      line-height: 1.52;
+    }
+
+    .output-box {
+      width: 100%;
+      min-height: 260px;
+      margin-top: 10px;
+      font-family: "D2Coding", Consolas, monospace;
+      font-size: 0.9rem;
+      white-space: pre-wrap;
+    }
+
+    .copy-result {
+      min-height: 22px;
+      margin-top: 12px;
+      color: var(--green-dark);
+      font-size: 0.9rem;
+      font-weight: 800;
+    }
+
+    .footer-help {
+      margin-top: 20px;
+      padding: 16px 18px;
+      border: 1px solid rgba(83, 118, 99, 0.22);
+      border-radius: 18px;
+      background: rgba(255, 255, 255, 0.62);
+      color: var(--muted);
+      line-height: 1.65;
+    }
+
+    code {
+      padding: 2px 5px;
+      border-radius: 7px;
+      background: rgba(83, 118, 99, 0.12);
+      color: var(--green-dark);
+      font-family: "D2Coding", Consolas, monospace;
+      font-size: 0.92em;
+    }
+
+    @media (max-width: 980px) {
+      .intro,
+      .workspace {
+        grid-template-columns: 1fr;
+      }
+
+      textarea {
+        min-height: 320px;
+      }
+    }
+
+    @media (max-width: 640px) {
+      .page-shell {
+        width: min(100% - 20px, 1240px);
+        padding-top: 16px;
+      }
+
+      .topbar {
+        align-items: stretch;
+        flex-direction: column;
+      }
+
+      .home-link {
+        width: 100%;
+      }
+
+      .intro-copy,
+      .guide-panel,
+      .form-panel,
+      .preview-panel,
+      .output-panel {
+        border-radius: 18px;
+        padding: 18px;
+      }
+
+      .form-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .actions .button {
+        width: 100%;
+      }
+    }
+  </style>
+</head>
+<body>
+  <main class="page-shell">
+    <header class="topbar">
+      <div class="brand">
+        <span class="eyebrow">Daejeon Full Gospel Church</span>
+        <h1>주일설교 묵상 관리자</h1>
+      </div>
+      <a class="home-link" href="./index.html">묵상 페이지 보기</a>
+    </header>
+
+    <section class="intro" aria-label="관리자 화면 안내">
+      <div class="intro-copy">
+        <span class="eyebrow">이번 주 원고를 붙여넣고, 사이트용 입력 파일을 만듭니다</span>
+        <p>
+          설교 날짜, 본문, 제목을 확인한 뒤 원고를 붙여넣으면 `새본문.txt` 형식으로 정리됩니다.
+          이 화면은 서버에 내용을 저장하지 않습니다. 생성된 파일을 내려받아 기존 `새본문.txt`를 바꾸고
+          `깃허브용_업데이트.bat`을 실행하면 됩니다.
+        </p>
+      </div>
+      <aside class="guide-panel">
+        <div class="step"><b>1</b><span>설교 원고를 붙여넣고 자동 추출을 누릅니다.</span></div>
+        <div class="step"><b>2</b><span>`새본문.txt`를 다운로드해서 기존 파일에 덮어씁니다.</span></div>
+        <div class="step"><b>3</b><span>`깃허브용_업데이트.bat` 실행 후 GitHub Desktop에서 커밋합니다.</span></div>
+      </aside>
+    </section>
+
+    <section class="workspace">
+      <form class="form-panel" id="admin-form">
+        <div class="panel-heading">
+          <h2>이번 주 설교 입력</h2>
+          <span class="status-pill" id="char-count">0자</span>
+        </div>
+
+        <div class="form-grid">
+          <div class="field">
+            <label for="date-input">설교 날짜</label>
+            <input id="date-input" type="text" inputmode="numeric" placeholder="예: 2026.6.7">
+            <span class="field-note">첫 줄에서 자동으로 가져올 수 있습니다.</span>
+          </div>
+
+          <div class="field">
+            <label for="title-input">설교 제목</label>
+            <input id="title-input" type="text" placeholder="예: 네 가지 사랑 이야기">
+          </div>
+
+          <div class="field full">
+            <label for="passage-input">성경 본문</label>
+            <input id="passage-input" type="text" placeholder="예: 누가복음7장1~2절, 18~19절">
+          </div>
+
+          <div class="field full">
+            <label for="video-input">설교 영상 주소</label>
+            <input id="video-input" type="url" placeholder="선택 사항: YouTube 주소">
+          </div>
+
+          <div class="field full">
+            <label for="sermon-input">설교 원고</label>
+            <textarea id="sermon-input" placeholder="첫 줄 예시:
+2026.6.7(주) 누가복음7장1~2절, 18~19절 '네 가지 사랑 이야기'
+
+그 아래에 설교 원고 전체를 붙여넣으세요."></textarea>
+            <span class="field-note">`첫째, 둘째, 셋째...` 구조가 있으면 요일별 미리보기로 나누어 보여줍니다.</span>
+          </div>
+        </div>
+
+        <div class="actions">
+          <button class="button primary" type="button" id="extract-button">자동 추출</button>
+          <button class="button secondary" type="button" id="build-button">파일 내용 만들기</button>
+          <button class="button ghost" type="reset">초기화</button>
+        </div>
+      </form>
+
+      <div class="side-stack">
+        <section class="preview-panel" aria-label="요일별 미리보기">
+          <div class="panel-heading">
+            <h2>요일별 미리보기</h2>
+            <span class="status-pill" id="section-count">대기 중</span>
+          </div>
+          <div class="warnings" id="warnings"></div>
+          <div class="day-preview" id="day-preview"></div>
+        </section>
+
+        <section class="output-panel" aria-label="생성 결과">
+          <div class="panel-heading">
+            <h2>생성된 `새본문.txt`</h2>
+          </div>
+          <textarea class="output-box" id="output-box" readonly></textarea>
+          <div class="actions">
+            <button class="button primary" type="button" id="download-button">새본문.txt 다운로드</button>
+            <button class="button secondary" type="button" id="copy-button">클립보드 복사</button>
+          </div>
+          <div class="copy-result" id="copy-result" aria-live="polite"></div>
+        </section>
+      </div>
+    </section>
+
+    <p class="footer-help">
+      다음 단계는 간단합니다. 다운로드한 `새본문.txt`를 이 폴더의 기존 파일과 바꾼 뒤
+      `깃허브용_업데이트.bat`을 실행하세요. 그 다음 GitHub Desktop에서 변경 파일을 커밋하고 푸시하면
+      Cloudflare가 자동으로 새 묵상 페이지를 배포합니다.
+    </p>
+  </main>
+
+  <script>
+    const weekdays = ["월", "화", "수", "목", "금", "토"];
+    const dayMapByCount = {
+      1: [0, 0, 0, 0, 0, 0],
+      2: [0, 0, 1, 1, 1, 1],
+      3: [0, 0, 1, 1, 2, 2],
+      4: [0, 0, 1, 2, 3, 3],
+      5: [0, 1, 2, 3, 4, 4],
+      6: [0, 1, 2, 3, 4, 5]
+    };
+
+    const els = {
+      form: document.querySelector("#admin-form"),
+      date: document.querySelector("#date-input"),
+      title: document.querySelector("#title-input"),
+      passage: document.querySelector("#passage-input"),
+      video: document.querySelector("#video-input"),
+      sermon: document.querySelector("#sermon-input"),
+      output: document.querySelector("#output-box"),
+      warnings: document.querySelector("#warnings"),
+      preview: document.querySelector("#day-preview"),
+      charCount: document.querySelector("#char-count"),
+      sectionCount: document.querySelector("#section-count"),
+      copyResult: document.querySelector("#copy-result")
+    };
+
+    function normalizeSpaces(value) {
+      return String(value || "").replace(/\s+/g, " ").trim();
+    }
+
+    function normalizeBody(value) {
+      return String(value || "")
+        .replace(/\r\n/g, "\n")
+        .replace(/\r/g, "\n")
+        .replace(/[ \t]+\n/g, "\n")
+        .trim();
+    }
+
+    function stripHeaderLine(body) {
+      const lines = normalizeBody(body).split("\n");
+      if (!lines.length) return "";
+      return looksLikeHeader(lines[0]) ? lines.slice(1).join("\n").trim() : lines.join("\n").trim();
+    }
+
+    function looksLikeHeader(line) {
+      return /^\s*\d{4}[.\-/년]/.test(line) && /['"‘“].+['"’”]\s*$/.test(line);
+    }
+
+    function parseHeaderLine(line) {
+      const source = normalizeSpaces(line);
+      const quote = source.match(/['"‘“]([^'"’”]+)['"’”]\s*$/);
+      const beforeTitle = quote ? source.slice(0, quote.index).trim() : source;
+      const date = beforeTitle.match(/^(\d{4})\s*[.\-/년]\s*(\d{1,2})\s*[.\-/월]\s*(\d{1,2})/);
+      if (!date) {
+        return { date: "", passage: "", title: quote ? quote[1].trim() : "" };
+      }
+      const dateText = `${date[1]}.${Number(date[2])}.${Number(date[3])}`;
+      const passage = beforeTitle
+        .slice(date[0].length)
+        .replace(/^\s*[일.\-/\s]*(?:\([^)]*\))?/, "")
+        .trim();
+      return {
+        date: dateText,
+        passage,
+        title: quote ? quote[1].trim() : ""
+      };
+    }
+
+    function firstLine(text) {
+      return normalizeBody(text).split("\n").find((line) => line.trim()) || "";
+    }
+
+    function extractMeta() {
+      const header = firstLine(els.sermon.value);
+      const parsed = parseHeaderLine(header);
+      if (parsed.date && !els.date.value.trim()) els.date.value = parsed.date;
+      if (parsed.passage && !els.passage.value.trim()) els.passage.value = parsed.passage;
+      if (parsed.title && !els.title.value.trim()) els.title.value = parsed.title;
+      updateAll();
+    }
+
+    function buildHeader() {
+      const date = normalizeSpaces(els.date.value);
+      const passage = normalizeSpaces(els.passage.value);
+      const title = normalizeSpaces(els.title.value);
+      if (!date && !passage && !title) return "";
+      return `${date}(주) ${passage} '${title}'`.trim();
+    }
+
+    function buildOutput() {
+      const header = buildHeader();
+      const video = normalizeSpaces(els.video.value);
+      const body = stripHeaderLine(els.sermon.value);
+      return [
+        header,
+        video ? `영상: ${video}` : "",
+        body
+      ].filter(Boolean).join("\n\n").trim();
+    }
+
+    function parseSections(text) {
+      const body = stripHeaderLine(text);
+      const lines = body.split("\n");
+      const sections = [];
+      let current = null;
+
+      for (const line of lines) {
+        const match = line.match(/^\s*(첫째(?:로)?|둘째(?:로)?|셋째(?:로)?|넷째(?:로)?|다섯째(?:로)?|여섯째(?:로)?)\s*[,.]?\s*(.+)$/);
+        if (match) {
+          current = {
+            label: match[1].replace("로", ""),
+            title: normalizeSpaces(match[2]),
+            content: []
+          };
+          sections.push(current);
+          continue;
+        }
+        if (current) current.content.push(line);
+      }
+
+      if (sections.length) {
+        return sections.map((section) => ({
+          ...section,
+          content: normalizeBody(section.content.join("\n")).replace(/^\(\d+\)\s*/gm, "")
+        }));
+      }
+
+      const paragraphs = body.split(/\n{2,}/).map(normalizeBody).filter(Boolean);
+      return paragraphs.slice(0, 6).map((paragraph, index) => ({
+        label: weekdays[index] || "묵상",
+        title: paragraph.split("\n")[0].slice(0, 32),
+        content: paragraph
+      }));
+    }
+
+    function snippet(text) {
+      const cleaned = normalizeSpaces(text).replace(/^\(\d+\)\s*/g, "");
+      if (!cleaned) return "본문을 입력하면 이곳에 요약 미리보기가 표시됩니다.";
+      return cleaned.length > 92 ? `${cleaned.slice(0, 92)}...` : cleaned;
+    }
+
+    function renderPreview() {
+      const sections = parseSections(els.sermon.value);
+      const count = sections.length;
+      const map = dayMapByCount[Math.min(Math.max(count, 1), 6)] || dayMapByCount[1];
+      els.sectionCount.textContent = count ? `${count}개 단락 감지` : "대기 중";
+
+      els.preview.innerHTML = weekdays.map((day, index) => {
+        const section = sections[map[index]] || {};
+        return `
+          <article class="day-card">
+            <small>${day}요일 묵상</small>
+            <strong>${escapeHtml(section.title || "묵상 제목 미리보기")}</strong>
+            <p>${escapeHtml(snippet(section.content || ""))}</p>
+          </article>
+        `;
+      }).join("");
+
+      const warnings = [];
+      if (!normalizeSpaces(els.date.value)) warnings.push("설교 날짜가 비어 있습니다.");
+      if (!normalizeSpaces(els.title.value)) warnings.push("설교 제목이 비어 있습니다.");
+      if (!normalizeSpaces(els.passage.value)) warnings.push("성경 본문이 비어 있습니다.");
+      if (normalizeBody(els.sermon.value).length < 200) warnings.push("설교 원고가 너무 짧습니다. 전체 원고를 붙여넣었는지 확인하세요.");
+      if (count > 0 && count < 3) warnings.push("감지된 큰 단락이 적습니다. `첫째, 둘째, 셋째...` 제목이 잘 들어갔는지 확인하세요.");
+      if (!warnings.length) warnings.push("입력 형식이 좋아 보입니다. 파일을 만들어도 됩니다.");
+
+      els.warnings.innerHTML = warnings.map((text, index) => (
+        `<div class="warning ${index === 0 && text.includes("좋아") ? "success" : ""}">${escapeHtml(text)}</div>`
+      )).join("");
+    }
+
+    function escapeHtml(value) {
+      return String(value)
+        .replaceAll("&", "&amp;")
+        .replaceAll("<", "&lt;")
+        .replaceAll(">", "&gt;")
+        .replaceAll('"', "&quot;")
+        .replaceAll("'", "&#039;");
+    }
+
+    function updateAll() {
+      const text = normalizeBody(els.sermon.value);
+      els.charCount.textContent = `${text.length.toLocaleString("ko-KR")}자`;
+      els.output.value = buildOutput();
+      renderPreview();
+    }
+
+    function downloadOutput() {
+      updateAll();
+      if (!els.output.value.trim()) return;
+      const blob = new Blob([els.output.value], { type: "text/plain;charset=utf-8" });
+      const url = URL.createObjectURL(blob);
+      const link = document.createElement("a");
+      link.href = url;
+      link.download = "새본문.txt";
+      document.body.append(link);
+      link.click();
+      link.remove();
+      URL.revokeObjectURL(url);
+      els.copyResult.textContent = "다운로드되었습니다. 기존 `새본문.txt`와 바꿔주세요.";
+    }
+
+    async function copyOutput() {
+      updateAll();
+      if (!els.output.value.trim()) return;
+      try {
+        await navigator.clipboard.writeText(els.output.value);
+        els.copyResult.textContent = "클립보드에 복사했습니다.";
+      } catch {
+        els.output.focus();
+        els.output.select();
+        document.execCommand("copy");
+        els.copyResult.textContent = "선택된 내용을 복사했습니다.";
+      }
+    }
+
+    document.querySelector("#extract-button").addEventListener("click", extractMeta);
+    document.querySelector("#build-button").addEventListener("click", updateAll);
+    document.querySelector("#download-button").addEventListener("click", downloadOutput);
+    document.querySelector("#copy-button").addEventListener("click", copyOutput);
+    els.form.addEventListener("reset", () => {
+      window.setTimeout(() => {
+        els.copyResult.textContent = "";
+        updateAll();
+      }, 0);
+    });
+
+    [els.date, els.title, els.passage, els.video, els.sermon].forEach((el) => {
+      el.addEventListener("input", updateAll);
+    });
+
+    updateAll();
+  </script>
+</body>
+</html>
