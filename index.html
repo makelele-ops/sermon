@@ -1216,7 +1216,6 @@ textarea:focus {
     <main id="app" class="app-shell" aria-live="polite"></main>
     <div class="a11y-bar" role="group" aria-label="묵상 도구">
       <button id="archive-toggle" type="button" aria-controls="archive-panel" aria-expanded="false">지난 설교</button>
-      <button id="feedback-button" type="button">피드백</button>
       <button id="font-toggle" type="button" aria-pressed="false">글씨 크게</button>
     </div>
     <aside id="archive-panel" class="archive-popover" aria-label="지난 설교 묵상" hidden></aside>
@@ -1967,17 +1966,6 @@ function shareVerse() {
   shareOut(text, pageUrl(state.selected));
 }
 
-function shareFeedback() {
-  const text = [
-    `${weeklyContent.themeTitle} 말씀묵상 피드백`,
-    `월-토 중 본 날: `,
-    `가정/소그룹 질문 사용: `,
-    `도움된 점: `,
-    `부담된 점: `
-  ].join("\n");
-  shareOut(text, pageUrl());
-}
-
 // --- 말씀 듣기 (음성) ---
 function setListenLabel(button, speaking) {
   button.innerHTML = speaking ? `${icon("stop")} 그만 듣기` : `${icon("speaker")} 말씀 듣기`;
@@ -2023,7 +2011,6 @@ function showCelebration() {
       <p class="celebrate-sub">한 주 동안 말씀을 듣고 마음에 새기셨습니다.</p>
       <div class="celebrate-actions">
         <button class="text-button complete done" data-cel="share" type="button">${icon("share")} 완주 소식 나누기</button>
-        <button class="text-button" data-cel="feedback" type="button">${icon("heart")} 한 줄 피드백 보내기</button>
         <button class="text-button" data-cel="close" type="button">닫기</button>
       </div>
     </div>
@@ -2035,9 +2022,6 @@ function showCelebration() {
     }
     if (event.target.closest('[data-cel="share"]')) {
       shareOut(`${weeklyContent.themeTitle}\n6일 말씀 묵상 여정을 완주했습니다! 🌾`, pageUrl());
-    }
-    if (event.target.closest('[data-cel="feedback"]')) {
-      shareFeedback();
     }
   });
   document.body.appendChild(wrap);
@@ -2059,8 +2043,6 @@ document.querySelector("#archive-toggle")?.addEventListener("click", (event) => 
   const panel = document.querySelector("#archive-panel");
   setArchiveOpen(panel?.hidden !== false);
 });
-
-document.querySelector("#feedback-button")?.addEventListener("click", shareFeedback);
 
 document.addEventListener("click", (event) => {
   if (event.target.closest("#archive-panel") || event.target.closest("#archive-toggle")) return;
