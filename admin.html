@@ -107,6 +107,7 @@
 
     .intro-copy,
     .guide-panel,
+    .impact-panel,
     .form-panel,
     .preview-panel,
     .output-panel {
@@ -159,6 +160,90 @@
     .step span {
       color: var(--muted);
       line-height: 1.5;
+    }
+
+    .impact-panel {
+      display: grid;
+      gap: 18px;
+      margin-bottom: 22px;
+      padding: 24px;
+      border-radius: 22px;
+    }
+
+    .panel-heading.impact-heading {
+      align-items: end;
+      margin-bottom: 0;
+    }
+
+    .impact-heading > div {
+      display: grid;
+      gap: 8px;
+    }
+
+    .impact-lead {
+      max-width: 860px;
+      margin: 0;
+      color: var(--muted);
+      font-size: 1rem;
+      line-height: 1.72;
+    }
+
+    .impact-metrics {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 0;
+      border-top: 1px solid rgba(207, 185, 144, 0.72);
+      border-bottom: 1px solid rgba(207, 185, 144, 0.72);
+    }
+
+    .impact-metric {
+      display: grid;
+      gap: 8px;
+      min-width: 0;
+      padding: 18px 16px;
+      border-right: 1px solid rgba(207, 185, 144, 0.58);
+    }
+
+    .impact-metric:last-child {
+      border-right: 0;
+    }
+
+    .impact-metric b {
+      color: var(--green-dark);
+      font-size: 0.98rem;
+      line-height: 1.35;
+    }
+
+    .impact-metric p {
+      margin: 0;
+      color: var(--ink);
+      line-height: 1.58;
+      word-break: keep-all;
+    }
+
+    .impact-metric span {
+      color: var(--muted);
+      font-size: 0.84rem;
+      line-height: 1.45;
+    }
+
+    .impact-note {
+      display: grid;
+      gap: 6px;
+      padding: 15px 16px;
+      border-left: 3px solid var(--gold);
+      background: rgba(180, 122, 40, 0.08);
+    }
+
+    .impact-note strong {
+      color: var(--gold);
+      font-size: 0.9rem;
+    }
+
+    .impact-note p {
+      margin: 0;
+      color: var(--muted);
+      line-height: 1.65;
     }
 
     .workspace {
@@ -401,6 +486,18 @@
         grid-template-columns: 1fr;
       }
 
+      .impact-metrics {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+
+      .impact-metric:nth-child(2) {
+        border-right: 0;
+      }
+
+      .impact-metric:nth-child(-n + 2) {
+        border-bottom: 1px solid rgba(207, 185, 144, 0.58);
+      }
+
       textarea {
         min-height: 320px;
       }
@@ -423,11 +520,30 @@
 
       .intro-copy,
       .guide-panel,
+      .impact-panel,
       .form-panel,
       .preview-panel,
       .output-panel {
         border-radius: 18px;
         padding: 18px;
+      }
+
+      .panel-heading.impact-heading {
+        align-items: start;
+        flex-direction: column;
+      }
+
+      .impact-metrics {
+        grid-template-columns: 1fr;
+      }
+
+      .impact-metric,
+      .impact-metric:nth-child(2) {
+        border-right: 0;
+      }
+
+      .impact-metric:nth-child(-n + 3) {
+        border-bottom: 1px solid rgba(207, 185, 144, 0.58);
       }
 
       .form-grid {
@@ -464,6 +580,49 @@
         <div class="step"><b>2</b><span>`새본문.txt`를 다운로드해서 기존 파일에 덮어씁니다.</span></div>
         <div class="step"><b>3</b><span>`깃허브용_업데이트.bat` 실행 후 GitHub Desktop에서 커밋합니다.</span></div>
       </aside>
+    </section>
+
+    <section class="impact-panel" aria-labelledby="impact-title">
+      <div class="panel-heading impact-heading">
+        <div>
+          <span class="eyebrow">사역 효과 점검</span>
+          <h2 id="impact-title">설교가 삶으로 이어지는지 확인합니다</h2>
+        </div>
+        <span class="status-pill">매주 10분 점검</span>
+      </div>
+      <p class="impact-lead">
+        이 프로젝트의 성과는 단순 조회수보다 “성도들이 주일 말씀을 다시 붙들고, 월-토 중 실제로 몇 번 묵상하며,
+        가정과 소그룹에서 질문을 사용했는가”로 확인합니다. 작은 지표를 매주 보면서 분량, 질문, 안내 방식을 계속 조정합니다.
+      </p>
+      <div class="impact-metrics" aria-label="핵심 성과 기준">
+        <div class="impact-metric">
+          <b>QR 접속률</b>
+          <p>주보, 예배 화면, 카카오톡 링크에서 얼마나 첫 접속이 일어나는지 봅니다.</p>
+          <span>방법: QR별 짧은 링크 또는 Cloudflare Analytics로 유입 경로 확인</span>
+        </div>
+        <div class="impact-metric">
+          <b>묵상 지속일</b>
+          <p>월-토 중 성도들이 어느 요일까지 말씀 묵상을 이어가는지 점검합니다.</p>
+          <span>방법: 소그룹 리더에게 “이번 주 며칠까지 봤나요?” 한 문항으로 확인</span>
+        </div>
+        <div class="impact-metric">
+          <b>질문 활용도</b>
+          <p>가정예배나 소그룹에서 실제로 질문을 읽고 나눔에 사용했는지 확인합니다.</p>
+          <span>방법: 리더/가정 대상 간단 체크, 사용한 질문과 좋았던 표현 기록</span>
+        </div>
+        <div class="impact-metric">
+          <b>부담/도움 피드백</b>
+          <p>성도들이 “부담스럽다”와 “도움된다”를 어떻게 느끼는지 함께 듣습니다.</p>
+          <span>방법: 완주 후 한 줄 피드백, 주중 리더 대화, 다음 주 편집에 반영</span>
+        </div>
+      </div>
+      <div class="impact-note">
+        <strong>운영 질문</strong>
+        <p>
+          접속은 높은데 지속일이 낮으면 하루 분량을 더 짧게 하고, 도움이 된다는 반응이 많으면 실제 적용 사례를 모읍니다.
+          부담스럽다는 피드백이 반복되면 질문 수와 표현을 줄여 “하루 5분”의 입구를 더 낮춥니다.
+        </p>
+      </div>
     </section>
 
     <section class="workspace">
