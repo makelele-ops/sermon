@@ -160,6 +160,9 @@ function makeDay({ id, index, variant, section, date, passage, image, video }) {
 
 function classifySection(section) {
   const text = `${section.title} ${section.content}`;
+  if (hasAny(text, ["나라", "민족", "예루살렘", "형편", "무관심"]) && hasAny(text, ["묻", "물어", "질문"])) return "nation";
+  if (hasAny(text, ["말씀을 붙", "하신 말씀", "헌신", "사용하여", "도구", "사명"]) && hasAny(text, ["나라", "기도", "느헤미야", "내 자리"])) return "mission";
+  if (hasAny(text, ["회개", "범죄", "동일시", "악한 길", "자복"]) && hasAny(text, ["나라", "민족", "느헤미야", "다니엘", "백성"])) return "repentance";
   if (hasAny(text, ["향유", "죄 사함", "죄 지은", "회개", "눈물", "평안히"])) return "forgiveness";
   if (hasAny(text, ["침례요한", "감옥", "확신", "흔들", "메시야", "증거"])) return "assurance";
   if (hasAny(text, ["과부", "죽은 아들", "장례", "울지 말", "소망", "살려"])) return "hope";
@@ -176,6 +179,9 @@ function classifySection(section) {
 function dayTitle(section, profile, variant) {
   const title = cleanTitle(section.title);
   const table = {
+    nation: ["무관심을 깨고 형편을 묻다", "나라를 품고 하나님께 묻다"],
+    repentance: ["비난보다 먼저 하나님 앞에 머물다", "우리의 죄로 회개하는 기도"],
+    mission: ["말씀을 붙들고 기도하다", "내 자리에서 헌신으로 나아가다"],
     enemyLove: ["사랑의 범위가 넓어진 사람", "원수까지 품는 성령의 사람"],
     love: ["사랑이 믿음을 깊게 하다", "사랑으로 사람을 귀히 여기다"],
     hope: ["슬픔을 보시는 주님", "의외의 은혜가 소망이 되다"],
@@ -194,6 +200,9 @@ function dayTitle(section, profile, variant) {
 function dayNavTitle(section, profile, variant) {
   const title = cleanTitle(section.title);
   const table = {
+    nation: ["묻는 마음", "나라를 품는 기도"],
+    repentance: ["먼저 머무는 기도", "동일시하는 회개"],
+    mission: ["말씀을 붙든 기도", "헌신의 자리"],
     enemyLove: ["사랑의 범위", "원수 사랑"],
     love: ["백부장의 사랑", "믿음을 깊게 하는 사랑"],
     hope: ["과부를 보신 주님", "소망을 주시는 은혜"],
@@ -253,6 +262,18 @@ function dayVerse(focusText, profile, title, variant = 0) {
     prayer: [
       "예수께서 기도하시러 산으로 가사 밤이 새도록 하나님께 기도하시고",
       "밝으매 그 제자들을 부르사 그 중에서 열둘을 택하여"
+    ],
+    nation: [
+      "내가 그 사로잡힘을 면하고 남아 있는 유다와 예루살렘 사람들의 형편을 물은즉",
+      "가까이 오사 성을 보시고 우시며"
+    ],
+    repentance: [
+      "내가 이 말을 듣고 앉아서 울고 수일 동안 슬퍼하며",
+      "나와 내 아버지의 집이 범죄하여"
+    ],
+    mission: [
+      "주께서 명령하신 말씀을 이제 기억하옵소서",
+      "오늘 종이 형통하여 이 사람 앞에서 은혜를 입게 하옵소서"
     ]
   };
   const verses = table[profile];
@@ -276,6 +297,9 @@ function readingText(section, profile, variant) {
     compassion: "성령의 사람은 기준과 규정 뒤에 가려진 사람의 아픔과 필요를 볼 줄 압니다.",
     word: "성령의 사람은 말씀을 듣는 자리에서 멈추지 않고, 그 말씀 위에 오늘의 선택과 삶을 세웁니다.",
     prayer: "성령의 사람은 중요한 선택 앞에서 먼저 주님께 나아가 기도하며 인도를 구합니다.",
+    nation: "나라를 품은 기도는 무관심을 깨고 하나님의 마음으로 형편을 묻는 데서 시작됩니다.",
+    repentance: "하나님 앞의 회개는 남의 죄를 고발하기보다 백성과 자신을 동일시하며 긍휼을 구하는 자리입니다.",
+    mission: "말씀을 붙든 기도는 헌신으로 이어지고, 하나님은 우리가 있는 자리에서 사명의 사람으로 부르십니다.",
     general: "오늘 말씀은 주님이 찾으시는 사람의 모습을 우리 삶에 비추어 보게 합니다."
   };
   return `${body ? `${body} ` : ""}${additions[profile] || additions.general}`;
@@ -310,7 +334,10 @@ function defaultImageFor(profile, index, variant) {
     self: ["./assets/devotion/warm-open-bible.png", "./assets/devotion/book-hand.jpg"],
     compassion: ["./assets/devotion/warm-meadow.png", "./assets/devotion/bible-path.jpg"],
     word: ["./assets/devotion/warm-pages.png", "./assets/devotion/pages.jpg"],
-    prayer: ["./assets/devotion/warm-candle.png", "./assets/devotion/candle.jpg"]
+    prayer: ["./assets/devotion/warm-candle.png", "./assets/devotion/candle.jpg"],
+    nation: ["./assets/devotion/warm-open-bible.png", "./assets/devotion/bible-path.jpg"],
+    repentance: ["./assets/devotion/warm-candle.png", "./assets/devotion/warm-pages.png"],
+    mission: ["./assets/devotion/warm-wheat.png", "./assets/devotion/warm-meadow.png"]
   };
   const rotation = byProfile[profile] || [
     "./assets/devotion/warm-open-bible.png",
@@ -336,7 +363,10 @@ function accentFor(profile, index) {
     self: "#4f7fa8",
     compassion: "#4d8a55",
     word: "#4f7fa8",
-    prayer: "#8b689d"
+    prayer: "#8b689d",
+    nation: "#2f6f76",
+    repentance: "#9b5c50",
+    mission: "#8f7334"
   };
   const fallback = ["#317b65", "#b66550", "#4d8a55", "#8b689d", "#4f7fa8", "#b77716"];
   return table[profile] || fallback[index % fallback.length];
@@ -353,7 +383,10 @@ function prayerText(profile, title) {
     self: "주님, 제 안의 들보를 먼저 보게 하시고 정한 마음을 새롭게 하옵소서.",
     compassion: "성령님, 규정 뒤에 가려진 사람의 아픔과 필요를 볼 수 있는 눈을 주옵소서.",
     word: "주님, 제가 말씀을 듣기만 하는 사람이 아니라 오늘 한 가지라도 행하는 사람이 되게 하옵소서.",
-    prayer: "성령님, 기도의 자리에서 주님의 뜻을 듣고 순종하게 하옵소서."
+    prayer: "성령님, 기도의 자리에서 주님의 뜻을 듣고 순종하게 하옵소서.",
+    nation: "주님, 무관심을 깨뜨려 주시고 이 땅을 주님의 마음으로 묻고 품으며 기도하게 하옵소서.",
+    repentance: "주님, 남을 탓하기 전에 먼저 하나님 앞에 엎드려 우리의 죄를 회개하게 하옵소서.",
+    mission: "주님, 말씀을 붙들고 기도하게 하시며 제가 있는 자리에서 사명의 사람으로 헌신하게 하옵소서."
   };
   return table[profile] || `주님, ${title}의 말씀이 오늘 제 삶에 실제가 되게 하옵소서.`;
 }
@@ -369,7 +402,10 @@ function actionText(profile, title) {
     self: "오늘 판단했던 사람을 떠올리고, 그 판단 속에 숨어 있는 내 들보를 한 문장으로 적습니다.",
     compassion: "오늘 만나는 사람 중 한 명의 필요를 살피고, 작지만 실제적인 도움을 선택합니다.",
     word: "오늘 들은 말씀 중 즉시 순종할 수 있는 한 가지를 정하고 실행합니다.",
-    prayer: "중요한 결정 하나를 놓고 잠시 멈추어 기도로 주님께 맡깁니다."
+    prayer: "중요한 결정 하나를 놓고 잠시 멈추어 기도로 주님께 맡깁니다.",
+    nation: "오늘 나라와 교회, 다음 세대의 형편을 놓고 구체적인 기도 제목 세 가지를 적어 기도합니다.",
+    repentance: "비난하고 싶은 마음이 올라올 때 멈추고, '주님, 우리의 죄를 용서하여 주옵소서'라고 기도합니다.",
+    mission: "내 자리에서 나라와 교회를 위해 할 수 있는 작은 헌신 한 가지를 정하고 실천합니다."
   };
   return table[profile] || `${title}과 연결된 작은 순종 하나를 오늘 실천합니다.`;
 }
@@ -385,7 +421,10 @@ function familyQuestionText(profile, title) {
     self: "가족 안에서 서로를 판단하기 전에 먼저 돌아볼 내 모습은 무엇일까요?",
     compassion: "우리 가족이 오늘 한 사람의 필요를 살피고 도울 수 있는 작은 일은 무엇일까요?",
     word: "오늘 말씀을 우리 집에서 함께 실천한다면 어떤 한 가지를 시작할 수 있을까요?",
-    prayer: "우리 가족이 함께 기도로 주님께 맡겨야 할 일은 무엇일까요?"
+    prayer: "우리 가족이 함께 기도로 주님께 맡겨야 할 일은 무엇일까요?",
+    nation: "우리 가족이 나라와 다음 세대를 위해 이번 주 함께 물으며 기도할 제목은 무엇일까요?",
+    repentance: "우리 가정과 교회가 하나님 앞에서 먼저 돌이켜야 할 모습은 무엇일까요?",
+    mission: "우리 가족이 각자의 자리에서 하나님께 드릴 수 있는 헌신은 무엇일까요?"
   };
   return table[profile] || `${title}의 말씀을 우리 가족은 어떻게 함께 실천할 수 있을까요?`;
 }
@@ -401,7 +440,10 @@ function prompts(profile, title) {
     self: ["내가 다른 사람에게서 크게 보던 문제가 사실 내 안에도 있는 것은 무엇인가요?", "판단 멈춤", "내 들보 보기", "정한 마음 구하기"],
     compassion: ["나는 요즘 사람의 아픔보다 기준과 평가를 먼저 보고 있지는 않나요?", "필요 살피기", "작은 도움", "회복의 시선"],
     word: ["내가 알고는 있지만 아직 행하지 못한 주님의 말씀은 무엇인가요?", "한 가지 순종", "말씀 실천", "반석 위에 세우기"],
-    prayer: ["오늘 내가 먼저 기도로 주님께 가져가야 할 결정은 무엇인가요?", "멈추고 기도", "인도 구하기", "순종 선택"]
+    prayer: ["오늘 내가 먼저 기도로 주님께 가져가야 할 결정은 무엇인가요?", "멈추고 기도", "인도 구하기", "순종 선택"],
+    nation: ["나는 이 나라와 교회의 형편을 하나님 앞에서 얼마나 구체적으로 묻고 있나요?", "형편 묻기", "무관심 깨기", "나라 품기"],
+    repentance: ["나는 시대의 문제를 말하기 전에 우리의 죄와 나의 죄를 먼저 고백하고 있나요?", "동일시하기", "회개 기도", "긍휼 구하기"],
+    mission: ["하나님이 지금 내 자리에서 맡기시는 작은 헌신은 무엇인가요?", "말씀 붙들기", "나를 드리기", "사명 감당"]
   };
   return table[profile] || [`오늘 ${title} 앞에서 주님이 제게 원하시는 반응은 무엇인가요?`, "멈추기", "기도하기", "실천하기"];
 }
@@ -454,7 +496,7 @@ function sectionVariant(sections, index) {
 
 function parseSegments(text) {
   const segments = {};
-  const segmentRegex = /^\s*(월요일?|화요일?|수요일?|목요일?|금요일?|토요일?|mon(?:day)?|tue(?:sday)?|wed(?:nesday)?|thu(?:rsday)?|fri(?:day)?|sat(?:urday)?)\s*[:：]\s*(\d{1,2}:\d{2})(?:\s*[-~–]\s*(\d{1,2}:\d{2}))?/gim;
+  const segmentRegex = /^\s*((?:월|화|수|목|금|토)(?:요일)?|mon(?:day)?|tue(?:sday)?|wed(?:nesday)?|thu(?:rsday)?|fri(?:day)?|sat(?:urday)?)\s*[:：]\s*(\d{1,2}:\d{2})(?:\s*[-~–]\s*(\d{1,2}:\d{2}))?/gim;
   for (const match of text.matchAll(segmentRegex)) {
     const key = segmentLabels[match[1].toLowerCase()] || segmentLabels[match[1]];
     if (key) segments[key] = cleanObject({ start: match[2], end: match[3] });
