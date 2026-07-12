@@ -335,7 +335,7 @@ function defaultImageFor(profile, index, variant) {
     compassion: ["./assets/devotion/warm-meadow.png", "./assets/devotion/bible-path.jpg"],
     word: ["./assets/devotion/warm-pages.png", "./assets/devotion/pages.jpg"],
     prayer: ["./assets/devotion/warm-candle.png", "./assets/devotion/candle.jpg"],
-    nation: ["./assets/devotion/warm-open-bible.png", "./assets/devotion/bible-path.jpg"],
+    nation: ["./assets/devotion/warm-open-bible.png", "./assets/devotion/warm-notebook.png"],
     repentance: ["./assets/devotion/warm-candle.png", "./assets/devotion/warm-pages.png"],
     mission: ["./assets/devotion/warm-wheat.png", "./assets/devotion/warm-meadow.png"]
   };
