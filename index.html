@@ -146,6 +146,19 @@ svg {
   margin: 0 auto;
 }
 
+.church-brand {
+  display: block;
+  width: clamp(210px, 25vw, 270px);
+  margin: 0 0 16px;
+}
+
+.church-brand img {
+  display: block;
+  width: 100%;
+  height: auto;
+  filter: drop-shadow(0 1px 10px rgba(255, 253, 247, 0.86));
+}
+
 .sermon-date,
 .section-heading p,
 .day-pill,
@@ -1125,6 +1138,11 @@ textarea:focus {
     width: 100%;
   }
 
+  .church-brand {
+    width: min(220px, 72vw);
+    margin-bottom: 12px;
+  }
+
   .hero h1 {
     font-size: clamp(2.3rem, 9vw, 3rem);
     line-height: 1.14;
@@ -1758,6 +1776,9 @@ function renderList(completeCount, progress, transition) {
     <section class="screen list-screen ${transition}">
       <header class="hero" style="--hero-image: url('${heroMedia.image}')">
         <div class="hero-copy">
+          <div class="church-brand">
+            <img src="./assets/brand/daejeon-full-gospel-logo.png" alt="대전순복음교회" width="748" height="274" fetchpriority="high">
+          </div>
           <p class="sermon-date">${weeklyContent.sermonDate}</p>
           <h1>${weeklyContent.themeTitle}</h1>
           <p class="passage">${weeklyContent.passage}</p>
