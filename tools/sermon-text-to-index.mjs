@@ -150,8 +150,8 @@ function makeDay({ id, index, variant, section, date, passage, image, video }) {
     passage,
     verse,
     reading: readingText(section, profile, variant),
-    prayer: prayerText(profile, title),
-    action: actionText(profile, title),
+    prayer: prayerText(profile, title, variant),
+    action: actionText(profile, title, variant),
     familyQuestion: familyQuestionText(profile, title),
     prompts: prompts(profile, title),
     video
@@ -160,6 +160,9 @@ function makeDay({ id, index, variant, section, date, passage, image, video }) {
 
 function classifySection(section) {
   const text = `${section.title} ${section.content}`;
+  if (hasAny(text, ["풍성", "오병이어", "공급자", "전달자", "통로", "질그릇"]) && hasAny(text, ["성도", "주님", "예수님", "그리스도"])) return "abundance";
+  if (hasAny(text, ["권위", "권세", "보냄", "보내셨", "능력"]) && hasAny(text, ["성도", "제자", "예수님", "주님"])) return "authority";
+  if (hasAny(text, ["빛", "어둠", "등대", "드러나는", "비추"]) && hasAny(text, ["성도", "제자", "예수님", "헤롯"])) return "light";
   if (hasAny(text, ["나라", "민족", "예루살렘", "형편", "무관심"]) && hasAny(text, ["묻", "물어", "질문"])) return "nation";
   if (hasAny(text, ["말씀을 붙", "하신 말씀", "헌신", "사용하여", "도구", "사명"]) && hasAny(text, ["나라", "기도", "느헤미야", "내 자리"])) return "mission";
   if (hasAny(text, ["회개", "범죄", "동일시", "악한 길", "자복"]) && hasAny(text, ["나라", "민족", "느헤미야", "다니엘", "백성"])) return "repentance";
@@ -179,6 +182,9 @@ function classifySection(section) {
 function dayTitle(section, profile, variant) {
   const title = cleanTitle(section.title);
   const table = {
+    authority: ["주님의 권위로 보냄 받은 자", "주님이 주신 권위와 자격"],
+    light: ["어둠이 물러가는 빛", "예수님의 빛으로 드러나다"],
+    abundance: ["공급자가 아니라 통로", "주님의 풍성함을 나누는 사람"],
     nation: ["무관심을 깨고 형편을 묻다", "나라를 품고 하나님께 묻다"],
     repentance: ["비난보다 먼저 하나님 앞에 머물다", "우리의 죄로 회개하는 기도"],
     mission: ["말씀을 붙들고 기도하다", "내 자리에서 헌신으로 나아가다"],
@@ -200,6 +206,9 @@ function dayTitle(section, profile, variant) {
 function dayNavTitle(section, profile, variant) {
   const title = cleanTitle(section.title);
   const table = {
+    authority: ["보냄 받은 정체", "주님이 주신 자격"],
+    light: ["어둠이 물러가는 빛", "빛으로 드러나는 성도"],
+    abundance: ["주님의 통로", "그리스도의 풍성함"],
     nation: ["묻는 마음", "나라를 품는 기도"],
     repentance: ["먼저 머무는 기도", "동일시하는 회개"],
     mission: ["말씀을 붙든 기도", "헌신의 자리"],
@@ -223,6 +232,18 @@ function dayVerse(focusText, profile, title, variant = 0) {
   if (quoted) return quoted;
 
   const table = {
+    authority: [
+      "예수께서 열두 제자를 불러 모으사 모든 귀신을 제어하며 병을 고치는 능력과 권위를 주시고",
+      "하늘과 땅의 모든 권세를 내게 주셨으니"
+    ],
+    light: [
+      "분봉 왕 헤롯이 이 모든 일을 듣고 심히 당황하니",
+      "너희는 세상의 빛이라 산 위에 있는 동네가 숨겨지지 못할 것이요"
+    ],
+    abundance: [
+      "우리에게 떡 다섯 개와 물고기 두 마리밖에 없으니",
+      "너희는 나를 누구라 하느냐"
+    ],
     enemyLove: [
       "너희 원수를 사랑하며 너희를 미워하는 자를 선대하며",
       "너희를 저주하는 자를 위하여 축복하며 너희를 모욕하는 자를 위하여 기도하라"
@@ -287,6 +308,9 @@ function readingText(section, profile, variant) {
   if (body.length >= 80) return shorten(body, 165);
 
   const additions = {
+    authority: "성도는 자기 능력이나 배경이 아니라, 부르시고 보내신 예수님의 권위로 오늘의 사명을 살아갑니다.",
+    light: "빛은 자신을 과시하지 않아도 어둠을 물리치고 길을 보여 주듯, 성도는 삶의 자리에서 예수님의 빛을 드러냅니다.",
+    abundance: "성도는 공급의 원천이 아니라 주님의 풍성함을 흘려보내는 통로이며, 작은 것을 주님께 드릴 때 은혜가 나누어집니다.",
     enemyLove: "성령의 사람은 사랑하기 쉬운 사람에게만 머물지 않고, 주님의 마음으로 사랑의 경계를 넓혀 갑니다.",
     love: "성령의 사람은 사랑하기 쉬운 사람에게만 머물지 않고, 주님의 마음으로 사랑의 경계를 넓혀 갑니다.",
     hope: "주님은 아무도 도움을 구하지 못한 자리에서도 슬픔을 보시고, 의외의 은혜로 다시 소망을 열어 주십니다.",
@@ -325,6 +349,9 @@ function cleanNumberedMarkers(value) {
 
 function defaultImageFor(profile, index, variant) {
   const byProfile = {
+    authority: ["./assets/devotion/warm-open-bible.png", "./assets/devotion/bible-path.jpg"],
+    light: ["./assets/devotion/warm-candle.png", "./assets/devotion/candle.jpg"],
+    abundance: ["./assets/devotion/warm-wheat.png", "./assets/devotion/wheat.jpg"],
     love: ["./assets/devotion/warm-notebook.png", "./assets/devotion/warm-open-bible.png"],
     enemyLove: ["./assets/devotion/warm-notebook.png", "./assets/devotion/warm-open-bible.png"],
     hope: ["./assets/devotion/warm-meadow.png", "./assets/devotion/field.jpg"],
@@ -354,6 +381,9 @@ function defaultImageFor(profile, index, variant) {
 
 function accentFor(profile, index) {
   const table = {
+    authority: "#3f6f83",
+    light: "#b77716",
+    abundance: "#8f7334",
     love: "#317b65",
     enemyLove: "#317b65",
     hope: "#4d8a55",
@@ -372,8 +402,20 @@ function accentFor(profile, index) {
   return table[profile] || fallback[index % fallback.length];
 }
 
-function prayerText(profile, title) {
+function prayerText(profile, title, variant = 0) {
   const table = {
+    authority: [
+      "주님, 연약한 저를 부르시고 보내셨음을 믿으며 주님의 능력과 권위로 사명을 감당하게 하옵소서.",
+      "주님, 제 형편보다 모든 권세를 가지신 예수님을 바라보고 주님이 주신 자격으로 담대히 살게 하옵소서."
+    ],
+    light: [
+      "주님, 제 삶을 통해 예수님의 빛이 드러나 어둠과 두려움이 물러가게 하옵소서.",
+      "주님, 가정과 일터와 교회에서 말과 행동으로 예수님의 빛을 분명하게 비추게 하옵소서."
+    ],
+    abundance: [
+      "주님, 제 부족함을 정직하게 드리고 주님의 풍성함을 사랑으로 나누는 통로가 되게 하옵소서.",
+      "주님, 믿음이 흐려질 때마다 제가 누구인지 다시 깨닫게 하시고 마음과 영혼에 새 힘과 풍성함을 더하여 주옵소서."
+    ],
     enemyLove: "성령님, 제 사랑의 경계를 넓혀 주시고 주님의 마음으로 사람을 보게 하옵소서.",
     love: "성령님, 제 사랑의 경계를 넓혀 주시고 주님의 마음으로 사람을 보게 하옵소서.",
     hope: "주님, 슬픔과 막막함 속에서도 저를 보시는 주님의 사랑을 신뢰하게 하옵소서.",
@@ -388,11 +430,25 @@ function prayerText(profile, title) {
     repentance: "주님, 남을 탓하기 전에 먼저 하나님 앞에 엎드려 우리의 죄를 회개하게 하옵소서.",
     mission: "주님, 말씀을 붙들고 기도하게 하시며 제가 있는 자리에서 사명의 사람으로 헌신하게 하옵소서."
   };
-  return table[profile] || `주님, ${title}의 말씀이 오늘 제 삶에 실제가 되게 하옵소서.`;
+  const selected = table[profile];
+  if (Array.isArray(selected)) return selected[Math.min(variant, selected.length - 1)];
+  return selected || `주님, ${title}의 말씀이 오늘 제 삶에 실제가 되게 하옵소서.`;
 }
 
-function actionText(profile, title) {
+function actionText(profile, title, variant = 0) {
   const table = {
+    authority: [
+      "오늘 두려워 미루었던 한 가지 일을 정하고, '주님이 나를 보내셨습니다'라고 고백하며 작은 순종을 시작합니다.",
+      "나를 작게 만드는 말 대신 '나는 주님께 부름 받고 보냄 받은 사람입니다'라고 소리 내어 고백합니다."
+    ],
+    light: [
+      "내 삶에서 두려움과 불안이 머무는 자리를 적고, 예수님의 빛이 임하도록 기도합니다.",
+      "오늘 만나는 한 사람에게 말보다 먼저 친절과 섬김으로 예수님의 빛을 비춥니다."
+    ],
+    abundance: [
+      "내가 가진 작은 시간·재능·물질 중 한 가지를 정해 필요한 사람과 기쁘게 나눕니다.",
+      "'나는 누구인가'를 묻고, 주님의 권위·빛·풍성함 안에서 나의 정체성을 세 문장으로 적어 기도합니다."
+    ],
     enemyLove: "마음이 불편한 한 사람을 떠올리고, 그를 위해 짧게 축복의 기도를 드립니다.",
     love: "마음이 불편한 한 사람을 떠올리고, 그를 위해 짧게 축복의 기도를 드립니다.",
     hope: "소망이 끊긴 것처럼 느껴지는 한 가지 일을 주님 앞에 적고 다시 맡깁니다.",
@@ -407,11 +463,16 @@ function actionText(profile, title) {
     repentance: "비난하고 싶은 마음이 올라올 때 멈추고, '주님, 우리의 죄를 용서하여 주옵소서'라고 기도합니다.",
     mission: "내 자리에서 나라와 교회를 위해 할 수 있는 작은 헌신 한 가지를 정하고 실천합니다."
   };
-  return table[profile] || `${title}과 연결된 작은 순종 하나를 오늘 실천합니다.`;
+  const selected = table[profile];
+  if (Array.isArray(selected)) return selected[Math.min(variant, selected.length - 1)];
+  return selected || `${title}과 연결된 작은 순종 하나를 오늘 실천합니다.`;
 }
 
 function familyQuestionText(profile, title) {
   const table = {
+    authority: "우리 가족이 주님께 보냄받았다는 믿음으로 이번 주 담대히 순종할 일은 무엇일까요?",
+    light: "우리 가정이 이웃에게 예수님의 빛을 비추기 위해 함께 실천할 친절은 무엇일까요?",
+    abundance: "우리 가족이 가진 작은 것을 주님께 드려 함께 나눌 수 있는 대상은 누구일까요?",
     enemyLove: "우리 가족이 이번 주 더 넓은 사랑으로 품어야 할 사람은 누구일까요?",
     love: "우리 가족이 이번 주 더 넓은 사랑으로 품어야 할 사람은 누구일까요?",
     hope: "우리 가족이 낙심한 사람에게 소망을 전하기 위해 할 수 있는 작은 위로는 무엇일까요?",
@@ -431,6 +492,9 @@ function familyQuestionText(profile, title) {
 
 function prompts(profile, title) {
   const table = {
+    authority: ["나는 요즘 내 형편보다 나를 보내신 주님의 권위를 더 크게 바라보고 있나요?", "보냄받은 정체", "두려움 내려놓기", "담대히 순종하기"],
+    light: ["내가 오늘 예수님의 빛을 가장 먼저 비추어야 할 어두운 자리는 어디인가요?", "빛으로 살기", "조용히 섬기기", "사랑으로 비추기"],
+    abundance: ["나는 공급자가 되려 애쓰고 있나요, 주님의 풍성함을 전하는 통로로 살고 있나요?", "부족함 고백", "작은 것 드리기", "풍성함 나누기"],
     enemyLove: ["오늘 내 사랑의 범위 밖에 두고 있는 사람은 누구인가요?", "축복 기도", "선대 선택", "미움 내려놓기"],
     love: ["오늘 내 사랑의 범위 밖에 두고 있는 사람은 누구인가요?", "축복 기도", "선대 선택", "미움 내려놓기"],
     hope: ["주님이 오늘 내 슬픔과 막막함을 보고 계신다는 사실은 어떤 위로가 되나요?", "소망 붙들기", "위로 전하기", "주님께 맡기기"],
