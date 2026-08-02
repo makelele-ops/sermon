@@ -1357,11 +1357,18 @@ const weeklyContent = {
 
 const weeklyArchive = [
   {
+    "weekId": "2026-08-02",
+    "sermonDate": "2026년 8월 2일 주일설교",
+    "themeTitle": "신앙생활 안내서",
+    "passage": "누가복음 9장 46-50절",
+    "href": "../index.html"
+  },
+  {
     "weekId": "2026-07-26",
     "sermonDate": "2026년 7월 26일 주일설교",
     "themeTitle": "은혜의 보좌, 사랑의 보좌",
     "passage": "누가복음 9장 23-43절",
-    "href": "../index.html"
+    "href": "./2026-07-26.html"
   },
   {
     "weekId": "2026-07-19",
@@ -1420,6 +1427,7 @@ const weeklyArchive = [
     "href": "./2026-05-31.html"
   }
 ];
+
 
 
 
@@ -1906,6 +1914,7 @@ function openDetail(index, transition = "open") {
   state.view = "detail";
   persist();
   render(transition);
+  window.scrollTo(0, 0);
 }
 
 function openList() {
