@@ -49,7 +49,7 @@ if (!existsSync(indexPath)) {
   process.exit(1);
 }
 
-const sourceText = stripBom(await readFile(inputPath, "utf8"));
+const sourceText = normalizeDenominationTerms(stripBom(await readFile(inputPath, "utf8")));
 if (!hasRealInput(sourceText)) {
   console.error("새본문.txt에 새 설교 본문을 먼저 붙여넣고 저장해 주세요.");
   process.exit(1);
@@ -243,16 +243,16 @@ function dayVerse(focusText, profile, title, variant = 0) {
 
   const table = {
     silentPrayer: [
-      "한나가 마음이 괴로워서 여호와께 기도하고 통곡하며",
+      "한나가 마음이 괴로워서 야훼께 기도하고 통곡하며",
       "한나가 속으로 말하매 입술만 움직이고 음성은 들리지 아니하므로"
     ],
     remembrance: [
       "평안히 가라 이스라엘의 하나님이 네가 기도하여 구한 것을 허락하시기를 원하노라",
-      "여호와께서 그를 생각하신지라"
+      "야훼께서 그를 생각하신지라"
     ],
     answeredPrayer: [
       "한나가 임신하고 때가 이르매 아들을 낳아 사무엘이라 이름하였으니",
-      "사무엘이 이스라엘을 위하여 여호와께 부르짖으매 여호와께서 응답하셨더라"
+      "사무엘이 이스라엘을 위하여 야훼께 부르짖으매 야훼께서 응답하셨더라"
     ],
     authority: [
       "예수께서 열두 제자를 불러 모으사 모든 귀신을 제어하며 병을 고치는 능력과 권위를 주시고",
@@ -1054,6 +1054,12 @@ function timestamp() {
 
 function stripBom(text) {
   return String(text || "").replace(/^\uFEFF/, "");
+}
+
+function normalizeDenominationTerms(text) {
+  return String(text || "")
+    .replaceAll("여호와", "야훼")
+    .replaceAll("세례", "침례");
 }
 
 function hasRealInput(text) {
