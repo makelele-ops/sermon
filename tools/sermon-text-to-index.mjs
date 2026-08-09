@@ -160,6 +160,9 @@ function makeDay({ id, index, variant, section, date, passage, image, video }) {
 
 function classifySection(section) {
   const text = `${section.title} ${section.content}`;
+  if (hasAny(text, ["말로 표현되지", "입술만 움직", "말할 수 없는 탄식", "심정을 통한"])) return "silentPrayer";
+  if (hasAny(text, ["생각하시는 하나님", "생각하셨", "기억하사", "결코 잊지", "손바닥에 새겼"])) return "remembrance";
+  if (hasAny(text, ["개인의 기쁨", "사무엘의 뜻", "사무엘을 보내", "하나님의 역사로"])) return "answeredPrayer";
   if (hasAny(text, ["풍성", "오병이어", "공급자", "전달자", "통로", "질그릇"]) && hasAny(text, ["성도", "주님", "예수님", "그리스도"])) return "abundance";
   if (hasAny(text, ["권위", "권세", "보냄", "보내셨", "능력"]) && hasAny(text, ["성도", "제자", "예수님", "주님"])) return "authority";
   if (hasAny(text, ["빛", "어둠", "등대", "드러나는", "비추"]) && hasAny(text, ["성도", "제자", "예수님", "헤롯"])) return "light";
@@ -182,6 +185,9 @@ function classifySection(section) {
 function dayTitle(section, profile, variant) {
   const title = cleanTitle(section.title);
   const table = {
+    silentPrayer: ["괴로움을 기도로 바꾸다", "말없는 탄식도 들으시는 하나님"],
+    remembrance: ["먼저 마음에 임한 평안", "결코 잊지 않으시는 하나님"],
+    answeredPrayer: ["이름이 된 기도의 간증", "응답이 세대를 살리는 역사로"],
     authority: ["주님의 권위로 보냄 받은 자", "주님이 주신 권위와 자격"],
     light: ["어둠이 물러가는 빛", "예수님의 빛으로 드러나다"],
     abundance: ["공급자가 아니라 통로", "주님의 풍성함을 나누는 사람"],
@@ -206,6 +212,9 @@ function dayTitle(section, profile, variant) {
 function dayNavTitle(section, profile, variant) {
   const title = cleanTitle(section.title);
   const table = {
+    silentPrayer: ["마음을 쏟는 기도", "말없는 탄식"],
+    remembrance: ["먼저 주신 평안", "기억하고 일하시는 하나님"],
+    answeredPrayer: ["사무엘의 이름", "넘쳐 흐르는 응답"],
     authority: ["보냄 받은 정체", "주님이 주신 자격"],
     light: ["어둠이 물러가는 빛", "빛으로 드러나는 성도"],
     abundance: ["주님의 통로", "그리스도의 풍성함"],
@@ -229,9 +238,22 @@ function dayNavTitle(section, profile, variant) {
 
 function dayVerse(focusText, profile, title, variant = 0) {
   const quoted = firstQuotedSentence(focusText);
-  if (quoted) return quoted;
+  const preferCurated = ["silentPrayer", "remembrance", "answeredPrayer"].includes(profile);
+  if (quoted && !preferCurated) return quoted;
 
   const table = {
+    silentPrayer: [
+      "한나가 마음이 괴로워서 여호와께 기도하고 통곡하며",
+      "한나가 속으로 말하매 입술만 움직이고 음성은 들리지 아니하므로"
+    ],
+    remembrance: [
+      "평안히 가라 이스라엘의 하나님이 네가 기도하여 구한 것을 허락하시기를 원하노라",
+      "여호와께서 그를 생각하신지라"
+    ],
+    answeredPrayer: [
+      "한나가 임신하고 때가 이르매 아들을 낳아 사무엘이라 이름하였으니",
+      "사무엘이 이스라엘을 위하여 여호와께 부르짖으매 여호와께서 응답하셨더라"
+    ],
     authority: [
       "예수께서 열두 제자를 불러 모으사 모든 귀신을 제어하며 병을 고치는 능력과 권위를 주시고",
       "하늘과 땅의 모든 권세를 내게 주셨으니"
@@ -299,11 +321,26 @@ function dayVerse(focusText, profile, title, variant = 0) {
   };
   const verses = table[profile];
   if (Array.isArray(verses)) return verses[Math.min(variant, verses.length - 1)];
-  return `${title}의 말씀을 오늘 마음에 새깁니다`;
+  return quoted || `${title}의 말씀을 오늘 마음에 새깁니다`;
 }
 
 function readingText(section, profile, variant) {
   const focus = sectionFocusText(section, variant);
+  const curated = {
+    silentPrayer: [
+      "한나는 자신의 괴로움을 숨기거나 사람에게 쏟지 않고 기도로 바꾸어 하나님 앞에 마음을 다 내어놓았습니다.",
+      "한나는 오래도록 기도했지만 입술만 움직일 뿐 소리를 낼 수 없었습니다. 사람은 오해했지만 하나님은 말로 표현되지 않은 탄식까지 들으셨습니다."
+    ],
+    remembrance: [
+      "한나는 엘리 제사장에게 마음을 이야기하고 축복을 받은 뒤, 환경이 바뀌기 전부터 마음에 평안을 얻었습니다.",
+      "하나님이 한나를 생각하셨다는 것은 그를 위해 구체적으로 일하기 시작하셨다는 뜻입니다. 기다림은 길었지만 하나님은 한나를 결코 잊지 않으셨습니다."
+    ],
+    answeredPrayer: [
+      "사무엘이라는 이름은 ‘하나님이 들으셨다’는 한나의 간증이었습니다. 한나는 응답을 볼 때마다 기도를 들으신 하나님을 기억했습니다.",
+      "하나님은 사무엘을 한나의 기쁨에만 머물게 하지 않고 이스라엘을 살리는 지도자로 세우셨습니다. 기도의 응답은 개인의 복을 넘어 다른 사람을 살리는 복으로 흐릅니다."
+    ]
+  };
+  if (curated[profile]) return curated[profile][Math.min(variant, curated[profile].length - 1)];
   const body = firstSentences(focus, 2);
   if (body.length >= 80) return shorten(body, 165);
 
@@ -349,6 +386,9 @@ function cleanNumberedMarkers(value) {
 
 function defaultImageFor(profile, index, variant) {
   const byProfile = {
+    silentPrayer: ["./assets/devotion/warm-candle.png", "./assets/devotion/candle.jpg"],
+    remembrance: ["./assets/devotion/warm-open-bible.png", "./assets/devotion/warm-meadow.png"],
+    answeredPrayer: ["./assets/devotion/warm-wheat.png", "./assets/devotion/warm-notebook.png"],
     authority: ["./assets/devotion/warm-open-bible.png", "./assets/devotion/bible-path.jpg"],
     light: ["./assets/devotion/warm-candle.png", "./assets/devotion/candle.jpg"],
     abundance: ["./assets/devotion/warm-wheat.png", "./assets/devotion/wheat.jpg"],
@@ -381,6 +421,9 @@ function defaultImageFor(profile, index, variant) {
 
 function accentFor(profile, index) {
   const table = {
+    silentPrayer: "#8b689d",
+    remembrance: "#4f7fa8",
+    answeredPrayer: "#317b65",
     authority: "#3f6f83",
     light: "#b77716",
     abundance: "#8f7334",
@@ -404,6 +447,18 @@ function accentFor(profile, index) {
 
 function prayerText(profile, title, variant = 0) {
   const table = {
+    silentPrayer: [
+      "주님, 제 괴로움과 감정을 숨기지 않고 기도로 바꾸어 주님 앞에 온전히 쏟아 놓게 하옵소서.",
+      "성령님, 말로 다 표현하지 못하는 탄식까지 들으시는 주님을 신뢰하며 오래 머물러 기도하게 하옵소서."
+    ],
+    remembrance: [
+      "주님, 환경보다 먼저 제 마음과 생각을 지키시는 평강을 누리게 하옵소서.",
+      "주님, 기다림이 길어도 저를 잊지 않으심을 믿고 하나님의 때를 평안히 기다리게 하옵소서."
+    ],
+    answeredPrayer: [
+      "주님, 기도를 들으신 은혜를 잊지 않고 제 삶의 간증으로 고백하게 하옵소서.",
+      "주님, 제게 주신 응답과 복이 이웃과 교회와 다음 세대를 살리는 통로가 되게 하옵소서."
+    ],
     authority: [
       "주님, 연약한 저를 부르시고 보내셨음을 믿으며 주님의 능력과 권위로 사명을 감당하게 하옵소서.",
       "주님, 제 형편보다 모든 권세를 가지신 예수님을 바라보고 주님이 주신 자격으로 담대히 살게 하옵소서."
@@ -437,6 +492,18 @@ function prayerText(profile, title, variant = 0) {
 
 function actionText(profile, title, variant = 0) {
   const table = {
+    silentPrayer: [
+      "마음에 눌러 둔 괴로움 한 가지를 솔직한 기도 한 문장으로 적어 하나님께 올려 드립니다.",
+      "말을 많이 만들지 않고 10분 동안 하나님 앞에 조용히 머물며 마음 깊은 탄식을 맡깁니다."
+    ],
+    remembrance: [
+      "염려 한 가지를 기도 제목으로 바꾸고, 기도 뒤 마음에 주시는 평안을 짧게 기록합니다.",
+      "오래 기다리는 기도 제목과 지금까지 받은 은혜의 증거를 나란히 적고 다시 하나님께 맡깁니다."
+    ],
+    answeredPrayer: [
+      "하나님이 들어 주신 기도 한 가지를 떠올려 짧은 감사 간증으로 기록합니다.",
+      "내가 받은 복을 나눌 한 사람을 정하고, 오늘 작은 섬김이나 격려를 실제로 전합니다."
+    ],
     authority: [
       "오늘 두려워 미루었던 한 가지 일을 정하고, '주님이 나를 보내셨습니다'라고 고백하며 작은 순종을 시작합니다.",
       "나를 작게 만드는 말 대신 '나는 주님께 부름 받고 보냄 받은 사람입니다'라고 소리 내어 고백합니다."
@@ -470,6 +537,9 @@ function actionText(profile, title, variant = 0) {
 
 function familyQuestionText(profile, title) {
   const table = {
+    silentPrayer: "우리 가족이 말로 다 설명하지 못해도 하나님께 함께 맡겨야 할 마음은 무엇일까요?",
+    remembrance: "기다림 속에서도 하나님이 우리를 기억하신다는 사실을 어떻게 서로 일깨워 줄 수 있을까요?",
+    answeredPrayer: "우리 가족이 받은 응답과 복을 이번 주 누구에게 어떻게 나눌 수 있을까요?",
     authority: "우리 가족이 주님께 보냄받았다는 믿음으로 이번 주 담대히 순종할 일은 무엇일까요?",
     light: "우리 가정이 이웃에게 예수님의 빛을 비추기 위해 함께 실천할 친절은 무엇일까요?",
     abundance: "우리 가족이 가진 작은 것을 주님께 드려 함께 나눌 수 있는 대상은 누구일까요?",
@@ -492,6 +562,9 @@ function familyQuestionText(profile, title) {
 
 function prompts(profile, title) {
   const table = {
+    silentPrayer: ["나는 괴로운 마음을 숨기고 있나요, 하나님께 정직하게 쏟아 놓고 있나요?", "마음 쏟기", "조용히 머물기", "탄식 맡기기"],
+    remembrance: ["기다림이 길어질 때에도 하나님이 나를 잊지 않으셨음을 믿고 있나요?", "평안 구하기", "은혜 기억하기", "하나님의 때 기다리기"],
+    answeredPrayer: ["내가 받은 응답이 다른 사람을 살리는 복으로 흘러가고 있나요?", "감사 간증", "복 나누기", "다음 세대 세우기"],
     authority: ["나는 요즘 내 형편보다 나를 보내신 주님의 권위를 더 크게 바라보고 있나요?", "보냄받은 정체", "두려움 내려놓기", "담대히 순종하기"],
     light: ["내가 오늘 예수님의 빛을 가장 먼저 비추어야 할 어두운 자리는 어디인가요?", "빛으로 살기", "조용히 섬기기", "사랑으로 비추기"],
     abundance: ["나는 공급자가 되려 애쓰고 있나요, 주님의 풍성함을 전하는 통로로 살고 있나요?", "부족함 고백", "작은 것 드리기", "풍성함 나누기"],
@@ -560,7 +633,11 @@ function sectionVariant(sections, index) {
 
 function parseSegments(text) {
   const segments = {};
-  const segmentRegex = /^\s*((?:월|화|수|목|금|토)(?:요일)?|mon(?:day)?|tue(?:sday)?|wed(?:nesday)?|thu(?:rsday)?|fri(?:day)?|sat(?:urday)?)\s*[:：]\s*(\d{1,2}:\d{2})(?:\s*[-~–]\s*(\d{1,2}:\d{2}))?/gim;
+  const timecode = "\\d{1,2}:\\d{2}(?::\\d{2})?";
+  const segmentRegex = new RegExp(
+    `^\\s*((?:월|화|수|목|금|토)(?:요일)?|mon(?:day)?|tue(?:sday)?|wed(?:nesday)?|thu(?:rsday)?|fri(?:day)?|sat(?:urday)?)\\s*[:：]\\s*(${timecode})(?:\\s*[-~–]\\s*(${timecode}))?`,
+    "gim"
+  );
   for (const match of text.matchAll(segmentRegex)) {
     const key = segmentLabels[match[1].toLowerCase()] || segmentLabels[match[1]];
     if (key) segments[key] = cleanObject({ start: match[2], end: match[3] });
