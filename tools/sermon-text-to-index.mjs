@@ -137,7 +137,7 @@ function makeDay({ id, index, variant, section, date, passage, image, video }) {
   const title = dayTitle(section, profile, variant);
   const navTitle = dayNavTitle(section, profile, variant);
   const focus = sectionFocusText(section, variant);
-  const reference = firstReference(focus) || firstReference(section.content) || passage;
+  const reference = profileReference(profile, variant) || firstReference(focus) || firstReference(section.content) || passage;
   const verse = dayVerse(focus, profile, title, variant);
 
   return cleanObject({
@@ -152,14 +152,17 @@ function makeDay({ id, index, variant, section, date, passage, image, video }) {
     reading: readingText(section, profile, variant),
     prayer: prayerText(profile, title, variant),
     action: actionText(profile, title, variant),
-    familyQuestion: familyQuestionText(profile, title),
-    prompts: prompts(profile, title),
+    familyQuestion: familyQuestionText(profile, title, variant),
+    prompts: prompts(profile, title, variant),
     video
   });
 }
 
 function classifySection(section) {
   const text = `${section.title} ${section.content}`;
+  if (hasAny(text, ["야베스", "대상4:9", "역대상 4장 9"]) && hasAny(text, ["아픔보다", "복을 구한", "운명"])) return "jabezBlessing";
+  if (hasAny(text, ["야베스", "대상4:10", "역대상 4장 10"]) && hasAny(text, ["주의 손", "하나님의 손", "환난을 벗어나"])) return "jabezHand";
+  if (hasAny(text, ["야베스", "대상4:10", "역대상 4장 10"]) && hasAny(text, ["지경", "지역을 넓", "한계를 넘어"])) return "jabezBorder";
   if (hasAny(text, ["말로 표현되지", "입술만 움직", "말할 수 없는 탄식", "심정을 통한"])) return "silentPrayer";
   if (hasAny(text, ["생각하시는 하나님", "생각하셨", "기억하사", "결코 잊지", "손바닥에 새겼"])) return "remembrance";
   if (hasAny(text, ["개인의 기쁨", "사무엘의 뜻", "사무엘을 보내", "하나님의 역사로"])) return "answeredPrayer";
@@ -182,9 +185,30 @@ function classifySection(section) {
   return "general";
 }
 
+function profileReference(profile, variant = 0) {
+  const table = {
+    jabezBlessing: [
+      "역대상 4:9",
+      "역대상 4:10, 이사야 43:1, 창세기 32:26, 민수기 6:24, 시편 67:1"
+    ],
+    jabezBorder: [
+      "역대상 4:10",
+      "역대상 4:10, 창세기 12:2; 26:22, 시편 18:19, 마태복음 4:19"
+    ],
+    jabezHand: [
+      "역대상 4:10, 열왕기상 11:4, 출애굽기 33:15, 시편 139:9-10",
+      "역대상 4:10"
+    ]
+  };
+  return table[profile]?.[Math.min(variant, table[profile].length - 1)];
+}
+
 function dayTitle(section, profile, variant) {
   const title = cleanTitle(section.title);
   const table = {
+    jabezBlessing: ["고통보다 귀중한 자", "운명 대신 복을 구하다"],
+    jabezBorder: ["오늘의 한계를 넘어", "더 많이 쓰임받는 지경"],
+    jabezHand: ["넓어진 지경을 감당하는 손", "과거의 고통을 넘어선 미래"],
     silentPrayer: ["괴로움을 기도로 바꾸다", "말없는 탄식도 들으시는 하나님"],
     remembrance: ["먼저 마음에 임한 평안", "결코 잊지 않으시는 하나님"],
     answeredPrayer: ["이름이 된 기도의 간증", "응답이 세대를 살리는 역사로"],
@@ -212,6 +236,9 @@ function dayTitle(section, profile, variant) {
 function dayNavTitle(section, profile, variant) {
   const title = cleanTitle(section.title);
   const table = {
+    jabezBlessing: ["하나님이 부르시는 이름", "복을 구하는 믿음"],
+    jabezBorder: ["넓은 지경을 바라보다", "복의 통로가 되는 확장"],
+    jabezHand: ["주의 손을 구하다", "환난에서 건지시는 응답"],
     silentPrayer: ["마음을 쏟는 기도", "말없는 탄식"],
     remembrance: ["먼저 주신 평안", "기억하고 일하시는 하나님"],
     answeredPrayer: ["사무엘의 이름", "넘쳐 흐르는 응답"],
@@ -238,10 +265,13 @@ function dayNavTitle(section, profile, variant) {
 
 function dayVerse(focusText, profile, title, variant = 0) {
   const quoted = firstQuotedSentence(focusText);
-  const preferCurated = ["silentPrayer", "remembrance", "answeredPrayer"].includes(profile);
+  const preferCurated = ["silentPrayer", "remembrance", "answeredPrayer", "jabezBlessing", "jabezBorder", "jabezHand"].includes(profile);
   if (quoted && !preferCurated) return quoted;
 
   const table = {
+    jabezBlessing: ["야베스는 그의 형제보다 귀중한 자라", "주께서 내게 복을 주시려거든"],
+    jabezBorder: ["나의 지역을 넓히시고", "너는 복이 될지라"],
+    jabezHand: ["주의 손으로 나를 도우사", "하나님이 그가 구하는 것을 허락하셨더라"],
     silentPrayer: [
       "한나가 마음이 괴로워서 야훼께 기도하고 통곡하며",
       "한나가 속으로 말하매 입술만 움직이고 음성은 들리지 아니하므로"
@@ -327,6 +357,18 @@ function dayVerse(focusText, profile, title, variant = 0) {
 function readingText(section, profile, variant) {
   const focus = sectionFocusText(section, variant);
   const curated = {
+    jabezBlessing: [
+      "어머니는 힘든 출산의 기억을 따라 아들의 이름을 ‘고통’이라 지었지만, 성경은 야베스를 고통으로 설명하지 않고 ‘귀중한 자’라고 불렀습니다. 아픈 시작과 사람의 평가는 하나님이 정하신 우리의 가치보다 크지 않습니다.",
+      "야베스의 시작은 불행했지만 그는 그것을 어쩔 수 없는 운명으로 받아들이지 않았습니다. 하나님께 나아가 복을 구한 그의 기도는 과거보다 하나님의 은혜를 더 크게 믿는 믿음의 선택이었습니다."
+    ],
+    jabezBorder: [
+      "지경을 넓혀 달라는 기도는 현재의 모습이 내 인생의 전부가 아님을 믿는 기도입니다. 하나님은 우리가 익숙한 한계에 갇히지 않고 더 넓은 믿음과 사명의 자리로 나아가기를 바라십니다.",
+      "넓어진 지경은 나만 더 많이 가지는 삶이 아니라 하나님께 더 많이 쓰임받는 삶입니다. 하나님이 주신 시간과 은사와 관계가 이웃을 살리고 복되게 할 때 우리의 지경은 참으로 넓어집니다."
+    ],
+    jabezHand: [
+      "야베스는 복과 넓은 지경만 구하지 않고 그것을 감당하도록 주의 손이 함께하기를 구했습니다. 하나님의 도우심이 없으면 커진 책임 앞에서 마음이 흔들릴 수 있기에, 축복보다 먼저 주님과 동행해야 합니다.",
+      "야베스는 과거의 고통이 자신의 미래까지 주장하지 못하도록 환난에서 벗어나 근심이 없게 해 달라고 간구했습니다. 하나님은 그의 진심 어린 기도를 들으시고 구하는 것을 허락하셨습니다."
+    ],
     silentPrayer: [
       "한나는 자신의 괴로움을 숨기거나 사람에게 쏟지 않고 기도로 바꾸어 하나님 앞에 마음을 다 내어놓았습니다.",
       "한나는 오래도록 기도했지만 입술만 움직일 뿐 소리를 낼 수 없었습니다. 사람은 오해했지만 하나님은 말로 표현되지 않은 탄식까지 들으셨습니다."
@@ -420,6 +462,9 @@ function defaultImageFor(profile, index, variant) {
 }
 
 function accentFor(profile, index) {
+  if (["jabezBlessing", "jabezBorder", "jabezHand"].includes(profile)) {
+    return ["#8b689d", "#8b689d", "#4f7fa8", "#317b65", "#4d8a55", "#b77716"][index];
+  }
   const table = {
     silentPrayer: "#8b689d",
     remembrance: "#4f7fa8",
@@ -447,6 +492,18 @@ function accentFor(profile, index) {
 
 function prayerText(profile, title, variant = 0) {
   const table = {
+    jabezBlessing: [
+      "하나님, 과거의 아픔이나 사람의 평가가 아니라 주님이 부르시는 이름으로 저 자신을 바라보게 하옵소서.",
+      "주님, 포기와 체념에 머물지 않고 저를 지으시고 부르신 하나님께 담대히 복을 구하게 하옵소서."
+    ],
+    jabezBorder: [
+      "하나님, 지금의 형편만 바라보지 않게 하시고 주님이 열어 가실 더 넓은 길을 믿음으로 바라보게 하옵소서.",
+      "주님, 더 많이 소유하려는 마음보다 더 넓게 사랑하고 섬기며 쓰임받기를 구하게 하옵소서."
+    ],
+    jabezHand: [
+      "주님, 제 능력을 의지하지 않게 하시고 맡겨 주신 복과 책임을 주의 손을 붙들고 충성되게 감당하게 하옵소서.",
+      "하나님, 과거의 고통이 제 미래를 다스리지 못하게 하시고 환난에서 건져 주시는 은혜 안에 평안히 걷게 하옵소서."
+    ],
     silentPrayer: [
       "주님, 제 괴로움과 감정을 숨기지 않고 기도로 바꾸어 주님 앞에 온전히 쏟아 놓게 하옵소서.",
       "성령님, 말로 다 표현하지 못하는 탄식까지 들으시는 주님을 신뢰하며 오래 머물러 기도하게 하옵소서."
@@ -492,6 +549,18 @@ function prayerText(profile, title, variant = 0) {
 
 function actionText(profile, title, variant = 0) {
   const table = {
+    jabezBlessing: [
+      "나를 붙잡아 온 부정적인 이름 하나를 적고, 그 옆에 ‘하나님께 귀중한 자’라고 새롭게 고백합니다.",
+      "체념하고 있던 삶의 한 영역을 정해, 오늘 하나님께 구체적인 복의 기도 한 문장으로 올려 드립니다."
+    ],
+    jabezBorder: [
+      "스스로 정해 놓은 한계 한 가지를 적고, 이번 주에 내디딜 수 있는 작은 믿음의 한 걸음을 정합니다.",
+      "내 시간과 재능으로 도울 수 있는 한 사람을 정하고, 오늘 구체적인 섬김을 실천합니다."
+    ],
+    jabezHand: [
+      "부담을 느끼는 책임 한 가지를 적고, ‘주의 손으로 나를 도우소서’라고 천천히 세 번 기도합니다.",
+      "미래를 두렵게 하는 과거의 기억을 하나님께 맡기고, 하나님이 여실 새 길에 대한 감사 한 문장을 적습니다."
+    ],
     silentPrayer: [
       "마음에 눌러 둔 괴로움 한 가지를 솔직한 기도 한 문장으로 적어 하나님께 올려 드립니다.",
       "말을 많이 만들지 않고 10분 동안 하나님 앞에 조용히 머물며 마음 깊은 탄식을 맡깁니다."
@@ -535,8 +604,20 @@ function actionText(profile, title, variant = 0) {
   return selected || `${title}과 연결된 작은 순종 하나를 오늘 실천합니다.`;
 }
 
-function familyQuestionText(profile, title) {
+function familyQuestionText(profile, title, variant = 0) {
   const table = {
+    jabezBlessing: [
+      "우리 가족이 서로에게 다시 불러 주어야 할 하나님의 따뜻한 이름은 무엇일까요?",
+      "우리 가정이 체념하지 않고 하나님께 함께 구해야 할 복은 무엇일까요?"
+    ],
+    jabezBorder: [
+      "우리 가족이 ‘여기까지’라고 선을 그어 놓은 영역에서 어떤 믿음의 한 걸음을 내디딜 수 있을까요?",
+      "하나님이 우리 가정의 지경을 넓히신다면 누구를 섬기고 복되게 하고 싶나요?"
+    ],
+    jabezHand: [
+      "우리 가족이 자신의 힘보다 하나님의 도우심을 구해야 할 책임은 무엇일까요?",
+      "우리 가족이 과거의 아픔을 넘어 하나님께 기대하고 싶은 새로운 미래는 어떤 모습인가요?"
+    ],
     silentPrayer: "우리 가족이 말로 다 설명하지 못해도 하나님께 함께 맡겨야 할 마음은 무엇일까요?",
     remembrance: "기다림 속에서도 하나님이 우리를 기억하신다는 사실을 어떻게 서로 일깨워 줄 수 있을까요?",
     answeredPrayer: "우리 가족이 받은 응답과 복을 이번 주 누구에게 어떻게 나눌 수 있을까요?",
@@ -557,11 +638,25 @@ function familyQuestionText(profile, title) {
     repentance: "우리 가정과 교회가 하나님 앞에서 먼저 돌이켜야 할 모습은 무엇일까요?",
     mission: "우리 가족이 각자의 자리에서 하나님께 드릴 수 있는 헌신은 무엇일까요?"
   };
-  return table[profile] || `${title}의 말씀을 우리 가족은 어떻게 함께 실천할 수 있을까요?`;
+  const selected = table[profile];
+  if (Array.isArray(selected)) return selected[Math.min(variant, selected.length - 1)];
+  return selected || `${title}의 말씀을 우리 가족은 어떻게 함께 실천할 수 있을까요?`;
 }
 
-function prompts(profile, title) {
+function prompts(profile, title, variant = 0) {
   const table = {
+    jabezBlessing: [
+      ["나는 아직도 과거의 아픔이나 누군가의 평가로 나를 규정하고 있지 않나요?", "상처의 이름 내려놓기", "귀중한 자로 보기", "새 이름 고백하기"],
+      ["나는 바꿀 수 없는 운명이라며 기도하기를 포기한 영역이 있나요?", "체념 내려놓기", "복을 구하기", "믿음으로 다시 시작하기"]
+    ],
+    jabezBorder: [
+      ["나는 현재의 모습이 내 인생의 전부라고 단정하고 있지 않나요?", "한계 발견하기", "넓은 길 바라보기", "믿음의 한 걸음"],
+      ["내가 바라는 확장은 소유의 증가인가요, 쓰임의 확장인가요?", "은사 살피기", "한 사람 섬기기", "복의 통로 되기"]
+    ],
+    jabezHand: [
+      ["나는 복을 구하면서도 그것을 감당할 주의 손을 함께 구하고 있나요?", "내 힘 내려놓기", "주의 손 붙들기", "책임을 맡겨 드리기"],
+      ["과거의 고통이 아직도 내 미래를 결정하도록 내버려 두고 있지는 않나요?", "고통 맡겨 드리기", "응답 신뢰하기", "새 미래 감사하기"]
+    ],
     silentPrayer: ["나는 괴로운 마음을 숨기고 있나요, 하나님께 정직하게 쏟아 놓고 있나요?", "마음 쏟기", "조용히 머물기", "탄식 맡기기"],
     remembrance: ["기다림이 길어질 때에도 하나님이 나를 잊지 않으셨음을 믿고 있나요?", "평안 구하기", "은혜 기억하기", "하나님의 때 기다리기"],
     answeredPrayer: ["내가 받은 응답이 다른 사람을 살리는 복으로 흘러가고 있나요?", "감사 간증", "복 나누기", "다음 세대 세우기"],
@@ -582,7 +677,9 @@ function prompts(profile, title) {
     repentance: ["나는 시대의 문제를 말하기 전에 우리의 죄와 나의 죄를 먼저 고백하고 있나요?", "동일시하기", "회개 기도", "긍휼 구하기"],
     mission: ["하나님이 지금 내 자리에서 맡기시는 작은 헌신은 무엇인가요?", "말씀 붙들기", "나를 드리기", "사명 감당"]
   };
-  return table[profile] || [`오늘 ${title} 앞에서 주님이 제게 원하시는 반응은 무엇인가요?`, "멈추기", "기도하기", "실천하기"];
+  const selected = table[profile];
+  if (Array.isArray(selected?.[0])) return selected[Math.min(variant, selected.length - 1)];
+  return selected || [`오늘 ${title} 앞에서 주님이 제게 원하시는 반응은 무엇인가요?`, "멈추기", "기도하기", "실천하기"];
 }
 
 function splitSections(text) {
@@ -775,12 +872,12 @@ function replaceWeeklyContent(html, content) {
   const semicolon = html.indexOf(";", braceEnd);
   if (semicolon < 0) throw new Error("weeklyContent 객체의 끝 세미콜론을 찾지 못했습니다.");
 
-  const replacement = `const weeklyContent = ${JSON.stringify(content, null, 2)};\n`;
+  const replacement = `const weeklyContent = ${JSON.stringify(content, null, 2)};`;
   return `${html.slice(0, start)}${replacement}${html.slice(semicolon + 1)}`;
 }
 
 function replaceWeeklyArchive(html, entries) {
-  const replacement = `const weeklyArchive = ${JSON.stringify(entries, null, 2)};\n`;
+  const replacement = `const weeklyArchive = ${JSON.stringify(entries, null, 2)};`;
   const start = html.indexOf("const weeklyArchive =");
 
   if (start >= 0) {
