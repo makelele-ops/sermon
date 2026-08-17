@@ -902,18 +902,6 @@ textarea:focus {
   border: 0;
 }
 
-.clip-external {
-  display: inline-flex;
-  align-items: center;
-  gap: 6px;
-  margin-top: 10px;
-  color: #6f4c1c;
-  font-size: 0.78rem;
-  font-weight: 700;
-  text-decoration: underline;
-  text-underline-offset: 3px;
-}
-
 .card-video {
   display: inline-flex;
   align-items: center;
@@ -1265,7 +1253,7 @@ const weeklyContent = {
   "themeTitle": "기도의 모범",
   "passage": "역대상 4장 9-10절",
   "journeyTitle": "6일 말씀 묵상 여정",
-  "sermonVideo": "https://www.youtube.com/live/wLA8ZV_nS0Y?si=ArrYeLShv6vezEcj",
+  "sermonVideo": "https://youtu.be/iGewCX96hcQ?si=S-1qluVpyKsaSpq7",
   "days": [
     {
       "id": "mon",
@@ -1287,8 +1275,8 @@ const weeklyContent = {
         "새 이름 고백하기"
       ],
       "video": {
-        "start": "4:37:04",
-        "end": "4:43:39"
+        "start": "0:00",
+        "end": "6:35"
       }
     },
     {
@@ -1311,8 +1299,8 @@ const weeklyContent = {
         "믿음으로 다시 시작하기"
       ],
       "video": {
-        "start": "4:42:59",
-        "end": "4:48:18"
+        "start": "5:55",
+        "end": "11:14"
       }
     },
     {
@@ -1335,8 +1323,8 @@ const weeklyContent = {
         "믿음의 한 걸음"
       ],
       "video": {
-        "start": "4:47:41",
-        "end": "4:52:20"
+        "start": "10:37",
+        "end": "15:16"
       }
     },
     {
@@ -1359,8 +1347,8 @@ const weeklyContent = {
         "복의 통로 되기"
       ],
       "video": {
-        "start": "4:51:40",
-        "end": "4:57:36"
+        "start": "14:36",
+        "end": "20:32"
       }
     },
     {
@@ -1383,8 +1371,8 @@ const weeklyContent = {
         "책임을 맡겨 드리기"
       ],
       "video": {
-        "start": "4:56:57",
-        "end": "5:03:43"
+        "start": "19:53",
+        "end": "26:39"
       }
     },
     {
@@ -1407,8 +1395,8 @@ const weeklyContent = {
         "새 미래 감사하기"
       ],
       "video": {
-        "start": "5:03:04",
-        "end": "5:07:03"
+        "start": "26:00",
+        "end": "29:59"
       }
     }
   ]
@@ -1903,20 +1891,8 @@ function sermonClipSrc(devotion) {
   return `https://www.youtube.com/embed/${id}?${params.toString()}`;
 }
 
-function sermonWatchUrl(devotion) {
-  const video = devotion.video;
-  if (!video) return "";
-  const id = parseYouTubeId(video.id || weeklyContent.sermonVideo);
-  if (!id) return "";
-  const params = new URLSearchParams({ v: id });
-  const start = toSeconds(video.start);
-  if (start > 0) params.set("t", `${start}s`);
-  return `https://www.youtube.com/watch?${params.toString()}`;
-}
-
 function renderSermonClip(devotion) {
   const src = sermonClipSrc(devotion);
-  const watchUrl = sermonWatchUrl(devotion);
   if (!src) return "";
 
   return `
@@ -1932,9 +1908,6 @@ function renderSermonClip(devotion) {
           allowfullscreen
         ></iframe>
       </div>
-      <a class="clip-external" href="${watchUrl}" target="_blank" rel="noopener noreferrer">
-        ${icon("play")} 영상이 재생되지 않으면 YouTube에서 이 구간 열기
-      </a>
     </div>
   `;
 }

@@ -902,18 +902,6 @@ textarea:focus {
   border: 0;
 }
 
-.clip-external {
-  display: inline-flex;
-  align-items: center;
-  gap: 6px;
-  margin-top: 10px;
-  color: #6f4c1c;
-  font-size: 0.78rem;
-  font-weight: 700;
-  text-decoration: underline;
-  text-underline-offset: 3px;
-}
-
 .card-video {
   display: inline-flex;
   align-items: center;
@@ -1901,20 +1889,8 @@ function sermonClipSrc(devotion) {
   return `https://www.youtube.com/embed/${id}?${params.toString()}`;
 }
 
-function sermonWatchUrl(devotion) {
-  const video = devotion.video;
-  if (!video) return "";
-  const id = parseYouTubeId(video.id || weeklyContent.sermonVideo);
-  if (!id) return "";
-  const params = new URLSearchParams({ v: id });
-  const start = toSeconds(video.start);
-  if (start > 0) params.set("t", `${start}s`);
-  return `https://www.youtube.com/watch?${params.toString()}`;
-}
-
 function renderSermonClip(devotion) {
   const src = sermonClipSrc(devotion);
-  const watchUrl = sermonWatchUrl(devotion);
   if (!src) return "";
 
   return `
@@ -1930,9 +1906,6 @@ function renderSermonClip(devotion) {
           allowfullscreen
         ></iframe>
       </div>
-      <a class="clip-external" href="${watchUrl}" target="_blank" rel="noopener noreferrer">
-        ${icon("play")} 영상이 재생되지 않으면 YouTube에서 이 구간 열기
-      </a>
     </div>
   `;
 }
