@@ -160,6 +160,9 @@ function makeDay({ id, index, variant, section, date, passage, image, video }) {
 
 function classifySection(section) {
   const text = `${section.title} ${section.content}`;
+  if (hasAny(text, ["마른 뼈에게 대언", "마른뼈에게 대언"])) return "dryBonesWord";
+  if (hasAny(text, ["생기에게 대언"])) return "breathOfLife";
+  if (hasAny(text, ["절망한 사람에게 희망", "희망을 대언"])) return "hopeProclamation";
   if (hasAny(text, ["야베스", "대상4:9", "역대상 4장 9"]) && hasAny(text, ["아픔보다", "복을 구한", "운명"])) return "jabezBlessing";
   if (hasAny(text, ["야베스", "대상4:10", "역대상 4장 10"]) && hasAny(text, ["주의 손", "하나님의 손", "환난을 벗어나"])) return "jabezHand";
   if (hasAny(text, ["야베스", "대상4:10", "역대상 4장 10"]) && hasAny(text, ["지경", "지역을 넓", "한계를 넘어"])) return "jabezBorder";
@@ -187,6 +190,18 @@ function classifySection(section) {
 
 function profileReference(profile, variant = 0) {
   const table = {
+    dryBonesWord: [
+      "에스겔 37:4-5, 로마서 4:17-18",
+      "에스겔 37:7-8, 갈라디아서 6:9, 고린도전서 15:58"
+    ],
+    breathOfLife: [
+      "에스겔 37:8-9, 스가랴 4:6",
+      "에스겔 37:10"
+    ],
+    hopeProclamation: [
+      "에스겔 37:11-12",
+      "에스겔 37:12-14, 요한복음 11:25"
+    ],
     jabezBlessing: [
       "역대상 4:9",
       "역대상 4:10, 이사야 43:1, 창세기 32:26, 민수기 6:24, 시편 67:1"
@@ -206,6 +221,9 @@ function profileReference(profile, variant = 0) {
 function dayTitle(section, profile, variant) {
   const title = cleanTitle(section.title);
   const table = {
+    dryBonesWord: ["말씀의 능력 앞에 서다", "포기하지 않고 대언하다"],
+    breathOfLife: ["모양을 넘어 생기로", "성령이 바꾸시는 사람"],
+    hopeProclamation: ["무덤을 여시는 절대 희망", "희망을 대언하는 사람"],
     jabezBlessing: ["고통보다 귀중한 자", "운명 대신 복을 구하다"],
     jabezBorder: ["오늘의 한계를 넘어", "더 많이 쓰임받는 지경"],
     jabezHand: ["넓어진 지경을 감당하는 손", "과거의 고통을 넘어선 미래"],
@@ -236,6 +254,9 @@ function dayTitle(section, profile, variant) {
 function dayNavTitle(section, profile, variant) {
   const title = cleanTitle(section.title);
   const table = {
+    dryBonesWord: ["마른 뼈가 듣는 말씀", "말씀으로 움직이는 삶"],
+    breathOfLife: ["생기를 구하는 기도", "극히 큰 군대로"],
+    hopeProclamation: ["무덤을 여시는 주님", "희망의 메신저"],
     jabezBlessing: ["하나님이 부르시는 이름", "복을 구하는 믿음"],
     jabezBorder: ["넓은 지경을 바라보다", "복의 통로가 되는 확장"],
     jabezHand: ["주의 손을 구하다", "환난에서 건지시는 응답"],
@@ -269,6 +290,18 @@ function dayVerse(focusText, profile, title, variant = 0) {
   if (quoted && !preferCurated) return quoted;
 
   const table = {
+    dryBonesWord: [
+      "너희 마른 뼈들아 야훼의 말씀을 들을지어다",
+      "내가 생기를 너희에게 들어가게 하리니 너희가 살아나리라"
+    ],
+    breathOfLife: [
+      "생기야 사방에서부터 와서 이 죽음을 당한 자에게 불어서 살아나게 하라",
+      "생기가 그들에게 들어가매 그들이 곧 살아서 일어나 서는데 극히 큰 군대더라"
+    ],
+    hopeProclamation: [
+      "내 백성들아 내가 너희 무덤을 열고 너희로 거기에서 나오게 하고",
+      "내가 너희로 거기에서 나오게 하고 이스라엘 땅으로 들어가게 하리라"
+    ],
     jabezBlessing: ["야베스는 그의 형제보다 귀중한 자라", "주께서 내게 복을 주시려거든"],
     jabezBorder: ["나의 지역을 넓히시고", "너는 복이 될지라"],
     jabezHand: ["주의 손으로 나를 도우사", "하나님이 그가 구하는 것을 허락하셨더라"],
@@ -357,6 +390,18 @@ function dayVerse(focusText, profile, title, variant = 0) {
 function readingText(section, profile, variant) {
   const focus = sectionFocusText(section, variant);
   const curated = {
+    dryBonesWord: [
+      "마른 뼈에는 생명이 없고 스스로 일어설 힘도 없습니다. 그러나 하나님은 에스겔에게 그 뼈들을 향해 말씀을 대언하라고 하셨습니다. 능력은 마른 뼈의 가능성에 있지 않고, 죽은 자를 살리시며 없는 것을 있는 것처럼 부르시는 하나님의 말씀에 있습니다.",
+      "에스겔이 말씀을 대언하자 흩어진 뼈들이 움직여 서로 연결되고 힘줄과 살이 생겼습니다. 변화가 당장 보이지 않아도 포기하지 말아야 합니다. 하나님이 주신 말씀을 붙들고 입으로 고백할 때, 주 안에서 우리의 수고는 헛되지 않습니다."
+    ],
+    breathOfLife: [
+      "뼈가 연결되고 몸의 모양을 갖추었지만 아직 그 속에 생기가 없었습니다. 신앙의 모양과 조직만으로는 충분하지 않습니다. 하나님은 에스겔에게 생기를 향해 대언하라고 하셨고, 우리도 말씀에 생명을 주시는 성령의 바람을 구해야 합니다.",
+      "성령님은 식은 마음을 뜨겁게 하시고 두려워하던 제자를 증인으로 바꾸십니다. 에스겔이 생기에게 대언하자 죽은 자 같던 몸들이 살아나 극히 큰 군대가 되었습니다. 사람의 현재 모습으로 끝을 정하지 말고 성령께서 새롭게 하실 일을 기대해야 합니다."
+    ],
+    hopeProclamation: [
+      "하나님이 에스겔에게 환상을 주신 것은 그 한 사람만 살리기 위해서가 아니라, 소망을 잃은 이스라엘 백성에게 희망을 전하게 하시려는 것이었습니다. 백성은 자신들의 현실을 무덤이라 불렀지만 하나님은 그 무덤을 열고 나오게 하겠다고 말씀하셨습니다.",
+      "예수님은 죽은 나사로를 무덤에서 불러내셨고 부활로 우리의 절대 희망이 되셨습니다. 세상이 끝났다고 말해도 우리는 살아 계신 하나님과 부활하신 예수님을 말해야 합니다. 회복된 사람은 낙심한 이웃에게 희망을 대언하는 사람으로 보냄받습니다."
+    ],
     jabezBlessing: [
       "어머니는 힘든 출산의 기억을 따라 아들의 이름을 ‘고통’이라 지었지만, 성경은 야베스를 고통으로 설명하지 않고 ‘귀중한 자’라고 불렀습니다. 아픈 시작과 사람의 평가는 하나님이 정하신 우리의 가치보다 크지 않습니다.",
       "야베스의 시작은 불행했지만 그는 그것을 어쩔 수 없는 운명으로 받아들이지 않았습니다. 하나님께 나아가 복을 구한 그의 기도는 과거보다 하나님의 은혜를 더 크게 믿는 믿음의 선택이었습니다."
@@ -462,6 +507,9 @@ function defaultImageFor(profile, index, variant) {
 }
 
 function accentFor(profile, index) {
+  if (["dryBonesWord", "breathOfLife", "hopeProclamation"].includes(profile)) {
+    return ["#8f7334", "#b77716", "#4f7fa8", "#317b65", "#4d8a55", "#2f6f76"][index];
+  }
   if (["jabezBlessing", "jabezBorder", "jabezHand"].includes(profile)) {
     return ["#8b689d", "#8b689d", "#4f7fa8", "#317b65", "#4d8a55", "#b77716"][index];
   }
@@ -492,6 +540,18 @@ function accentFor(profile, index) {
 
 function prayerText(profile, title, variant = 0) {
   const table = {
+    dryBonesWord: [
+      "하나님, 눈앞의 가능성보다 주님의 말씀을 더 믿게 하시고 마른 뼈 같은 현실 앞에서도 믿음으로 대언하게 하옵소서.",
+      "주님, 변화가 더딜 때 낙심하지 않게 하시고 주신 말씀을 붙들어 끝까지 선을 행하며 고백하게 하옵소서."
+    ],
+    breathOfLife: [
+      "성령님, 신앙의 모양에 머물지 않게 하시고 제 심령과 가정과 교회에 생명의 바람을 불어넣어 주옵소서.",
+      "성령님, 제가 사람을 억지로 바꾸려 하지 않게 하시고 주께서 살리고 새롭게 하실 일을 믿으며 기도하게 하옵소서."
+    ],
+    hopeProclamation: [
+      "하나님, 무덤처럼 닫힌 현실보다 그것을 여시는 주님을 바라보며 절대 희망을 품게 하옵소서.",
+      "주님, 살아 계신 하나님과 부활하신 예수님을 제 입술과 삶으로 전하여 낙심한 사람을 살리게 하옵소서."
+    ],
     jabezBlessing: [
       "하나님, 과거의 아픔이나 사람의 평가가 아니라 주님이 부르시는 이름으로 저 자신을 바라보게 하옵소서.",
       "주님, 포기와 체념에 머물지 않고 저를 지으시고 부르신 하나님께 담대히 복을 구하게 하옵소서."
@@ -549,6 +609,18 @@ function prayerText(profile, title, variant = 0) {
 
 function actionText(profile, title, variant = 0) {
   const table = {
+    dryBonesWord: [
+      "마른 뼈처럼 느껴지는 삶의 한 영역을 적고, 그 위에 붙들 하나님의 말씀 한 구절을 소리 내어 고백합니다.",
+      "아직 변화가 보이지 않아 낙심한 일을 적고, 오늘 포기하지 않고 계속할 작은 선행 한 가지를 실천합니다."
+    ],
+    breathOfLife: [
+      "마음이 식고 생기를 잃은 영역을 정직하게 적은 뒤, ‘성령님, 제 안에 생기를 불어넣어 주옵소서’라고 기도합니다.",
+      "바꾸려고 다그쳤던 한 사람을 주님께 맡기고, 판단 대신 그를 위한 성령의 역사와 새로움을 구합니다."
+    ],
+    hopeProclamation: [
+      "끝났다고 단정한 문제 한 가지를 적고, ‘하나님이 이 무덤을 여실 수 있습니다’라고 믿음으로 고백합니다.",
+      "오늘 낙심한 한 사람에게 살아 계신 주님을 기억하게 하는 구체적인 격려 한 문장을 전합니다."
+    ],
     jabezBlessing: [
       "나를 붙잡아 온 부정적인 이름 하나를 적고, 그 옆에 ‘하나님께 귀중한 자’라고 새롭게 고백합니다.",
       "체념하고 있던 삶의 한 영역을 정해, 오늘 하나님께 구체적인 복의 기도 한 문장으로 올려 드립니다."
@@ -606,6 +678,18 @@ function actionText(profile, title, variant = 0) {
 
 function familyQuestionText(profile, title, variant = 0) {
   const table = {
+    dryBonesWord: [
+      "우리 가족이 마른 뼈처럼 느끼는 현실 앞에서 함께 붙들고 고백할 하나님의 말씀은 무엇일까요?",
+      "변화가 더디더라도 우리 가족이 포기하지 않고 계속해야 할 믿음의 수고는 무엇일까요?"
+    ],
+    breathOfLife: [
+      "우리 가정에 성령의 생기가 가장 절실히 필요한 자리는 어디이며, 함께 어떻게 기도할 수 있을까요?",
+      "가족을 바꾸려 다그치기보다 성령께 맡기고 서로 격려해야 할 모습은 무엇일까요?"
+    ],
+    hopeProclamation: [
+      "우리 가족이 무덤처럼 닫혔다고 느끼지만 하나님께서 여실 수 있다고 믿어야 할 일은 무엇일까요?",
+      "우리 가족이 이번 주 희망의 메신저가 되어 위로하고 격려할 사람은 누구일까요?"
+    ],
     jabezBlessing: [
       "우리 가족이 서로에게 다시 불러 주어야 할 하나님의 따뜻한 이름은 무엇일까요?",
       "우리 가정이 체념하지 않고 하나님께 함께 구해야 할 복은 무엇일까요?"
@@ -645,6 +729,18 @@ function familyQuestionText(profile, title, variant = 0) {
 
 function prompts(profile, title, variant = 0) {
   const table = {
+    dryBonesWord: [
+      ["나는 눈앞의 가능성보다 하나님의 말씀에 더 큰 능력이 있음을 믿고 있나요?", "현실 정직하게 보기", "말씀 붙들기", "믿음으로 대언하기"],
+      ["변화가 더디다는 이유로 포기하려 한 일은 무엇인가요?", "낙심 내려놓기", "수고를 계속하기", "주님의 때 신뢰하기"]
+    ],
+    breathOfLife: [
+      ["내 삶에는 신앙의 모양만 있고 성령의 생기를 잃은 자리가 있지 않나요?", "공허함 인정하기", "성령을 구하기", "생명의 바람 기다리기"],
+      ["나는 사람을 바꾸려 다그치고 있나요, 성령께서 새롭게 하시도록 맡기고 있나요?", "판단 내려놓기", "성령께 맡기기", "새로움을 기대하기"]
+    ],
+    hopeProclamation: [
+      ["내가 무덤처럼 끝났다고 단정한 현실은 무엇인가요?", "절망 이름 붙이기", "무덤을 여시는 주님", "절대 희망 고백하기"],
+      ["하나님이 내게 주신 희망을 누구에게 전해야 하나요?", "희망 기억하기", "한 사람 격려하기", "부활의 주님 전하기"]
+    ],
     jabezBlessing: [
       ["나는 아직도 과거의 아픔이나 누군가의 평가로 나를 규정하고 있지 않나요?", "상처의 이름 내려놓기", "귀중한 자로 보기", "새 이름 고백하기"],
       ["나는 바꿀 수 없는 운명이라며 기도하기를 포기한 영역이 있나요?", "체념 내려놓기", "복을 구하기", "믿음으로 다시 시작하기"]
