@@ -160,6 +160,9 @@ function makeDay({ id, index, variant, section, date, passage, image, video }) {
 
 function classifySection(section) {
   const text = `${section.title} ${section.content}`;
+  if (hasAny(text, ["주님이 보내시는 사람이 결국 승리", "주님이 나를 보내셨다"])) return "sentVictory";
+  if (hasAny(text, ["이리 가운데서도 어린 양으로 남", "끝까지 어린 양으로 남"])) return "lambVictory";
+  if (hasAny(text, ["결과가 뜻대로 안 돼도 포기하지", "결과를 하나님께 맡기며 다음 사명"])) return "faithfulVictory";
   if (hasAny(text, ["마른 뼈에게 대언", "마른뼈에게 대언"])) return "dryBonesWord";
   if (hasAny(text, ["생기에게 대언"])) return "breathOfLife";
   if (hasAny(text, ["절망한 사람에게 희망", "희망을 대언"])) return "hopeProclamation";
@@ -190,6 +193,18 @@ function classifySection(section) {
 
 function profileReference(profile, variant = 0) {
   const table = {
+    sentVictory: [
+      "누가복음 10:2, 열왕기상 19:18",
+      "누가복음 10:1, 창세기 45:5"
+    ],
+    lambVictory: [
+      "누가복음 10:3, 로마서 12:21",
+      "누가복음 10:5, 9, 요한계시록 17:14"
+    ],
+    faithfulVictory: [
+      "누가복음 10:10-12, 다니엘 3:17-18",
+      "누가복음 10:17-18"
+    ],
     dryBonesWord: [
       "에스겔 37:4-5, 로마서 4:17-18",
       "에스겔 37:7-8, 갈라디아서 6:9, 고린도전서 15:58"
@@ -221,6 +236,9 @@ function profileReference(profile, variant = 0) {
 function dayTitle(section, profile, variant) {
   const title = cleanTitle(section.title);
   const table = {
+    sentVictory: ["보내시는 주님을 바라보다", "먼저 가시는 주님을 따르다"],
+    lambVictory: ["이리 가운데 어린 양으로", "평안과 생명으로 승리하다"],
+    faithfulVictory: ["결과보다 믿음을 지키다", "사탄이 번개같이 떨어지다"],
     dryBonesWord: ["말씀의 능력 앞에 서다", "포기하지 않고 대언하다"],
     breathOfLife: ["모양을 넘어 생기로", "성령이 바꾸시는 사람"],
     hopeProclamation: ["무덤을 여시는 절대 희망", "희망을 대언하는 사람"],
@@ -254,6 +272,9 @@ function dayTitle(section, profile, variant) {
 function dayNavTitle(section, profile, variant) {
   const title = cleanTitle(section.title);
   const table = {
+    sentVictory: ["추수하는 주인께 청하라", "주님이 가실 곳에 먼저 보냄받다"],
+    lambVictory: ["선으로 악을 이기다", "어린 양의 무기로 승리하다"],
+    faithfulVictory: ["하나님의 사람으로 남다", "어린 양으로 돌아온 승리"],
     dryBonesWord: ["마른 뼈가 듣는 말씀", "말씀으로 움직이는 삶"],
     breathOfLife: ["생기를 구하는 기도", "극히 큰 군대로"],
     hopeProclamation: ["무덤을 여시는 주님", "희망의 메신저"],
@@ -286,10 +307,32 @@ function dayNavTitle(section, profile, variant) {
 
 function dayVerse(focusText, profile, title, variant = 0) {
   const quoted = firstQuotedSentence(focusText);
-  const preferCurated = ["silentPrayer", "remembrance", "answeredPrayer", "jabezBlessing", "jabezBorder", "jabezHand"].includes(profile);
+  const preferCurated = [
+    "sentVictory",
+    "lambVictory",
+    "faithfulVictory",
+    "silentPrayer",
+    "remembrance",
+    "answeredPrayer",
+    "jabezBlessing",
+    "jabezBorder",
+    "jabezHand"
+  ].includes(profile);
   if (quoted && !preferCurated) return quoted;
 
   const table = {
+    sentVictory: [
+      "추수할 것은 많되 일꾼이 적으니 그러므로 추수하는 주인에게 청하여",
+      "친히 가시려는 각 동네와 각 지역으로 둘씩 앞서 보내시며"
+    ],
+    lambVictory: [
+      "악에게 지지 말고 선으로 악을 이기라",
+      "어느 집에 들어가든지 먼저 말하되 이 집이 평안할지어다 하라"
+    ],
+    faithfulVictory: [
+      "그러나 하나님의 나라가 가까이 온 줄을 알라 하라",
+      "사탄이 하늘로부터 번개 같이 떨어지는 것을 내가 보았노라"
+    ],
     dryBonesWord: [
       "너희 마른 뼈들아 야훼의 말씀을 들을지어다",
       "내가 생기를 너희에게 들어가게 하리니 너희가 살아나리라"
@@ -390,6 +433,18 @@ function dayVerse(focusText, profile, title, variant = 0) {
 function readingText(section, profile, variant) {
   const focus = sectionFocusText(section, variant);
   const curated = {
+    sentVictory: [
+      "예수님은 일꾼이 적다는 현실보다 추수할 것이 많다는 사실을 먼저 보셨습니다. 결과를 다 책임지려 하지 말고 추수하는 주인이신 하나님께 기도해야 합니다. 승리는 내가 강해지는 데서가 아니라 주님이 나를 보내셨다는 사실을 믿는 데서 시작됩니다.",
+      "칠십 인은 예수님이 친히 가시려는 곳에 먼저 보냄받았습니다. 지금 있는 자리를 원망하기보다 주님이 나를 이곳에 먼저 보내신 이유를 물으며, 보내신 분이 함께하시고 도우신다는 확신으로 순종해야 합니다."
+    ],
+    lambVictory: [
+      "믿음으로 살아도 이리 같은 현실을 만날 수 있지만, 주님은 더 강한 이리가 되라고 하지 않으셨습니다. 상처 때문에 사랑과 믿음을 잃지 말고 악에게 지지 않으며 선으로 악을 이겨 어린 양의 자리를 지켜야 합니다.",
+      "어린 양에게 주신 무기는 평안을 전하고 병든 자를 고치며 하나님의 나라를 말하는 것입니다. 예수님이 십자가와 부활로 승리하신 것처럼, 우리도 살리는 말과 평안과 자기 절제로 끝까지 어린 양으로 남아야 합니다."
+    ],
+    faithfulVictory: [
+      "주님이 보내셨어도 거절당하고 바라는 결과가 곧 나오지 않을 수 있습니다. 승리는 내 뜻대로 다 되는 것이 아니라 뜻대로 되지 않아도 하나님의 사람으로 남는 것입니다. 결과는 하나님께 맡기고 다음 사명으로 나아가야 합니다.",
+      "칠십 인은 어린 양으로 나갔다가 어린 양으로 돌아와 주님의 이름으로 승리했다고 고백했습니다. 미움에 미움으로 답하지 않고 믿음을 지킬 때 사탄의 권세가 무너집니다. 승리자의 관점을 끝까지 잃지 말아야 합니다."
+    ],
     dryBonesWord: [
       "마른 뼈에는 생명이 없고 스스로 일어설 힘도 없습니다. 그러나 하나님은 에스겔에게 그 뼈들을 향해 말씀을 대언하라고 하셨습니다. 능력은 마른 뼈의 가능성에 있지 않고, 죽은 자를 살리시며 없는 것을 있는 것처럼 부르시는 하나님의 말씀에 있습니다.",
       "에스겔이 말씀을 대언하자 흩어진 뼈들이 움직여 서로 연결되고 힘줄과 살이 생겼습니다. 변화가 당장 보이지 않아도 포기하지 말아야 합니다. 하나님이 주신 말씀을 붙들고 입으로 고백할 때, 주 안에서 우리의 수고는 헛되지 않습니다."
@@ -473,6 +528,9 @@ function cleanNumberedMarkers(value) {
 
 function defaultImageFor(profile, index, variant) {
   const byProfile = {
+    sentVictory: ["./assets/devotion/warm-wheat.png", "./assets/devotion/bible-path.jpg"],
+    lambVictory: ["./assets/devotion/warm-meadow.png", "./assets/devotion/field.jpg"],
+    faithfulVictory: ["./assets/devotion/warm-candle.png", "./assets/devotion/warm-open-bible.png"],
     silentPrayer: ["./assets/devotion/warm-candle.png", "./assets/devotion/candle.jpg"],
     remembrance: ["./assets/devotion/warm-open-bible.png", "./assets/devotion/warm-meadow.png"],
     answeredPrayer: ["./assets/devotion/warm-wheat.png", "./assets/devotion/warm-notebook.png"],
@@ -507,6 +565,9 @@ function defaultImageFor(profile, index, variant) {
 }
 
 function accentFor(profile, index) {
+  if (["sentVictory", "lambVictory", "faithfulVictory"].includes(profile)) {
+    return ["#8f7334", "#4f7fa8", "#4d8a55", "#317b65", "#8b689d", "#b77716"][index];
+  }
   if (["dryBonesWord", "breathOfLife", "hopeProclamation"].includes(profile)) {
     return ["#8f7334", "#b77716", "#4f7fa8", "#317b65", "#4d8a55", "#2f6f76"][index];
   }
@@ -540,6 +601,18 @@ function accentFor(profile, index) {
 
 function prayerText(profile, title, variant = 0) {
   const table = {
+    sentVictory: [
+      "주님, 부족한 현실보다 추수할 것을 보게 하시고 결과를 책임지시는 주인께 기도하며 보냄받은 자리에서 담대히 순종하게 하옵소서.",
+      "주님, 제가 있는 곳에 먼저 보내신 뜻을 묻게 하시고 앞서 가시며 함께하시는 주님을 믿고 확신으로 나아가게 하옵소서."
+    ],
+    lambVictory: [
+      "주님, 이리 같은 현실 앞에서도 미움과 악을 닮지 않고 선으로 악을 이기며 어린 양의 마음을 끝까지 지키게 하옵소서.",
+      "예수님, 제 입술과 삶에 평안과 생명을 주셔서 살리는 말을 하고 욕심을 이기며 어린 양의 길로 승리하게 하옵소서."
+    ],
+    faithfulVictory: [
+      "주님, 결과가 뜻대로 되지 않아도 믿음을 포기하지 않고 하나님의 사람으로 남아 다음 사명을 향해 걷게 하옵소서.",
+      "주님, 미움에 미움으로 답하지 않고 끝까지 어린 양으로 남아 사탄의 권세가 무너지는 참된 승리를 경험하게 하옵소서."
+    ],
     dryBonesWord: [
       "하나님, 눈앞의 가능성보다 주님의 말씀을 더 믿게 하시고 마른 뼈 같은 현실 앞에서도 믿음으로 대언하게 하옵소서.",
       "주님, 변화가 더딜 때 낙심하지 않게 하시고 주신 말씀을 붙들어 끝까지 선을 행하며 고백하게 하옵소서."
@@ -609,6 +682,18 @@ function prayerText(profile, title, variant = 0) {
 
 function actionText(profile, title, variant = 0) {
   const table = {
+    sentVictory: [
+      "내가 다 책임지려는 문제 한 가지를 적고, 추수하는 주인이신 하나님께 맡기는 기도를 드립니다.",
+      "지금 있는 자리에서 주님이 먼저 보내신 이유를 묻고, 오늘 할 수 있는 작은 순종 한 가지를 실천합니다."
+    ],
+    lambVictory: [
+      "나를 힘들게 한 사람 때문에 잃어버린 마음이 있는지 살피고, 미움 대신 그를 위한 축복의 기도를 드립니다.",
+      "오늘 만나는 한 사람에게 평안을 전하고, 상처 주는 말 대신 고치고 살리는 말 한 문장을 건넵니다."
+    ],
+    faithfulVictory: [
+      "아직 결과가 보이지 않는 순종 한 가지를 적고, 포기하지 않고 이어 갈 다음 믿음의 행동을 정합니다.",
+      "미움이나 억울함에 같은 방식으로 반응하지 않고, 어린 양의 마음을 지킬 구체적인 선택 하나를 실천합니다."
+    ],
     dryBonesWord: [
       "마른 뼈처럼 느껴지는 삶의 한 영역을 적고, 그 위에 붙들 하나님의 말씀 한 구절을 소리 내어 고백합니다.",
       "아직 변화가 보이지 않아 낙심한 일을 적고, 오늘 포기하지 않고 계속할 작은 선행 한 가지를 실천합니다."
@@ -678,6 +763,18 @@ function actionText(profile, title, variant = 0) {
 
 function familyQuestionText(profile, title, variant = 0) {
   const table = {
+    sentVictory: [
+      "우리 가족이 부족함보다 하나님이 하실 일을 크게 보며 주님께 맡겨야 할 일은 무엇일까요?",
+      "주님이 우리 가정을 지금 이 자리에 먼저 보내신 이유와 맡기신 순종은 무엇일까요?"
+    ],
+    lambVictory: [
+      "우리 가족이 상처 때문에 이리처럼 반응하지 않고 어린 양의 마음을 지켜야 할 관계는 어디인가요?",
+      "우리 가정이 이번 주 평안과 생명을 전하기 위해 바꿀 말과 행동은 무엇일까요?"
+    ],
+    faithfulVictory: [
+      "결과가 더디더라도 우리 가족이 포기하지 않고 지켜야 할 믿음과 정직은 무엇일까요?",
+      "우리 가족이 미움에 미움으로 답하지 않고 어린 양의 승리를 선택할 수 있는 일은 무엇일까요?"
+    ],
     dryBonesWord: [
       "우리 가족이 마른 뼈처럼 느끼는 현실 앞에서 함께 붙들고 고백할 하나님의 말씀은 무엇일까요?",
       "변화가 더디더라도 우리 가족이 포기하지 않고 계속해야 할 믿음의 수고는 무엇일까요?"
@@ -729,6 +826,18 @@ function familyQuestionText(profile, title, variant = 0) {
 
 function prompts(profile, title, variant = 0) {
   const table = {
+    sentVictory: [
+      ["나는 부족한 현실보다 추수할 것을 보시는 주님의 시선을 믿고 있나요?", "부족함 내려놓기", "주인께 청하기", "보냄받은 자리 지키기"],
+      ["주님이 나를 지금 이곳에 먼저 보내신 이유는 무엇일까요?", "자리 새롭게 보기", "앞서 가시는 주님", "담대히 순종하기"]
+    ],
+    lambVictory: [
+      ["상처 때문에 나도 같은 방식으로 미워하고 공격하고 있지는 않나요?", "상처 살피기", "미움 내려놓기", "선으로 악 이기기"],
+      ["내 말과 태도는 오늘 평안과 생명을 전하고 있나요?", "평안 전하기", "살리는 말", "자신을 이기기"]
+    ],
+    faithfulVictory: [
+      ["결과가 보이지 않는다는 이유로 포기하려는 믿음의 순종은 무엇인가요?", "결과 맡기기", "믿음 지키기", "다음 사명으로"],
+      ["나는 미움에 미움으로 답하지 않고 어린 양의 모습으로 돌아오고 있나요?", "승리 기억하기", "어린 양으로 남기", "사탄의 권세 무너뜨리기"]
+    ],
     dryBonesWord: [
       ["나는 눈앞의 가능성보다 하나님의 말씀에 더 큰 능력이 있음을 믿고 있나요?", "현실 정직하게 보기", "말씀 붙들기", "믿음으로 대언하기"],
       ["변화가 더디다는 이유로 포기하려 한 일은 무엇인가요?", "낙심 내려놓기", "수고를 계속하기", "주님의 때 신뢰하기"]
