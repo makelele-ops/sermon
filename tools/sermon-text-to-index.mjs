@@ -160,6 +160,9 @@ function makeDay({ id, index, variant, section, date, passage, image, video }) {
 
 function classifySection(section) {
   const text = `${section.title} ${section.content}`;
+  if (hasAny(text, ["롱런하려면 하나님의 은혜", "하나님의 은혜를 잊지 말아야"])) return "graceLongRun";
+  if (hasAny(text, ["롱런하려면 사람을 사랑", "사람을 품는 품이 넓어"])) return "loveLongRun";
+  if (hasAny(text, ["롱런하려면 주님의 발치", "주님의 발치로 돌아와야"])) return "restLongRun";
   if (hasAny(text, ["주님이 보내시는 사람이 결국 승리", "주님이 나를 보내셨다"])) return "sentVictory";
   if (hasAny(text, ["이리 가운데서도 어린 양으로 남", "끝까지 어린 양으로 남"])) return "lambVictory";
   if (hasAny(text, ["결과가 뜻대로 안 돼도 포기하지", "결과를 하나님께 맡기며 다음 사명"])) return "faithfulVictory";
@@ -193,6 +196,18 @@ function classifySection(section) {
 
 function profileReference(profile, variant = 0) {
   const table = {
+    graceLongRun: [
+      "누가복음 10:17-21",
+      "고린도전서 15:10, 사무엘상 17:47, 이사야 40:31"
+    ],
+    loveLongRun: [
+      "누가복음 10:25-37, 마태복음 9:36",
+      "디모데후서 4:7, 16"
+    ],
+    restLongRun: [
+      "누가복음 10:38-42, 시편 23:1-2",
+      "열왕기상 19:4-8, 히브리서 12:1-2, 디모데후서 4:7"
+    ],
     sentVictory: [
       "누가복음 10:2, 열왕기상 19:18",
       "누가복음 10:1, 창세기 45:5"
@@ -236,6 +251,9 @@ function profileReference(profile, variant = 0) {
 function dayTitle(section, profile, variant) {
   const title = cleanTitle(section.title);
   const table = {
+    graceLongRun: ["박수보다 영원한 기쁨", "은혜로 다시 달리다"],
+    loveLongRun: ["누군가의 이웃이 되다", "상처 속에서도 사랑하다"],
+    restLongRun: ["주님의 발치로 돌아오다", "공급받고 끝까지 완주하다"],
     sentVictory: ["보내시는 주님을 바라보다", "먼저 가시는 주님을 따르다"],
     lambVictory: ["이리 가운데 어린 양으로", "평안과 생명으로 승리하다"],
     faithfulVictory: ["결과보다 믿음을 지키다", "사탄이 번개같이 떨어지다"],
@@ -272,6 +290,9 @@ function dayTitle(section, profile, variant) {
 function dayNavTitle(section, profile, variant) {
   const title = cleanTitle(section.title);
   const table = {
+    graceLongRun: ["하늘에 기록된 이름", "내가 나 된 것은 은혜"],
+    loveLongRun: ["사랑의 경계를 넘어", "관용으로 넓어지는 품"],
+    restLongRun: ["일보다 먼저 주님", "앉은 뒤에 가서 섬기기"],
     sentVictory: ["추수하는 주인께 청하라", "주님이 가실 곳에 먼저 보냄받다"],
     lambVictory: ["선으로 악을 이기다", "어린 양의 무기로 승리하다"],
     faithfulVictory: ["하나님의 사람으로 남다", "어린 양으로 돌아온 승리"],
@@ -308,6 +329,9 @@ function dayNavTitle(section, profile, variant) {
 function dayVerse(focusText, profile, title, variant = 0) {
   const quoted = firstQuotedSentence(focusText);
   const preferCurated = [
+    "graceLongRun",
+    "loveLongRun",
+    "restLongRun",
     "sentVictory",
     "lambVictory",
     "faithfulVictory",
@@ -321,6 +345,18 @@ function dayVerse(focusText, profile, title, variant = 0) {
   if (quoted && !preferCurated) return quoted;
 
   const table = {
+    graceLongRun: [
+      "귀신들이 너희에게 항복하는 것으로 기뻐하지 말고 너희 이름이 하늘에 기록된 것으로 기뻐하라",
+      "그러나 내가 나 된 것은 하나님의 은혜로 된 것이니"
+    ],
+    loveLongRun: [
+      "가서 너도 이와 같이 하라",
+      "그들에게 허물을 돌리지 않기를 원하노라"
+    ],
+    restLongRun: [
+      "마리아라 하는 동생이 있어 주의 발치에 앉아 그의 말씀을 듣더니",
+      "인내로써 우리 앞에 당한 경주를 하며 믿음의 주요 또 온전하게 하시는 이인 예수를 바라보자"
+    ],
     sentVictory: [
       "추수할 것은 많되 일꾼이 적으니 그러므로 추수하는 주인에게 청하여",
       "친히 가시려는 각 동네와 각 지역으로 둘씩 앞서 보내시며"
@@ -433,6 +469,18 @@ function dayVerse(focusText, profile, title, variant = 0) {
 function readingText(section, profile, variant) {
   const focus = sectionFocusText(section, variant);
   const curated = {
+    graceLongRun: [
+      "칠십 인이 놀라운 승리를 보고했을 때 예수님은 한때의 성과보다 이름이 하늘에 기록된 영원한 은혜를 기뻐하라고 하셨습니다. 예수님은 제자들의 실력이 아니라 어린아이들에게 나타내신 아버지의 은혜를 감사하셨습니다. 내가 잘해서가 아니라 하나님이 하셨음을 아는 사람이 오래갑니다.",
+      "바울은 ‘내가 나 된 것은 하나님의 은혜’라고 고백했고 다윗은 전쟁이 야훼께 속했다고 선포했습니다. 신앙이 깊어질수록 어린아이처럼 오늘도 주님이 필요하다고 고백해야 합니다. 내 힘이 떨어져도 하나님이 새 힘을 공급하시므로 다시 일어나 끝까지 달릴 수 있습니다."
+    ],
+    loveLongRun: [
+      "율법 교사는 사랑의 경계를 정하려 했지만 예수님은 선한 사마리아인의 비유로 누구의 이웃이 되어 주었는지를 물으셨습니다. 출신과 자격을 계산하지 않고 고통받는 사람을 불쌍히 여기며 실제로 사랑하는 사람이 믿음의 길을 오래 걸을 수 있습니다.",
+      "자신을 가장 불쌍한 사람으로 여기면 다른 이를 관용하기 어렵지만 우리 안에는 풍성하신 예수님이 계십니다. 바울은 배신과 버림을 당하고도 끝까지 사랑을 포기하지 않았습니다. 상처가 없어서가 아니라 상처 속에서도 사람을 품는 품이 넓어질 때 롱런할 수 있습니다."
+    ],
+    restLongRun: [
+      "마르다는 주님을 사랑해 섬겼지만 일이 주님보다 커지자 평안을 잃고 비교하며 원망했습니다. 지쳤다는 신호가 올 때 일만 줄이는 데 머물지 말고 말씀과 기도와 예배의 자리인 주님의 발치로 돌아가야 합니다. 쉬지 않고 달리는 사람이 아니라 다시 돌아와 공급받는 사람이 오래갑니다.",
+      "하나님은 탈진한 엘리야를 재우고 먹이시며 다시 갈 길을 걷게 하셨습니다. 가서 오래 섬기려면 먼저 주님의 발치에 앉아 공급받아야 합니다. 우리보다 먼저 십자가의 길을 끝까지 걸으신 예수님을 바라보며 중도에 포기하지 않고 믿음과 사랑을 지켜 완주해야 합니다."
+    ],
     sentVictory: [
       "예수님은 일꾼이 적다는 현실보다 추수할 것이 많다는 사실을 먼저 보셨습니다. 결과를 다 책임지려 하지 말고 추수하는 주인이신 하나님께 기도해야 합니다. 승리는 내가 강해지는 데서가 아니라 주님이 나를 보내셨다는 사실을 믿는 데서 시작됩니다.",
       "칠십 인은 예수님이 친히 가시려는 곳에 먼저 보냄받았습니다. 지금 있는 자리를 원망하기보다 주님이 나를 이곳에 먼저 보내신 이유를 물으며, 보내신 분이 함께하시고 도우신다는 확신으로 순종해야 합니다."
@@ -528,6 +576,9 @@ function cleanNumberedMarkers(value) {
 
 function defaultImageFor(profile, index, variant) {
   const byProfile = {
+    graceLongRun: ["./assets/devotion/warm-wheat.png", "./assets/devotion/warm-meadow.png"],
+    loveLongRun: ["./assets/devotion/warm-notebook.png", "./assets/devotion/bible-path.jpg"],
+    restLongRun: ["./assets/devotion/warm-open-bible.png", "./assets/devotion/warm-candle.png"],
     sentVictory: ["./assets/devotion/warm-wheat.png", "./assets/devotion/bible-path.jpg"],
     lambVictory: ["./assets/devotion/warm-meadow.png", "./assets/devotion/field.jpg"],
     faithfulVictory: ["./assets/devotion/warm-candle.png", "./assets/devotion/warm-open-bible.png"],
@@ -565,6 +616,9 @@ function defaultImageFor(profile, index, variant) {
 }
 
 function accentFor(profile, index) {
+  if (["graceLongRun", "loveLongRun", "restLongRun"].includes(profile)) {
+    return ["#8f7334", "#4f7fa8", "#4d8a55", "#317b65", "#8b689d", "#b77716"][index];
+  }
   if (["sentVictory", "lambVictory", "faithfulVictory"].includes(profile)) {
     return ["#8f7334", "#4f7fa8", "#4d8a55", "#317b65", "#8b689d", "#b77716"][index];
   }
@@ -601,6 +655,18 @@ function accentFor(profile, index) {
 
 function prayerText(profile, title, variant = 0) {
   const table = {
+    graceLongRun: [
+      "주님, 한때의 성과와 박수보다 하늘에 기록된 구원의 은혜를 기뻐하며 모든 승리가 하나님께로부터 왔음을 잊지 않게 하옵소서.",
+      "하나님, 제 힘과 실력을 의지하지 않고 날마다 주님의 은혜를 구하며 넘어져도 공급하시는 새 힘으로 다시 달리게 하옵소서."
+    ],
+    loveLongRun: [
+      "예수님, 사랑의 경계를 정하지 않게 하시고 오늘 만나는 고통받는 사람에게 가까이 가서 실제적인 이웃이 되게 하옵소서.",
+      "주님, 상처 때문에 사랑을 포기하지 않게 하시고 제 안에 계신 예수님의 풍성함으로 사람을 품는 품이 날마다 넓어지게 하옵소서."
+    ],
+    restLongRun: [
+      "주님, 주님을 위해 일하면서 주님을 놓치지 않게 하시고 지칠 때마다 말씀과 기도와 예배의 자리인 주님의 발치로 돌아가게 하옵소서.",
+      "예수님, 먼저 주님께 공급받고 사랑으로 섬기게 하시며 중도에 포기하지 않고 믿음의 경주를 끝까지 완주하게 하옵소서."
+    ],
     sentVictory: [
       "주님, 부족한 현실보다 추수할 것을 보게 하시고 결과를 책임지시는 주인께 기도하며 보냄받은 자리에서 담대히 순종하게 하옵소서.",
       "주님, 제가 있는 곳에 먼저 보내신 뜻을 묻게 하시고 앞서 가시며 함께하시는 주님을 믿고 확신으로 나아가게 하옵소서."
@@ -682,6 +748,18 @@ function prayerText(profile, title, variant = 0) {
 
 function actionText(profile, title, variant = 0) {
   const table = {
+    graceLongRun: [
+      "최근의 성취 한 가지를 적고, 그 옆에 ‘하나님이 하셨습니다’라는 감사 고백을 기록합니다.",
+      "내 힘으로 버티려는 일 한 가지를 정하고, 이사야 40장 31절을 천천히 읽으며 새 힘을 구합니다."
+    ],
+    loveLongRun: [
+      "오늘 도움이 필요한 한 사람을 살피고, 계산하지 않는 작은 친절 한 가지를 실제로 건넵니다.",
+      "상처 때문에 멀리한 사람 한 명을 떠올리고, 허물을 돌리지 않는 마음으로 축복 기도를 드립니다."
+    ],
+    restLongRun: [
+      "분주함 때문에 평안을 잃은 일을 내려놓고 10분 동안 말씀 앞에 조용히 앉아 있습니다.",
+      "이번 주의 쉼과 섬김을 함께 계획하고, 예수님을 바라보며 끝까지 이어 갈 믿음의 한 걸음을 정합니다."
+    ],
     sentVictory: [
       "내가 다 책임지려는 문제 한 가지를 적고, 추수하는 주인이신 하나님께 맡기는 기도를 드립니다.",
       "지금 있는 자리에서 주님이 먼저 보내신 이유를 묻고, 오늘 할 수 있는 작은 순종 한 가지를 실천합니다."
@@ -763,6 +841,18 @@ function actionText(profile, title, variant = 0) {
 
 function familyQuestionText(profile, title, variant = 0) {
   const table = {
+    graceLongRun: [
+      "우리 가족이 성취보다 구원의 은혜를 더 기뻐하며 하나님께 감사할 일은 무엇일까요?",
+      "우리 가족이 자기 힘으로 버티지 말고 하나님의 새 힘을 구해야 할 자리는 어디일까요?"
+    ],
+    loveLongRun: [
+      "우리 가족이 이번 주 계산 없이 가까이 가서 이웃이 되어 줄 사람은 누구일까요?",
+      "상처 속에서도 사랑을 포기하지 않기 위해 우리 가족이 서로 도울 수 있는 일은 무엇일까요?"
+    ],
+    restLongRun: [
+      "우리 가족이 분주함을 멈추고 함께 주님의 발치에 앉아야 할 시간은 언제일까요?",
+      "오래도록 믿음과 사랑을 지키기 위해 우리 가족에게 필요한 쉼과 섬김의 균형은 무엇일까요?"
+    ],
     sentVictory: [
       "우리 가족이 부족함보다 하나님이 하실 일을 크게 보며 주님께 맡겨야 할 일은 무엇일까요?",
       "주님이 우리 가정을 지금 이 자리에 먼저 보내신 이유와 맡기신 순종은 무엇일까요?"
@@ -826,6 +916,18 @@ function familyQuestionText(profile, title, variant = 0) {
 
 function prompts(profile, title, variant = 0) {
   const table = {
+    graceLongRun: [
+      ["나는 한때의 성과보다 하늘에 기록된 구원의 은혜를 더 기뻐하고 있나요?", "박수 내려놓기", "은혜 기억하기", "하나님께 영광 돌리기"],
+      ["내 힘과 실력으로 버티다가 지친 자리는 어디인가요?", "어린아이처럼 구하기", "새 힘 공급받기", "다시 일어나 달리기"]
+    ],
+    loveLongRun: [
+      ["나는 사랑할 사람의 경계를 정하고 있나요, 누군가의 이웃이 되어 주고 있나요?", "사람의 필요 보기", "가까이 가기", "실제로 사랑하기"],
+      ["상처 때문에 사랑과 관용을 포기한 관계는 없나요?", "풍성하신 예수님 보기", "허물 돌리지 않기", "품을 넓히기"]
+    ],
+    restLongRun: [
+      ["주님을 위해 일하면서 정작 주님과 평안을 놓친 자리는 어디인가요?", "분주함 멈추기", "주님의 발치에 앉기", "다시 공급받기"],
+      ["끝까지 사랑하고 섬기기 위해 지금 내게 필요한 쉼과 말씀은 무엇인가요?", "예수님 바라보기", "믿음 지키기", "끝까지 완주하기"]
+    ],
     sentVictory: [
       ["나는 부족한 현실보다 추수할 것을 보시는 주님의 시선을 믿고 있나요?", "부족함 내려놓기", "주인께 청하기", "보냄받은 자리 지키기"],
       ["주님이 나를 지금 이곳에 먼저 보내신 이유는 무엇일까요?", "자리 새롭게 보기", "앞서 가시는 주님", "담대히 순종하기"]
