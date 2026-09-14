@@ -1,6 +1,7 @@
 import { existsSync } from "node:fs";
 import { copyFile, mkdir, readFile, writeFile } from "node:fs/promises";
 import path from "node:path";
+import { sermonProfiles } from "./sermon-profiles.mjs";
 
 const root = process.cwd();
 const inputPath = path.join(root, "새본문.txt");
@@ -133,6 +134,19 @@ function parseMeta(text) {
 }
 
 function makeDay({ id, index, variant, section, date, passage, image, video }) {
+  const curated = sermonProfiles[section.title]?.[variant];
+  if (curated) {
+    const { navTitle, ...content } = curated;
+    return cleanObject({
+      id,
+      image: image || defaultImageFor("general", index, variant),
+      accent: accentFor("general", index),
+      ...content,
+      subtitle: `${date.getMonth() + 1}.${date.getDate()} ${weekdays[index]} · ${navTitle}`,
+      passage,
+      video
+    });
+  }
   const profile = classifySection(section);
   const title = dayTitle(section, profile, variant);
   const navTitle = dayNavTitle(section, profile, variant);
