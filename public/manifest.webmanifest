@@ -1,0 +1,17 @@
+{
+  "name": "매일 말씀 묵상 · 대전순복음교회",
+  "short_name": "말씀묵상",
+  "description": "주일설교로 이어가는 6일 말씀 묵상과 말씀 도우미",
+  "lang": "ko",
+  "id": "/",
+  "start_url": "/?source=homescreen",
+  "scope": "/",
+  "display": "standalone",
+  "background_color": "#f6f1e8",
+  "theme_color": "#f6f1e8",
+  "icons": [
+    { "src": "/assets/brand/app-icon-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any" },
+    { "src": "/assets/brand/app-icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any" },
+    { "src": "/assets/brand/app-icon-maskable-512.png", "sizes": "512x512", "type": "image/png", "purpose": "maskable" }
+  ]
+}

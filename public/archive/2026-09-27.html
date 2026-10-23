@@ -10,6 +10,13 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Nanum+Myeongjo:wght@400;700;800&display=swap" />
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css" />
+    <link rel="manifest" href="/manifest.webmanifest" />
+    <link rel="icon" type="image/png" href="/assets/brand/favicon-48.png" />
+    <link rel="apple-touch-icon" href="/assets/brand/app-icon-180.png" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-title" content="말씀묵상" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="default" />
     <title>매일 말씀 묵상</title>
     <style>
 :root {
@@ -329,6 +336,26 @@ html[data-assistant="ready"] .ask-inline { display: flex; }
 .done-btn.done { background: var(--brand-2); color: var(--brand); }
 .dock-count { display: block; text-align: center; color: var(--ink-3); font-size: .75rem; font-weight: 700; margin-top: 6px; }
 
+/* ---------- 홈 화면에 추가 ---------- */
+.install-card {
+  display: flex; align-items: center; gap: 12px; margin-top: 12px; padding: 12px 10px 12px 12px;
+  border-radius: var(--radius); background: var(--paper-2); border: 1px solid color-mix(in srgb, var(--brand) 25%, var(--line));
+}
+.install-card img { width: 46px; height: 46px; border-radius: 12px; flex: none; box-shadow: 0 1px 4px rgb(0 0 0 / 12%); }
+.install-card div { flex: 1; min-width: 0; }
+.install-card b { display: block; font-size: .9375rem; }
+.install-card span { display: block; color: var(--ink-3); font-size: .8125rem; line-height: 1.5; }
+.install-card .install-go { flex: none; height: 40px; padding: 0 14px; border: 0; border-radius: 12px; background: var(--brand); color: var(--on-brand); font-weight: 800; font-size: .875rem; }
+.install-card .install-x { flex: none; width: 32px; height: 32px; border: 0; border-radius: 50%; background: transparent; color: var(--ink-3); font-size: 1.2rem; line-height: 1; }
+.install-steps { margin: 4px 0 16px; padding: 0; list-style: none; counter-reset: s; display: grid; gap: 10px; }
+.install-steps li { counter-increment: s; display: flex; gap: 12px; align-items: flex-start; padding: 14px; border-radius: 14px; background: var(--paper-2); border: 1px solid var(--line); font-size: 1rem; line-height: 1.6; }
+.install-steps li::before { content: counter(s); flex: none; display: grid; place-items: center; width: 28px; height: 28px; border-radius: 50%; background: var(--brand); color: var(--on-brand); font-weight: 800; font-size: .875rem; }
+.install-steps .ico { display: inline-grid; place-items: center; width: 26px; height: 26px; margin: 0 2px; border-radius: 7px; background: var(--paper-3); vertical-align: -6px; }
+.install-steps .ico svg { width: 16px; height: 16px; }
+.install-lead { margin: 0 0 14px; color: var(--ink-2); }
+.install-sheet .done-btn { margin-bottom: 8px; text-decoration: none; }
+.foot-link { border: 0; background: none; padding: 4px 0; color: var(--brand); font-weight: 700; font-size: .8125rem; text-decoration: underline; text-underline-offset: 3px; }
+
 /* ---------- 지난 설교 시트 ---------- */
 .sheet {
   width: min(560px, 100vw); max-height: min(80vh, 760px); margin: auto auto 0; padding: 0;
@@ -409,6 +436,13 @@ html[data-assistant="ready"] .ask-inline { display: flex; }
         <button class="sheet-close" type="button" data-close aria-label="닫기">×</button>
       </div>
       <div class="sheet-body" id="archive-list"></div>
+    </dialog>
+    <dialog id="install-sheet" class="sheet install-sheet" aria-labelledby="install-title">
+      <div class="sheet-head">
+        <h2 id="install-title">홈 화면에 추가하기</h2>
+        <button class="sheet-close" type="button" data-close aria-label="닫기">×</button>
+      </div>
+      <div class="sheet-body" id="install-body"></div>
     </dialog>
     <div id="toast" class="toast" role="status" aria-live="polite"></div>
     <script>
@@ -917,6 +951,7 @@ function renderHome(transition) {
             return '<button class="wd' + (done ? " done" : "") + (i === todayIndex ? " today" : "") + '" type="button" data-open="' + i + '" aria-label="' + esc(m.date + " " + d.title + (done ? " 완료" : "")) + '"><b>' + esc(m.dayShort || "") + "</b><span>" + esc(m.dayNum) + "</span><i></i></button>";
           }).join("") + "</div>" +
         "</div>" +
+        installCard() +
       "</div>" +
       '<button class="feature" type="button" data-open="' + fi + '" style="--accent:' + esc(fm.media.accent) + '">' +
         '<div class="feature-img">' + picture(fm.media.image, "", "", true) + '<span class="feature-tag">' + esc(featureTag) + "</span></div>" +
@@ -950,7 +985,8 @@ function renderHome(transition) {
         '<div class="archive-mini">' + archiveEntries.filter((e) => e.weekId !== weeklyContent.weekId).slice(0, 4).map((e) => archiveRow(e, "")).join("") + "</div>" +
       "</section>" +
     "</div>" +
-    '<footer class="site-foot">대전순복음교회 · 주일설교와 함께하는 매일 말씀 묵상<br />묵상 기록은 이 기기에만 저장됩니다.</footer>' +
+    '<footer class="site-foot">대전순복음교회 · 주일설교와 함께하는 매일 말씀 묵상<br />묵상 기록은 이 기기에만 저장됩니다.' +
+      (isStandalone() ? "" : '<br /><button class="foot-link" type="button" data-action="install">홈 화면에 추가하는 방법</button>') + "</footer>" +
   "</section>";
 }
 
@@ -1093,6 +1129,8 @@ $app.addEventListener("click", (event) => {
   if (ds.ask !== undefined) return ask(ds.ask, { autoSend: Boolean(ds.ask) });
   if (ds.askDay !== undefined) return ask("", { day: Number(ds.askDay), placeholder: "예) 직장에서 억울한 일이 있었어요. 오늘 말씀을 어떻게 붙들 수 있을까요?" });
   if (ds.action === "archive") return openArchive();
+  if (ds.action === "install") return startInstall();
+  if (ds.action === "install-dismiss") { try { localStorage.setItem(installKey, String(Date.now())); } catch (e) { /* 무시 */ } render(""); return; }
   if (ds.action === "previous") return moveDetail(-1);
   if (ds.action === "next") return moveDetail(1);
   if (ds.action === "listen") return toggleListen(button);
@@ -1246,6 +1284,91 @@ document.querySelector("#font-toggle").addEventListener("click", () => {
   toast(scaleIndex === 0 ? "기본 글씨 크기" : scaleIndex === 1 ? "글씨를 크게 했어요" : "글씨를 더 크게 했어요");
 });
 applyFontScale();
+
+// ----- 홈 화면에 추가 -----
+const installKey = "devotion-install-dismissed";
+let installPrompt = null;
+const ua = navigator.userAgent;
+const isIOS = /iPhone|iPad|iPod/i.test(ua) || (navigator.platform === "MacIntel" && navigator.maxTouchPoints > 1);
+const isAndroid = /Android/i.test(ua);
+function isStandalone() {
+  return window.matchMedia("(display-mode: standalone)").matches || window.navigator.standalone === true;
+}
+function installDismissed() {
+  try { const t = Number(localStorage.getItem(installKey)); return t && Date.now() - t < 1000 * 60 * 60 * 24 * 21; } catch (e) { return false; }
+}
+function installCard() {
+  if (isStandalone() || installDismissed()) return "";
+  return '<div class="install-card">' +
+    '<img src="/assets/brand/app-icon-192.png" alt="" width="46" height="46" />' +
+    "<div><b>홈 화면에 추가하기</b><span>앱처럼 아이콘을 눌러 매일 바로 열 수 있어요</span></div>" +
+    '<button class="install-go" type="button" data-action="install">추가</button>' +
+    '<button class="install-x" type="button" data-action="install-dismiss" aria-label="닫기">×</button>' +
+  "</div>";
+}
+const shareIcon = '<span class="ico"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3v13"/><path d="m7 8 5-5 5 5"/><path d="M5 13v6a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2v-6"/></svg></span>';
+const plusIcon = '<span class="ico"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="4" y="4" width="16" height="16" rx="3"/><path d="M12 8v8M8 12h8"/></svg></span>';
+const dotsIcon = '<span class="ico"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="5" r="1.4" fill="currentColor"/><circle cx="12" cy="12" r="1.4" fill="currentColor"/><circle cx="12" cy="19" r="1.4" fill="currentColor"/></svg></span>';
+const homeUrl = location.origin + "/";
+function showInstallSheet(html) {
+  const sheet = document.querySelector("#install-sheet");
+  document.querySelector("#install-body").innerHTML = html;
+  if (sheet.showModal) sheet.showModal(); else sheet.setAttribute("open", "");
+}
+async function startInstall() {
+  if (installPrompt) {
+    installPrompt.prompt();
+    const choice = await installPrompt.userChoice.catch(() => null);
+    installPrompt = null;
+    if (choice && choice.outcome === "accepted") toast("홈 화면에 추가했어요.");
+    return;
+  }
+  if (inKakao) {
+    const external = "kakaotalk://web/openExternal?url=" + encodeURIComponent(homeUrl);
+    showInstallSheet(
+      '<p class="install-lead">카카오톡 안에서는 홈 화면에 추가할 수 없어요. 휴대폰의 기본 인터넷 앱으로 연 뒤 다시 <b>추가</b>를 눌러 주세요.</p>' +
+      '<a class="done-btn" href="' + external + '">' + icon("arrow") + " 다른 브라우저로 열기</a>" +
+      '<ol class="install-steps"><li><span>버튼이 안 되면 오른쪽 위 ' + dotsIcon + " 를 누르고 <b>다른 브라우저로 열기</b>를 고르세요.</span></li>" +
+      "<li><span>열린 화면에서 <b>홈 화면에 추가하기</b>를 다시 눌러 주세요.</span></li></ol>"
+    );
+    return;
+  }
+  if (isIOS) {
+    showInstallSheet(
+      '<p class="install-lead">아이폰은 아래 순서로 추가해요. <b>사파리</b>에서 열었을 때 가장 잘 됩니다.</p>' +
+      '<ol class="install-steps">' +
+        "<li><span>화면 아래(또는 위) 가운데의 공유 버튼 " + shareIcon + " 을 누르세요.</span></li>" +
+        "<li><span>목록을 조금 내려 " + plusIcon + " <b>홈 화면에 추가</b>를 누르세요.</span></li>" +
+        "<li><span>오른쪽 위 <b>추가</b>를 누르면 끝! 홈 화면의 <b>말씀묵상</b> 아이콘으로 매일 열 수 있어요.</span></li>" +
+      "</ol>"
+    );
+    return;
+  }
+  showInstallSheet(
+    '<p class="install-lead">' + (isAndroid ? "인터넷 앱의 메뉴에서 추가할 수 있어요." : "브라우저 메뉴에서 추가할 수 있어요.") + "</p>" +
+    '<ol class="install-steps">' +
+      "<li><span>오른쪽 위(삼성 인터넷은 오른쪽 아래) 메뉴 " + dotsIcon + " 를 누르세요.</span></li>" +
+      "<li><span><b>홈 화면에 추가</b> 또는 <b>앱 설치</b>를 누르세요.</span></li>" +
+      "<li><span><b>추가</b>를 누르면 홈 화면에 <b>말씀묵상</b> 아이콘이 생겨요.</span></li>" +
+    "</ol>"
+  );
+}
+window.addEventListener("beforeinstallprompt", (event) => {
+  event.preventDefault();
+  installPrompt = event;
+});
+window.addEventListener("appinstalled", () => {
+  installPrompt = null;
+  toast("홈 화면에 추가했어요. 이제 아이콘으로 바로 여세요.");
+  if (state.view === "list") render("");
+});
+document.querySelector("#install-sheet").addEventListener("click", (event) => {
+  const sheet = document.querySelector("#install-sheet");
+  if (event.target === sheet || event.target.closest("[data-close]")) sheet.close();
+});
+if ("serviceWorker" in navigator && location.protocol === "https:") {
+  window.addEventListener("load", () => navigator.serviceWorker.register("/sw.js").catch(() => {}));
+}
 
 // 말씀 도우미가 현재 보고 있는 주와 요일을 알 수 있게 합니다.
 window.devotionPage = {
