@@ -1,4 +1,4 @@
-﻿# Generated backups
+# Generated backups
 index.backup*.html
 index.broken*.html
 index.overwritten*.html
@@ -13,3 +13,6 @@ implement-this-figma-design-in-the/
 # OS/editor noise
 .DS_Store
 Thumbs.db
+
+# Local AI key for preview (never commit)
+.dev.vars

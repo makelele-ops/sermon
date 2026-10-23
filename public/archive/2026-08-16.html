@@ -2,8 +2,10 @@
 <html lang="ko">
   <head>
     <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <meta name="description" content="6일 말씀 묵상 여정" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+    <meta name="description" content="대전순복음교회 주일설교로 이어가는 6일 말씀 묵상" />
+    <meta name="theme-color" content="#f6f1e8" media="(prefers-color-scheme: light)" />
+    <meta name="theme-color" content="#171412" media="(prefers-color-scheme: dark)" />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Nanum+Myeongjo:wght@400;700;800&display=swap" />
@@ -11,1242 +13,405 @@
     <title>매일 말씀 묵상</title>
     <style>
 :root {
+  --paper: #f6f1e8;
+  --paper-2: #fdfaf4;
+  --paper-3: #efe7da;
+  --ink: #2a231d;
+  --ink-2: #554b40;
+  --ink-3: #887c6e;
+  --line: #e4dacb;
+  --brand: #24584a;
+  --brand-2: #e3ece6;
+  --on-brand: #ffffff;
+  --gold: #9c6b14;
+  --gold-2: #f6ead2;
+  --shadow: 0 1px 2px rgb(60 40 20 / 6%), 0 8px 28px rgb(60 40 20 / 8%);
+  --radius: 18px;
+  --serif: "Nanum Myeongjo", "Noto Serif KR", serif;
+  --sans: "Pretendard Variable", Pretendard, -apple-system, BlinkMacSystemFont, "Apple SD Gothic Neo", "Malgun Gothic", sans-serif;
+  --safe-b: env(safe-area-inset-bottom, 0px);
   color-scheme: light;
-  --paper: #fbf6ec;
-  --paper-2: #f3e8d6;
-  --panel: #fffdf8;
-  --ink: #2b211a;
-  --ink-2: #5d5040;
-  --muted: #8d7c64;
-  --line: rgba(74, 52, 26, 0.12);
-  --line-soft: rgba(74, 52, 26, 0.07);
-  --accent: #2f7560;
-  --accent-2: #245b4b;
-  --gold: #a16a14;
-  --gold-soft: rgba(161, 106, 20, 0.12);
-  --ring: rgba(161, 106, 20, 0.36);
-  --shadow-1: 0 1px 1px rgba(60, 40, 18, 0.04), 0 2px 6px rgba(60, 40, 18, 0.05);
-  --shadow-2: 0 2px 4px rgba(60, 40, 18, 0.05), 0 14px 30px rgba(60, 40, 18, 0.10);
-  --shadow-3: 0 4px 10px rgba(60, 40, 18, 0.07), 0 30px 64px rgba(60, 40, 18, 0.14);
-  --radius: 14px;
-  --radius-sm: 10px;
-  --bg: var(--paper);
-  --serif: "Nanum Myeongjo", "Gowun Batang", "Batang", Georgia, serif;
-  --sans: "Pretendard Variable", "Pretendard", "Apple SD Gothic Neo", "Malgun Gothic", system-ui, -apple-system, "Segoe UI", sans-serif;
+}
+@media (prefers-color-scheme: dark) {
+  :root {
+    --paper: #171412;
+    --paper-2: #211d19;
+    --paper-3: #2a251f;
+    --ink: #f0e9df;
+    --ink-2: #cdc2b4;
+    --ink-3: #9d9183;
+    --line: #3a332b;
+    --brand: #86c4ab;
+    --brand-2: #1f322b;
+    --on-brand: #10201a;
+    --gold: #dcae55;
+    --gold-2: #3a2f1c;
+    --shadow: 0 1px 2px rgb(0 0 0 / 30%), 0 10px 30px rgb(0 0 0 / 35%);
+    color-scheme: dark;
+  }
 }
 
-* {
-  box-sizing: border-box;
-}
-
-html,
-body {
-  overflow-x: hidden;
-}
-
+* { box-sizing: border-box; }
+[hidden] { display: none !important; }
+html { -webkit-text-size-adjust: 100%; scroll-behavior: smooth; }
 body {
   margin: 0;
-  min-width: 320px;
+  min-height: 100vh;
+  background: var(--paper);
   color: var(--ink);
-  font-family: var(--sans);
-  font-feature-settings: "ss01", "case";
+  font: 400 1rem/1.7 var(--sans);
+  letter-spacing: -0.01em;
+  word-break: keep-all;
+  overflow-wrap: break-word;
   -webkit-font-smoothing: antialiased;
-  text-rendering: optimizeLegibility;
-  background:
-    radial-gradient(120% 80% at 50% -10%, rgba(255, 252, 244, 0.9), transparent 60%),
-    radial-gradient(90% 60% at 100% 0%, rgba(173, 134, 70, 0.08), transparent 55%),
-    linear-gradient(180deg, #fdf8ee 0%, #f8efe0 58%, #faf4e8 100%),
-    var(--paper);
 }
+button, input, textarea { font: inherit; color: inherit; }
+button { cursor: pointer; }
+a { color: inherit; }
+img { display: block; max-width: 100%; }
+svg { width: 1.15em; height: 1.15em; fill: none; stroke: currentColor; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; flex: none; }
+:focus-visible { outline: 3px solid color-mix(in srgb, var(--brand) 55%, transparent); outline-offset: 2px; border-radius: 8px; }
+.sr-only { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
 
-body::before {
-  content: "";
-  position: fixed;
-  inset: 0;
-  z-index: 0;
-  pointer-events: none;
-  opacity: 0.05;
-  mix-blend-mode: multiply;
-  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+/* ---------- 상단 바 ---------- */
+.topbar {
+  position: sticky; top: 0; z-index: 40;
+  display: flex; align-items: center; gap: 8px;
+  height: 60px; padding: 0 max(16px, env(safe-area-inset-left));
+  background: color-mix(in srgb, var(--paper) 88%, transparent);
+  backdrop-filter: saturate(1.4) blur(14px);
+  -webkit-backdrop-filter: saturate(1.4) blur(14px);
+  border-bottom: 1px solid transparent;
+  transition: border-color .2s;
 }
-
-button,
-textarea,
-input {
-  font: inherit;
+.topbar.scrolled { border-bottom-color: var(--line); }
+.topbar-inner { width: 100%; max-width: 1080px; margin: 0 auto; display: flex; align-items: center; gap: 8px; }
+.brand { display: flex; align-items: center; border: 0; background: none; padding: 4px 6px 4px 0; border-radius: 10px; }
+.brand img { height: 38px; width: auto; }
+@media (prefers-color-scheme: dark) { .brand img { background: #fbf8f2; border-radius: 8px; padding: 3px 6px; } }
+.back-btn { display: inline-flex; align-items: center; gap: 2px; border: 0; background: none; padding: 8px 10px 8px 2px; font-weight: 700; color: var(--ink); border-radius: 10px; }
+.back-btn svg { width: 1.4em; height: 1.4em; }
+.top-actions { margin-left: auto; display: flex; gap: 6px; }
+.top-btn {
+  display: inline-flex; align-items: center; gap: 6px;
+  min-height: 40px; padding: 0 14px;
+  border: 1px solid var(--line); border-radius: 999px;
+  background: var(--paper-2); color: var(--ink-2);
+  font-size: .875rem; font-weight: 650;
 }
+.top-btn[aria-pressed="true"] { background: var(--brand-2); color: var(--brand); border-color: transparent; }
+.font-btn { font-family: var(--serif); font-weight: 800; padding: 0 12px; }
+.font-btn small { font-family: var(--sans); font-size: .7rem; margin-left: 1px; }
 
-button {
-  cursor: pointer;
+/* ---------- 공통 레이아웃 ---------- */
+.app { max-width: 1080px; margin: 0 auto; padding: 0 16px 48px; }
+.screen { animation: fade .35s ease both; }
+.screen.slide-left { animation-name: from-right; }
+.screen.slide-right { animation-name: from-left; }
+@keyframes fade { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: none; } }
+@keyframes from-right { from { opacity: 0; transform: translateX(18px); } to { opacity: 1; transform: none; } }
+@keyframes from-left { from { opacity: 0; transform: translateX(-18px); } to { opacity: 1; transform: none; } }
+.eyebrow { margin: 0; color: var(--gold); font-size: .8125rem; font-weight: 750; letter-spacing: .02em; }
+.section-title { display: flex; align-items: baseline; justify-content: space-between; gap: 12px; margin: 40px 0 14px; }
+.section-title h2 { margin: 0; font: 800 1.25rem/1.4 var(--serif); }
+.section-title span { color: var(--ink-3); font-size: .875rem; }
+.link-btn { border: 0; background: none; padding: 6px 0; color: var(--brand); font-weight: 700; font-size: .9rem; }
+
+/* ---------- 지난 설교 안내 띠 ---------- */
+.past-banner {
+  display: flex; align-items: center; justify-content: space-between; gap: 12px; flex-wrap: wrap;
+  margin: 12px 0 0; padding: 12px 16px;
+  background: var(--gold-2); border-radius: 14px; color: var(--ink-2); font-size: .9rem;
 }
+.past-banner a { color: var(--gold); font-weight: 750; text-decoration: none; white-space: nowrap; }
 
-::selection {
-  background: var(--gold-soft);
+/* ---------- 홈: 머리글 ---------- */
+.home-top { display: grid; gap: 22px; padding-top: 22px; }
+.intro h1 { margin: 10px 0 8px; font: 800 clamp(2rem, 7.6vw, 3.1rem)/1.25 var(--serif); letter-spacing: -0.03em; }
+.intro .passage { margin: 0; color: var(--ink-2); font-size: 1.0625rem; font-weight: 550; }
+.intro-actions { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 18px; }
+.pill-btn {
+  display: inline-flex; align-items: center; gap: 7px;
+  min-height: 44px; padding: 0 18px;
+  border: 1px solid var(--line); border-radius: 999px;
+  background: var(--paper-2); color: var(--ink); text-decoration: none;
+  font-size: .9375rem; font-weight: 700;
 }
+.pill-btn.primary { background: var(--brand); border-color: var(--brand); color: var(--on-brand); }
+.pill-btn svg { width: 1em; height: 1em; }
 
-:focus-visible {
-  outline: 2px solid var(--ring);
-  outline-offset: 2px;
+/* 주간 진행 */
+.week {
+  margin-top: 26px; padding: 16px; border-radius: var(--radius);
+  background: var(--paper-2); box-shadow: var(--shadow);
 }
-
-svg {
-  width: 1em;
-  height: 1em;
-  fill: none;
-  stroke: currentColor;
-  stroke-linecap: round;
-  stroke-linejoin: round;
-  stroke-width: 1.8;
+.week-head { display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 12px; }
+.week-head strong { font-size: .9375rem; }
+.week-head span { font-size: .8125rem; color: var(--ink-3); font-weight: 650; }
+.week-days { display: grid; grid-template-columns: repeat(6, 1fr); gap: 6px; }
+.wd {
+  position: relative; display: grid; place-items: center; gap: 2px;
+  padding: 10px 0 9px; border: 1px solid var(--line); border-radius: 14px;
+  background: var(--paper); color: var(--ink-2);
 }
+.wd b { font-size: .8125rem; font-weight: 700; }
+.wd span { font: 800 1.125rem/1 var(--serif); color: var(--ink); }
+.wd i { width: 6px; height: 6px; border-radius: 50%; background: transparent; margin-top: 4px; }
+.wd.done i { background: var(--brand); }
+.wd.today { border-color: var(--brand); background: var(--brand); color: var(--on-brand); }
+.wd.today span { color: var(--on-brand); }
+.wd.today.done i { background: var(--on-brand); }
 
-.app-shell {
-  position: relative;
-  z-index: 1;
-  min-height: 100vh;
+/* 오늘의 묵상 카드 */
+.feature {
+  display: grid; overflow: hidden; border-radius: 22px;
+  background: var(--paper-2); box-shadow: var(--shadow);
+  border: 0; padding: 0; text-align: left; width: 100%;
 }
-
-.screen {
-  min-height: 100vh;
-  animation: pageIn 420ms cubic-bezier(0.2, 0.7, 0.2, 1) backwards;
+.feature-img { position: relative; aspect-ratio: 3 / 2; overflow: hidden; background: var(--paper-3); }
+.feature-img img { width: 100%; height: 100%; object-fit: cover; transition: transform .6s ease; }
+.feature:hover .feature-img img { transform: scale(1.025); }
+.feature-tag {
+  position: absolute; left: 14px; top: 14px;
+  padding: 6px 12px; border-radius: 999px;
+  background: rgb(255 255 255 / 92%); color: #2a231d; font-size: .8125rem; font-weight: 800;
 }
+.feature-body { padding: 20px 20px 22px; }
+.feature-body h3 { margin: 6px 0 10px; font: 800 1.5rem/1.38 var(--serif); letter-spacing: -0.02em; }
+.feature-verse { margin: 0 0 16px; padding-left: 12px; border-left: 3px solid var(--accent, var(--brand)); color: var(--ink-2); font: 700 1rem/1.7 var(--serif); }
+.feature-cta { display: inline-flex; align-items: center; gap: 6px; color: var(--brand); font-weight: 800; }
 
-.screen.open {
-  animation-name: openIn;
+/* 6일 목록 */
+.day-list { display: grid; gap: 10px; }
+.day-row {
+  display: grid; grid-template-columns: 84px 1fr auto; align-items: center; gap: 14px;
+  width: 100%; padding: 10px 14px 10px 10px; border: 1px solid var(--line); border-radius: 16px;
+  background: var(--paper-2); text-align: left;
+  transition: border-color .2s, transform .2s;
 }
+.day-row:hover { border-color: color-mix(in srgb, var(--brand) 40%, var(--line)); }
+.day-row:active { transform: scale(.99); }
+.day-row.today { border-color: var(--brand); box-shadow: 0 0 0 1px var(--brand) inset; }
+.day-thumb { width: 84px; height: 64px; border-radius: 11px; overflow: hidden; background: var(--paper-3); }
+.day-thumb img { width: 100%; height: 100%; object-fit: cover; }
+.day-row small { display: flex; align-items: center; gap: 6px; color: var(--ink-3); font-size: .8125rem; font-weight: 700; }
+.day-row small em { font-style: normal; color: var(--brand); }
+.day-row small .vid { display: inline-flex; align-items: center; gap: 3px; padding: 1px 7px 1px 5px; border-radius: 999px; background: var(--paper-3); color: var(--ink-2); font-size: .72rem; }
+.day-row small .vid svg { width: .8em; height: .8em; }
+.day-row strong { display: block; margin-top: 2px; font: 800 1.0625rem/1.45 var(--serif); color: var(--ink); }
+.day-row .nav-title { display: block; color: var(--ink-3); font-size: .8125rem; margin-top: 2px; }
+.day-status { display: grid; place-items: center; width: 30px; height: 30px; border-radius: 50%; border: 1.5px solid var(--line); color: transparent; }
+.day-row.done .day-status { background: var(--brand); border-color: var(--brand); color: var(--on-brand); }
+.day-status svg { width: 16px; height: 16px; stroke-width: 3; }
 
-.screen.back {
-  animation-name: backIn;
+/* 말씀 도우미 소개 */
+.ask-card {
+  display: none; margin-top: 40px; padding: 22px 20px; border-radius: 22px;
+  background: linear-gradient(160deg, var(--brand-2), var(--paper-2));
+  border: 1px solid color-mix(in srgb, var(--brand) 18%, var(--line));
 }
-
-.screen.slide-left {
-  animation-name: slideLeftIn;
+html[data-assistant="ready"] .ask-card { display: block; }
+.ask-card h2 { margin: 6px 0 6px; font: 800 1.25rem/1.4 var(--serif); }
+.ask-card p { margin: 0 0 14px; color: var(--ink-2); font-size: .9375rem; }
+.ask-card .eyebrow { color: var(--brand); }
+.ask-input {
+  display: flex; align-items: center; justify-content: space-between; gap: 10px;
+  width: 100%; min-height: 52px; padding: 0 8px 0 16px; margin-bottom: 12px;
+  border: 1px solid var(--line); border-radius: 16px; background: var(--paper-2);
+  color: var(--ink-3); text-align: left; font-size: .9375rem;
 }
-
-.screen.slide-right {
-  animation-name: slideRightIn;
-}
-
-/* ===== 목록: 히어로 ===== */
-.hero {
-  position: relative;
-  overflow: hidden;
-  min-height: 320px;
-  padding: 30px 26px 40px;
-  background-image:
-    linear-gradient(94deg, rgba(251, 246, 236, 0.94) 0%, rgba(251, 246, 236, 0.52) 46%, rgba(251, 246, 236, 0.86) 100%),
-    linear-gradient(180deg, rgba(251, 246, 236, 0.1) 40%, var(--paper) 99%),
-    var(--hero-image);
-  background-position: center 42%;
-  background-size: cover;
-  border-bottom: 1px solid var(--line-soft);
-}
-
-.hero-copy {
-  width: min(1180px, 100%);
-  margin: 0 auto;
-}
-
-.church-brand {
-  display: block;
-  width: clamp(210px, 25vw, 270px);
-  margin: 0 0 16px;
-}
-
-.church-brand img {
-  display: block;
-  width: 100%;
-  height: auto;
-  filter: drop-shadow(0 1px 10px rgba(255, 253, 247, 0.86));
-}
-
-.sermon-date,
-.section-heading p,
-.day-pill,
-.verse-block > span,
-.reflection-grid span,
-.journal-head p {
-  color: var(--gold);
-  font-size: 0.8rem;
-  font-weight: 700;
-  letter-spacing: 0.08em;
-}
-
-.sermon-date {
-  display: inline-flex;
-  align-items: center;
-  gap: 9px;
-  margin: 0 0 16px;
-}
-
-.hero .sermon-date::before {
-  content: "";
-  width: 22px;
-  height: 1px;
-  background: var(--gold);
-  opacity: 0.7;
-}
-
-.hero h1 {
-  max-width: 16ch;
-  margin: 0 0 20px;
-  font-family: var(--serif);
-  font-size: clamp(2.7rem, 6.4vw, 4.6rem);
-  font-weight: 700;
-  line-height: 1.08;
-  letter-spacing: -0.01em;
-  color: #261d14;
-  text-shadow: 0 1px 18px rgba(255, 253, 247, 0.7);
-  word-break: keep-all;
-}
-
-.passage {
-  margin: 0 0 34px;
-  color: var(--ink-2);
-  font-size: 0.95rem;
-  font-weight: 500;
-  letter-spacing: 0.01em;
-}
-
-.hero-progress,
-.detail-bottom,
-.detail-nav,
-.journal-head,
-.prayer-line {
-  display: flex;
-  align-items: center;
-}
-
-.hero-progress {
-  gap: 16px;
-  width: min(440px, 100%);
-  color: var(--ink-2);
-  font-size: 0.9rem;
-}
-
-.hero-progress strong {
-  white-space: nowrap;
-  font-weight: 700;
-}
-
-.progress-track {
-  position: relative;
-  flex: 1;
-  min-width: 0;
-  height: 4px;
-  overflow: hidden;
-  border-radius: 999px;
-  background: rgba(74, 52, 26, 0.14);
-}
-
-.progress-track span {
-  position: absolute;
-  inset: 0 auto 0 0;
-  border-radius: 999px;
-  background: linear-gradient(90deg, var(--gold), #c79233);
-  box-shadow: 0 0 10px rgba(161, 106, 20, 0.4);
-  transition: width 420ms cubic-bezier(0.2, 0.7, 0.2, 1);
-}
-
-/* ===== 목록: 여정 ===== */
-.journey {
-  width: min(1180px, calc(100% - 44px));
-  margin: 0 auto;
-  padding: 54px 0 80px;
-}
-
-.section-heading {
-  display: flex;
-  align-items: center;
-  gap: 16px;
-  margin-bottom: 26px;
-}
-
-.section-heading p {
-  margin: 0;
-  white-space: nowrap;
-}
-
-.section-heading::after {
-  content: "";
-  flex: 1;
-  height: 1px;
-  background: var(--line);
-}
-
-.card-grid {
-  display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
-  gap: 18px;
-}
-
-.day-card {
-  position: relative;
-  overflow: hidden;
-  min-height: 300px;
-  border: 1px solid var(--line);
-  border-radius: var(--radius);
-  padding: 0;
-  color: var(--ink);
-  background: var(--panel);
-  text-align: left;
-  box-shadow: var(--shadow-2);
-  transition:
-    transform 280ms cubic-bezier(0.2, 0.7, 0.2, 1),
-    box-shadow 280ms ease,
-    border-color 280ms ease;
-}
-
-.day-card::before,
-.day-card::after {
-  position: absolute;
-  inset: 0;
-  content: "";
-}
-
-.day-card::before {
-  background-image: var(--image);
-  background-position: center;
-  background-size: cover;
-  filter: brightness(1.02) saturate(1.04);
-  transform: scale(1.02);
-  transition: transform 520ms cubic-bezier(0.2, 0.7, 0.2, 1);
-}
-
-.day-card::after {
-  background:
-    linear-gradient(180deg, rgba(255, 252, 245, 0) 0%, rgba(255, 252, 245, 0.04) 36%, rgba(255, 252, 245, 0.56) 72%, rgba(255, 252, 245, 0.9) 100%);
-}
-
-.day-card:hover {
-  transform: translateY(-4px);
-  border-color: color-mix(in srgb, var(--accent), transparent 50%);
-  box-shadow: var(--shadow-3);
-}
-
-.day-card:hover::before {
-  transform: scale(1.07);
-}
-
-.day-card.done::before {
-  filter: brightness(1.02) saturate(0.7) grayscale(0.18);
-}
-
-.check-badge {
-  position: absolute;
-  z-index: 2;
-  top: 14px;
-  right: 14px;
-  display: grid;
-  place-items: center;
-  width: 32px;
-  height: 32px;
-  border-radius: 999px;
-  color: #fff;
-  border: none;
-  background: var(--accent);
-  box-shadow: 0 8px 20px rgba(47, 117, 96, 0.36);
-}
-
-.card-copy {
-  position: absolute;
-  z-index: 2;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  display: grid;
-  gap: 6px;
-  min-width: 0;
-  padding: 116px 20px 20px;
-}
-
-.card-copy small {
-  color: var(--gold);
-  font-size: 0.74rem;
-  font-weight: 700;
-  letter-spacing: 0.06em;
-}
-
-.card-copy strong {
-  color: var(--accent-2);
-  font-size: 0.92rem;
-  font-weight: 700;
-}
-
-.card-copy span {
-  margin-top: 8px;
-  font-family: var(--serif);
-  font-size: 1.34rem;
-  font-weight: 700;
-  line-height: 1.36;
-  color: #261d14;
-  letter-spacing: -0.01em;
-  word-break: keep-all;
-}
-
-.card-copy em {
-  display: -webkit-box;
-  overflow: hidden;
-  margin-top: 2px;
-  color: var(--ink-2);
-  font-size: 0.82rem;
-  font-style: normal;
-  line-height: 1.6;
-  -webkit-box-orient: vertical;
-  -webkit-line-clamp: 2;
-  word-break: keep-all;
-}
-
-/* ===== 상세 ===== */
-.detail-screen {
-  position: relative;
-  padding: 30px 22px 132px;
-  background-image:
-    linear-gradient(90deg, rgba(251, 246, 236, 0.97), rgba(251, 246, 236, 0.82), rgba(251, 246, 236, 0.96)),
-    linear-gradient(180deg, rgba(251, 246, 236, 0.7), var(--paper) 420px),
-    var(--detail-image);
-  background-position: center top;
-  background-size: cover;
-  background-attachment: scroll;
-}
-
-.detail-bottom {
-  position: fixed;
-  z-index: 6;
-  left: 50%;
-  bottom: 18px;
-  justify-content: space-between;
-  gap: 12px;
-  width: min(940px, calc(100% - 40px));
-  margin: 0;
-  padding: 11px;
-  border: 1px solid var(--line);
-  border-radius: var(--radius);
-  background: rgba(255, 253, 248, 0.82);
-  box-shadow: var(--shadow-3);
-  transform: translateX(-50%);
-  backdrop-filter: blur(18px) saturate(1.1);
-}
-
-.detail-nav {
-  gap: 12px;
-  color: var(--muted);
-  font-weight: 700;
-}
-
-.icon-button,
-.text-button,
+.ask-input span:last-child { display: grid; place-items: center; width: 38px; height: 38px; border-radius: 12px; background: var(--brand); color: var(--on-brand); }
+.ask-chips { display: flex; flex-wrap: wrap; gap: 6px; }
 .chip {
-  border: 1px solid var(--line);
-  color: var(--ink);
-  background: rgba(255, 255, 255, 0.5);
-  transition:
-    transform 180ms ease,
-    border-color 180ms ease,
-    background 180ms ease,
-    color 180ms ease;
+  display: inline-flex; align-items: center; gap: 6px;
+  min-height: 38px; padding: 0 14px; border-radius: 999px;
+  border: 1px solid var(--line); background: var(--paper-2); color: var(--ink-2);
+  font-size: .875rem; font-weight: 650;
 }
 
-.icon-button {
-  display: grid;
-  place-items: center;
-  width: 42px;
-  height: 42px;
-  border-radius: var(--radius-sm);
+/* 지난 설교 목록 (홈 하단) */
+.archive-mini { display: grid; gap: 0; border-top: 1px solid var(--line); }
+.archive-mini a, .archive-item {
+  display: grid; grid-template-columns: auto 1fr; gap: 2px 14px; align-items: baseline;
+  padding: 14px 4px; border-bottom: 1px solid var(--line); text-decoration: none;
 }
+.archive-mini small, .archive-item small { grid-row: span 2; color: var(--ink-3); font-size: .8125rem; font-weight: 700; font-variant-numeric: tabular-nums; min-width: 4.6em; }
+.archive-mini strong, .archive-item strong { font: 800 1rem/1.45 var(--serif); }
+.archive-mini span, .archive-item span { color: var(--ink-3); font-size: .8125rem; }
+.archive-item.current strong::after { content: "보는 중"; margin-left: 8px; padding: 2px 8px; border-radius: 999px; background: var(--brand-2); color: var(--brand); font: 700 .7rem/1.6 var(--sans); vertical-align: middle; }
 
-.text-button {
-  display: inline-flex;
-  align-items: center;
-  gap: 8px;
-  min-height: 42px;
-  padding: 0 16px;
-  border-radius: var(--radius-sm);
-  color: #6f4c1c;
-  font-weight: 600;
-  white-space: nowrap;
+.site-foot { margin-top: 48px; padding-top: 20px; border-top: 1px solid var(--line); color: var(--ink-3); font-size: .8125rem; text-align: center; }
+
+/* ---------- 상세 화면 ---------- */
+.reader { max-width: 720px; margin: 0 auto; }
+.reader-hero { position: relative; margin: 14px -16px 0; aspect-ratio: 3 / 2; max-height: 58vh; overflow: hidden; background: var(--paper-3); }
+.reader-hero img { width: 100%; height: 100%; object-fit: cover; }
+.reader-head { padding: 22px 0 6px; }
+.reader-head .eyebrow { color: var(--accent, var(--gold)); }
+.reader-head h1 { margin: 8px 0 8px; font: 800 clamp(1.75rem, 6.4vw, 2.4rem)/1.32 var(--serif); letter-spacing: -0.03em; }
+.reader-head .sub { margin: 0; color: var(--ink-3); font-size: .9375rem; }
+.verse {
+  position: relative; margin: 22px 0 8px; padding: 22px 20px 18px; border-radius: var(--radius);
+  background: color-mix(in srgb, var(--accent, var(--gold)) 9%, var(--paper-2));
+  border: 1px solid color-mix(in srgb, var(--accent, var(--gold)) 22%, var(--line));
 }
+.verse-label { color: var(--accent, var(--gold)); font-size: .8125rem; font-weight: 800; }
+.verse-text { margin: 8px 0 8px; font: 800 1.3125rem/1.65 var(--serif); letter-spacing: -0.02em; }
+.verse-ref { margin: 0; color: var(--ink-2); font-size: .875rem; font-weight: 650; }
+.verse-actions { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 14px; }
+.reading { margin: 26px 0 0; font-size: 1.125rem; line-height: 1.95; color: var(--ink); }
+.reading p { margin: 0 0 1em; }
+.block-title { margin: 34px 0 12px; font: 800 1.125rem/1.4 var(--serif); }
 
-.text-button.complete.done {
-  border-color: color-mix(in srgb, var(--accent), transparent 16%);
-  color: #fff;
-  background: var(--accent);
-  box-shadow: 0 8px 22px rgba(47, 117, 96, 0.28);
+.clip { margin-top: 26px; }
+.clip-btn {
+  position: relative; display: block; width: 100%; padding: 0; border: 0; border-radius: var(--radius); overflow: hidden;
+  aspect-ratio: 16 / 9; background: #111 linear-gradient(135deg, #2b2620, #111);
 }
-
-.icon-button:hover,
-.text-button:hover,
-.chip:hover {
-  border-color: var(--ring);
-  background: rgba(255, 255, 255, 0.92);
-  transform: translateY(-1px);
+.clip-btn img { width: 100%; height: 100%; object-fit: cover; opacity: .78; }
+.clip-btn .play {
+  position: absolute; inset: 0; display: grid; place-content: center; justify-items: center; gap: 10px; color: #fff;
+  background: linear-gradient(180deg, rgb(0 0 0 / 5%), rgb(0 0 0 / 50%));
 }
+.clip-btn .play i { display: grid; place-items: center; width: 64px; height: 64px; border-radius: 50%; background: rgb(255 255 255 / 94%); color: #1d1a17; }
+.clip-btn .play i svg { width: 26px; height: 26px; margin-left: 4px; }
+.clip-btn .play b { font-size: 1rem; text-shadow: 0 1px 6px rgb(0 0 0 / 50%); }
+.clip-btn .play small { font-size: .8125rem; opacity: .92; }
+.clip iframe { display: block; width: 100%; aspect-ratio: 16 / 9; border: 0; border-radius: var(--radius); background: #000; }
 
-.text-button.complete.done:hover {
-  background: var(--accent-2);
+.cards { display: grid; gap: 10px; }
+.card {
+  padding: 18px 18px 16px; border-radius: var(--radius); background: var(--paper-2); border: 1px solid var(--line);
 }
+.card > span { display: flex; align-items: center; gap: 8px; color: var(--ink-3); font-size: .8125rem; font-weight: 800; }
+.card > span svg { color: var(--accent, var(--brand)); }
+.card p { margin: 8px 0 0; font-size: 1.0625rem; line-height: 1.8; }
+.card.prayer { background: var(--brand-2); border-color: transparent; }
+.card.prayer p { font-family: var(--serif); font-weight: 700; }
+.card.family { background: var(--gold-2); border-color: transparent; }
 
-.detail-layout {
-  display: grid;
-  grid-template-columns: minmax(0, 1.12fr) minmax(320px, 0.66fr);
-  gap: 18px;
-  width: min(1180px, 100%);
-  margin: 0 auto;
+.ask-inline {
+  display: none; align-items: center; gap: 14px; width: 100%; margin-top: 26px; padding: 16px 18px;
+  border: 1px dashed color-mix(in srgb, var(--brand) 45%, var(--line)); border-radius: var(--radius);
+  background: transparent; text-align: left;
 }
+html[data-assistant="ready"] .ask-inline { display: flex; }
+.ask-inline i { display: grid; place-items: center; flex: none; width: 42px; height: 42px; border-radius: 14px; background: var(--brand); color: var(--on-brand); font-style: normal; }
+.ask-inline b { display: block; font-size: 1rem; }
+.ask-inline span { color: var(--ink-3); font-size: .875rem; }
 
-.detail-card,
-.journal-card {
-  border: 1px solid var(--line);
-  border-radius: var(--radius);
-  background:
-    linear-gradient(180deg, rgba(255, 255, 255, 0.78), rgba(255, 251, 243, 0.94));
-  box-shadow: var(--shadow-2);
-  backdrop-filter: blur(14px);
+.journal { margin-top: 10px; }
+.journal-note { margin: -4px 0 10px; color: var(--ink-3); font-size: .8125rem; }
+.journal .chip-row { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 10px; }
+.journal textarea {
+  display: block; width: 100%; min-height: 168px; padding: 16px; resize: vertical;
+  border: 1px solid var(--line); border-radius: var(--radius); background: var(--paper-2);
+  font-size: 1.0625rem; line-height: 1.8;
 }
+.journal textarea::placeholder { color: var(--ink-3); }
+.detail-end { height: 120px; }
 
-.detail-card {
-  padding: clamp(24px, 3.4vw, 44px);
+.dock {
+  position: fixed; left: 0; right: 0; bottom: 0; z-index: 30;
+  padding: 10px 16px calc(10px + var(--safe-b));
+  background: color-mix(in srgb, var(--paper) 92%, transparent);
+  backdrop-filter: blur(14px); -webkit-backdrop-filter: blur(14px);
+  border-top: 1px solid var(--line);
 }
-
-.day-pill {
-  display: inline-flex;
-  margin: 0 0 14px;
-  color: var(--accent);
+.dock-inner { max-width: 720px; margin: 0 auto; display: grid; grid-template-columns: 52px 1fr 52px; gap: 10px; align-items: center; }
+.icon-btn { display: grid; place-items: center; height: 52px; border: 1px solid var(--line); border-radius: 16px; background: var(--paper-2); color: var(--ink); }
+.icon-btn svg { width: 1.4em; height: 1.4em; }
+.done-btn {
+  display: flex; align-items: center; justify-content: center; gap: 8px; height: 52px;
+  width: 100%; border: 0; border-radius: 16px; background: var(--brand); color: var(--on-brand); font-size: 1.0625rem; font-weight: 800;
 }
+.dock-inner > div { min-width: 0; }
+.done-btn.done { background: var(--brand-2); color: var(--brand); }
+.dock-count { display: block; text-align: center; color: var(--ink-3); font-size: .75rem; font-weight: 700; margin-top: 6px; }
 
-.detail-card h1 {
-  margin: 0 0 18px;
-  font-family: var(--serif);
-  font-size: clamp(2.1rem, 4.4vw, 3.6rem);
-  font-weight: 700;
-  line-height: 1.16;
-  letter-spacing: -0.015em;
-  color: #221a12;
-  word-break: keep-all;
+/* ---------- 지난 설교 시트 ---------- */
+.sheet {
+  width: min(560px, 100vw); max-height: min(80vh, 760px); margin: auto auto 0; padding: 0;
+  border: 0; border-radius: 24px 24px 0 0; background: var(--paper); color: var(--ink);
+  box-shadow: 0 -10px 50px rgb(0 0 0 / 25%);
 }
+.sheet[open] { display: flex; flex-direction: column; animation: sheet-up .28s ease; }
+@keyframes sheet-up { from { transform: translateY(40px); opacity: 0; } to { transform: none; opacity: 1; } }
+.sheet::backdrop { background: rgb(20 16 12 / 45%); }
+.sheet-head { display: flex; align-items: center; justify-content: space-between; padding: 18px 20px 10px; }
+.sheet-head h2 { margin: 0; font: 800 1.25rem/1.4 var(--serif); }
+.sheet-close { width: 40px; height: 40px; border: 0; border-radius: 50%; background: var(--paper-3); font-size: 1.4rem; line-height: 1; }
+.sheet-body { overflow: auto; padding: 0 20px calc(20px + var(--safe-b)); }
+@media (min-width: 700px) { .sheet { margin: auto; border-radius: 24px; } }
 
-.lead {
-  max-width: 60ch;
-  margin: 0 0 26px;
-  color: var(--ink-2);
-  font-size: 1.02rem;
-  line-height: 1.9;
-  word-break: keep-all;
-}
-
-.verse-block {
-  position: relative;
-  overflow: hidden;
-  margin: 0 0 22px;
-  padding: 28px 28px 24px;
-  border: 1px solid var(--line-soft);
-  border-left: 2px solid var(--gold);
-  border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
-  background: linear-gradient(180deg, rgba(255, 246, 229, 0.85), rgba(255, 243, 222, 0.62));
-}
-
-.verse-block::before {
-  content: "\201C";
-  position: absolute;
-  top: -0.18em;
-  right: 0.06em;
-  font-family: var(--serif);
-  font-size: 7rem;
-  line-height: 1;
-  color: var(--gold);
-  opacity: 0.12;
-  pointer-events: none;
-}
-
-.verse-block > span,
-.reflection-grid span {
-  display: block;
-  margin-bottom: 12px;
-}
-
-.verse-block p {
-  position: relative;
-  margin: 0;
-  font-family: var(--serif);
-  font-size: clamp(1.4rem, 2.2vw, 2.1rem);
-  font-weight: 700;
-  line-height: 1.6;
-  letter-spacing: -0.01em;
-  color: #2a2014;
-  word-break: keep-all;
-}
-
-.verse-block small {
-  display: block;
-  margin-top: 14px;
-  color: var(--muted);
-  font-size: 0.82rem;
-}
-
-.reflection-grid {
-  display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 14px;
-}
-
-.reflection-grid > div,
-.family-card,
-.prayer-line {
-  border: 1px solid var(--line);
-  border-radius: var(--radius-sm);
-  background: rgba(255, 255, 255, 0.5);
-  padding: 20px;
-}
-
-.reflection-grid p,
-.family-card p,
-.prayer-line p {
-  margin: 0;
-  color: #463625;
-  line-height: 1.8;
-  word-break: keep-all;
-}
-
-.family-card {
-  margin-top: 14px;
-  border-color: rgba(161, 106, 20, 0.2);
-  background: linear-gradient(180deg, rgba(255, 250, 239, 0.86), rgba(255, 247, 231, 0.62));
-}
-
-.family-card span {
-  display: block;
-  margin-bottom: 10px;
-  color: var(--gold);
-  font-size: 0.8rem;
-  font-weight: 800;
-  letter-spacing: 0.04em;
-}
-
-.family-card p {
-  font-family: var(--serif);
-  font-size: 1.12rem;
-  font-weight: 700;
-  line-height: 1.7;
-}
-
-.prayer-line {
-  gap: 14px;
-  margin-top: 14px;
-  color: var(--accent);
-  background: linear-gradient(180deg, rgba(47, 117, 96, 0.06), rgba(47, 117, 96, 0.02));
-  border-color: color-mix(in srgb, var(--accent), transparent 78%);
-}
-
-.prayer-line svg {
-  flex: 0 0 auto;
-  font-size: 1.2rem;
-}
-
-.journal-card {
-  align-self: start;
-  padding: 24px;
-}
-
-.journal-head {
-  justify-content: space-between;
-  gap: 12px;
-  margin-bottom: 18px;
-}
-
-.journal-head p {
-  margin: 0;
-}
-
-.journal-head span {
-  color: var(--muted);
-  font-size: 0.76rem;
-}
-
-.chip-row {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 8px;
-  margin-bottom: 16px;
-}
-
-.chip {
-  min-height: 38px;
-  border-radius: 999px;
-  padding: 0 15px;
-  color: #6f4c1c;
-  font-size: 0.9rem;
-  font-weight: 500;
-}
-
-textarea {
-  width: 100%;
-  min-height: 248px;
-  resize: vertical;
-  border: 1px solid var(--line);
-  border-radius: var(--radius-sm);
-  padding: 18px;
-  color: var(--ink);
-  background: rgba(255, 255, 255, 0.62);
-  font-size: 1rem;
-  line-height: 1.78;
-  outline: none;
-  transition: border-color 160ms ease, box-shadow 160ms ease;
-}
-
-textarea::placeholder {
-  color: #b3a489;
-}
-
-textarea:focus {
-  border-color: var(--ring);
-  box-shadow: 0 0 0 4px rgba(161, 106, 20, 0.1);
-}
-
-/* ===== 상단 도구 / 아카이브 ===== */
-.a11y-bar {
-  position: fixed;
-  z-index: 30;
-  top: 14px;
-  right: 14px;
-  display: flex;
-  gap: 8px;
-  padding: 6px;
-  border: 1px solid var(--line);
-  border-radius: 999px;
-  background: rgba(255, 253, 248, 0.84);
-  box-shadow: var(--shadow-2);
-  backdrop-filter: blur(14px) saturate(1.1);
-}
-
-.a11y-bar button {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  gap: 7px;
-  min-width: 86px;
-  height: 38px;
-  padding: 0 14px;
-  border: 1px solid var(--line-soft);
-  border-radius: 999px;
-  color: #6f4c1c;
-  background: rgba(255, 255, 255, 0.6);
-  font-size: 0.84rem;
-  font-weight: 700;
-  line-height: 1;
-}
-
-.a11y-bar button:hover {
-  border-color: var(--ring);
-  background: #fff;
-}
-
-.archive-popover {
-  position: fixed;
-  z-index: 35;
-  top: 66px;
-  right: 14px;
-  width: min(380px, calc(100vw - 28px));
-  max-height: min(640px, calc(100vh - 86px));
-  overflow: auto;
-  padding: 18px;
-  border: 1px solid var(--line);
-  border-radius: var(--radius);
-  background: rgba(255, 253, 248, 0.94);
-  box-shadow: var(--shadow-3);
-  backdrop-filter: blur(16px) saturate(1.08);
-}
-
-.archive-popover[hidden] {
-  display: none;
-}
-
-.archive-popover h2 {
-  margin: 0 0 4px;
-  font-family: var(--serif);
-  font-size: 1.35rem;
-  line-height: 1.25;
-}
-
-.archive-popover > p {
-  margin: 0 0 14px;
-  color: var(--muted);
-  font-size: 0.84rem;
-}
-
-.archive-list {
-  display: grid;
-  gap: 10px;
-}
-
-.archive-item {
-  display: block;
-  padding: 14px 15px;
-  border: 1px solid var(--line-soft);
-  border-radius: var(--radius-sm);
-  color: var(--ink);
-  text-decoration: none;
-  background: rgba(255, 255, 255, 0.58);
-  transition:
-    transform 180ms ease,
-    border-color 180ms ease,
-    background 180ms ease;
-}
-
-.archive-item:hover {
-  transform: translateY(-1px);
-  border-color: var(--ring);
-  background: #fff;
-}
-
-.archive-item small {
-  display: block;
-  margin-bottom: 6px;
-  color: var(--gold);
-  font-weight: 700;
-}
-
-.archive-item strong {
-  display: block;
-  margin-bottom: 6px;
-  font-family: var(--serif);
-  font-size: 1.08rem;
-  line-height: 1.35;
-  word-break: keep-all;
-}
-
-.archive-item span {
-  display: block;
-  color: var(--muted);
-  font-size: 0.84rem;
-}
-
-/* ===== 오늘의 묵상 강조 ===== */
-.day-card.today {
-  border-color: var(--gold);
-  box-shadow:
-    0 0 0 1.5px var(--gold),
-    var(--shadow-3);
-}
-
-.today-badge {
-  position: absolute;
-  z-index: 2;
-  top: 14px;
-  left: 14px;
-  padding: 6px 13px;
-  border-radius: 999px;
-  font-size: 0.72rem;
-  font-weight: 800;
-  letter-spacing: 0.06em;
-  color: #fff;
-  background: var(--gold);
-  box-shadow: 0 8px 22px rgba(161, 106, 20, 0.42);
-}
-
-/* ===== 말씀 듣기 / 나누기 ===== */
-.verse-actions {
-  position: relative;
-  display: flex;
-  flex-wrap: wrap;
-  gap: 9px;
-  margin-top: 18px;
-}
-
-.verse-actions .chip {
-  display: inline-flex;
-  align-items: center;
-  gap: 7px;
-  background: rgba(255, 255, 255, 0.7);
-}
-
-.verse-actions .chip svg {
-  width: 1.05em;
-  height: 1.05em;
-}
-
-/* ===== 설교 영상 ===== */
-.sermon-clip {
-  margin: 0 0 22px;
-}
-
-.sermon-clip > span {
-  display: inline-flex;
-  align-items: center;
-  gap: 7px;
-  margin-bottom: 12px;
-  color: var(--gold);
-  font-size: 0.8rem;
-  font-weight: 700;
-  letter-spacing: 0.06em;
-}
-
-.sermon-clip > span svg {
-  width: 0.95em;
-  height: 0.95em;
-}
-
-.clip-frame {
-  position: relative;
-  aspect-ratio: 16 / 9;
-  overflow: hidden;
-  border: 1px solid var(--line);
-  border-radius: var(--radius-sm);
-  background: #100c08;
-  box-shadow: var(--shadow-1);
-}
-
-.clip-frame iframe {
-  position: absolute;
-  inset: 0;
-  width: 100%;
-  height: 100%;
-  border: 0;
-}
-
-.card-video {
-  display: inline-flex;
-  align-items: center;
-  gap: 5px;
-  justify-self: start;
-  margin-top: 2px;
-  padding: 3px 10px;
-  border-radius: 999px;
-  border: 1px solid var(--line);
-  background: rgba(255, 255, 255, 0.66);
-  color: #6f4c1c;
-  font-size: 0.72rem;
-  font-weight: 700;
-  letter-spacing: 0.04em;
-  box-shadow: 0 2px 8px rgba(60, 40, 18, 0.08);
-}
-
-.card-video svg {
-  width: 0.92em;
-  height: 0.92em;
-}
-
-/* ===== 토스트 ===== */
+/* ---------- 토스트 · 축하 ---------- */
 .toast {
-  position: fixed;
-  z-index: 40;
-  left: 50%;
-  bottom: 92px;
-  max-width: min(440px, calc(100% - 32px));
-  padding: 13px 20px;
-  border-radius: 999px;
-  color: #fbf6ec;
-  background: rgba(43, 33, 26, 0.95);
-  box-shadow: 0 16px 40px rgba(43, 33, 26, 0.34);
-  font-size: 0.9rem;
-  font-weight: 500;
-  text-align: center;
-  word-break: keep-all;
-  transform: translate(-50%, 16px);
-  opacity: 0;
-  pointer-events: none;
-  transition: opacity 240ms ease, transform 240ms ease;
+  position: fixed; left: 50%; bottom: calc(96px + var(--safe-b)); z-index: 80;
+  max-width: calc(100vw - 32px); padding: 12px 18px; border-radius: 14px;
+  background: #2a231d; color: #fff; font-size: .9375rem; text-align: center;
+  opacity: 0; transform: translate(-50%, 10px); pointer-events: none; transition: .25s;
 }
+.toast.show { opacity: 1; transform: translate(-50%, 0); }
+.celebrate { position: fixed; inset: 0; z-index: 90; display: grid; place-items: center; padding: 20px; background: rgb(20 16 12 / 55%); animation: fade .3s; }
+.celebrate-card { width: min(400px, 100%); padding: 30px 24px 22px; border-radius: 26px; background: var(--paper-2); text-align: center; box-shadow: var(--shadow); }
+.celebrate-mark { display: grid; place-items: center; width: 64px; height: 64px; margin: 14px auto; border-radius: 50%; background: var(--brand); color: var(--on-brand); }
+.celebrate-mark svg { width: 30px; height: 30px; stroke-width: 3; }
+.celebrate-card h2 { margin: 0 0 8px; font: 800 1.5rem/1.4 var(--serif); }
+.celebrate-card p { margin: 0; color: var(--ink-2); }
+.celebrate-card .eyebrow { color: var(--gold); }
+.celebrate-actions { display: grid; gap: 8px; margin-top: 22px; }
 
-.toast.show {
-  opacity: 1;
-  transform: translate(-50%, 0);
+/* ---------- 넓은 화면 ---------- */
+@media (min-width: 900px) {
+  .app { padding: 0 32px 64px; }
+  .home-top { grid-template-columns: 1fr 1.05fr; gap: 40px; align-items: start; padding-top: 44px; }
+  .intro { padding-top: 18px; }
+  .day-list { grid-template-columns: 1fr 1fr; }
+  .home-bottom { display: grid; grid-template-columns: 1fr 1fr; gap: 40px; align-items: start; }
+  .home-bottom .ask-card { margin-top: 40px; }
+  .reader-hero { margin: 22px 0 0; border-radius: 24px; }
+  .cards { grid-template-columns: 1fr 1fr; }
+  .cards .card.prayer, .cards .card.family { grid-column: span 2; }
 }
-
-/* ===== 6일 완주 축하 ===== */
-.celebrate {
-  position: fixed;
-  inset: 0;
-  z-index: 50;
-  display: grid;
-  place-items: center;
-  padding: 24px;
-  background: rgba(43, 33, 26, 0.5);
-  backdrop-filter: blur(8px);
-  animation: pageIn 260ms ease backwards;
+@media (max-width: 380px) {
+  .week { padding: 12px; }
+  .week-days { gap: 4px; }
+  .day-row { grid-template-columns: 68px 1fr auto; gap: 10px; }
+  .day-thumb { width: 68px; height: 56px; }
 }
-
-.celebrate-card {
-  width: min(440px, 100%);
-  padding: 40px 30px 30px;
-  text-align: center;
-  border: 1px solid var(--line);
-  border-radius: 18px;
-  background: linear-gradient(180deg, #fffdf8, #f8efe0);
-  box-shadow: var(--shadow-3);
-  animation: openIn 420ms cubic-bezier(0.2, 0.7, 0.2, 1) backwards;
-}
-
-.celebrate-kicker {
-  display: inline-flex;
-  align-items: center;
-  gap: 9px;
-  margin: 0 0 20px;
-  color: var(--gold);
-  font-weight: 700;
-  font-size: 0.82rem;
-  letter-spacing: 0.06em;
-}
-
-.celebrate-mark {
-  display: grid;
-  place-items: center;
-  width: 66px;
-  height: 66px;
-  margin: 0 auto 20px;
-  border-radius: 999px;
-  color: #fff;
-  font-size: 30px;
-  background: var(--accent);
-  box-shadow: 0 14px 34px rgba(47, 117, 96, 0.42);
-}
-
-.celebrate-card h2 {
-  margin: 0 0 16px;
-  font-family: var(--serif);
-  font-weight: 700;
-  font-size: clamp(1.9rem, 6vw, 2.5rem);
-  line-height: 1.24;
-  letter-spacing: -0.01em;
-  color: #221a12;
-  word-break: keep-all;
-}
-
-.celebrate-theme {
-  margin: 0 0 8px;
-  font-weight: 800;
-  color: var(--accent);
-  word-break: keep-all;
-}
-
-.celebrate-sub {
-  margin: 0 0 26px;
-  color: var(--muted);
-  line-height: 1.75;
-  word-break: keep-all;
-}
-
-.celebrate-actions {
-  display: grid;
-  gap: 10px;
-}
-
-.celebrate-actions .text-button {
-  justify-content: center;
-}
-
-/* ===== 애니메이션 ===== */
-@keyframes pageIn {
-  from {
-    opacity: 0;
-    transform: translateY(12px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
-
-@keyframes openIn {
-  from {
-    opacity: 0;
-    transform: translateY(28px) scale(0.985);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0) scale(1);
-  }
-}
-
-@keyframes backIn {
-  from {
-    opacity: 0;
-    transform: translateY(-14px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
-
-@keyframes slideLeftIn {
-  from {
-    opacity: 0;
-    transform: translateX(28px);
-  }
-  to {
-    opacity: 1;
-    transform: translateX(0);
-  }
-}
-
-@keyframes slideRightIn {
-  from {
-    opacity: 0;
-    transform: translateX(-28px);
-  }
-  to {
-    opacity: 1;
-    transform: translateX(0);
-  }
-}
-
 @media (prefers-reduced-motion: reduce) {
-  *,
-  *::before,
-  *::after {
-    animation-duration: 0.01ms !important;
-    transition-duration: 0.01ms !important;
-  }
+  *, *::before, *::after { animation: none !important; transition: none !important; scroll-behavior: auto !important; }
 }
-
-/* ===== 반응형 ===== */
-@media (max-width: 1020px) {
-  .card-grid {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-  }
-
-  .detail-layout {
-    grid-template-columns: 1fr;
-  }
+@media print {
+  .topbar, .dock, .ask-inline, .ask-card, .sa-launcher { display: none !important; }
 }
-
-@media (max-width: 680px) {
-  .a11y-bar {
-    top: 10px;
-    right: 10px;
-    padding: 5px;
-  }
-
-  .a11y-bar button {
-    min-width: 78px;
-    height: 36px;
-    padding: 0 11px;
-    font-size: 0.8rem;
-  }
-
-  .archive-popover {
-    top: 58px;
-    right: 10px;
-    width: calc(100vw - 20px);
-  }
-
-  .hero {
-    min-height: 280px;
-    padding: 24px 18px 34px;
-  }
-
-  .hero-copy {
-    width: 100%;
-  }
-
-  .church-brand {
-    width: min(220px, 72vw);
-    margin-bottom: 12px;
-  }
-
-  .hero h1 {
-    font-size: clamp(2.3rem, 9vw, 3rem);
-    line-height: 1.14;
-  }
-
-  .passage {
-    margin-bottom: 26px;
-  }
-
-  .hero-progress {
-    display: grid;
-    grid-template-columns: minmax(0, 1fr) auto;
-    width: 100%;
-    gap: 12px;
-  }
-
-  .journey {
-    width: calc(100% - 32px);
-    padding-top: 36px;
-  }
-
-  .card-grid,
-  .reflection-grid {
-    grid-template-columns: 1fr;
-  }
-
-  .day-card {
-    min-height: 252px;
-  }
-
-  .detail-screen {
-    padding: 18px 16px 116px;
-    overflow: hidden;
-  }
-
-  .detail-layout {
-    width: 100%;
-  }
-
-  .detail-bottom {
-    left: 14px;
-    right: 14px;
-    align-items: stretch;
-    flex-wrap: wrap;
-    width: auto;
-    bottom: 12px;
-    padding: 9px;
-    transform: none;
-  }
-
-  .detail-bottom > .text-button {
-    flex: 1 1 auto;
-    justify-content: center;
-  }
-
-  .detail-nav {
-    order: 3;
-    justify-content: center;
-    width: 100%;
-  }
-
-  .detail-card,
-  .journal-card {
-    padding: 20px;
-  }
-
-  .detail-card h1 {
-    font-size: 1.72rem;
-    line-height: 1.3;
-  }
-
-  .verse-block {
-    padding: 22px 20px 20px;
-  }
-
-  .verse-block p {
-    font-size: 1.3rem;
-    line-height: 1.62;
-  }
-
-  .toast {
-    bottom: 126px;
-  }
-}
-
     </style>
   </head>
-  <body>
-    <main id="app" class="app-shell" aria-live="polite"></main>
-    <div class="a11y-bar" role="group" aria-label="묵상 도구">
-      <button id="archive-toggle" type="button" aria-controls="archive-panel" aria-expanded="false">지난 설교</button>
-      <button id="font-toggle" type="button" aria-pressed="false">글씨 크게</button>
-    </div>
-    <aside id="archive-panel" class="archive-popover" aria-label="지난 설교 묵상" hidden></aside>
+  <body data-view="list">
+    <header class="topbar" id="topbar">
+      <div class="topbar-inner">
+        <button class="back-btn" id="back-btn" type="button" hidden>
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="m15 18-6-6 6-6"/></svg>이번 주
+        </button>
+        <button class="brand" id="brand-btn" type="button" aria-label="이번 주 묵상 목록">
+          <img src="../assets/brand/daejeon-full-gospel-logo.png" alt="대전순복음교회" width="748" height="274" />
+        </button>
+        <div class="top-actions">
+          <button class="top-btn" id="archive-toggle" type="button" aria-haspopup="dialog">지난 설교</button>
+          <button class="top-btn font-btn" id="font-toggle" type="button" aria-pressed="false" aria-label="글씨 크게">가<small>+</small></button>
+        </div>
+      </div>
+    </header>
+    <main id="app" class="app" aria-live="polite"></main>
+    <dialog id="archive-panel" class="sheet" aria-labelledby="archive-title">
+      <div class="sheet-head">
+        <h2 id="archive-title">지난 설교 묵상</h2>
+        <button class="sheet-close" type="button" data-close aria-label="닫기">×</button>
+      </div>
+      <div class="sheet-body" id="archive-list"></div>
+    </dialog>
     <div id="toast" class="toast" role="status" aria-live="polite"></div>
     <script>
-// 매주 이 파일만 수정하면 됩니다.
-// weekId는 저장된 묵상 기록을 주차별로 분리하는 값입니다.
-// image를 비워두면 기본 이미지 중 자동 선택하고, 새로 생성한 이미지가 있으면 image 경로를 넣습니다.
-// 설교 영상: 아래 sermonVideo에 유튜브 주소를 한 번만 넣으면 6일 카드 모두에 적용됩니다.
-//   sermonVideo: "https://youtu.be/xxxx"  (watch?v= 주소나 11자리 ID도 가능)
-// 각 날짜의 video에는 그 날 해당하는 구간만 지정합니다.
-//   video: { start: "5:35", end: "10:05" }   // mm:ss / hh:mm:ss / 숫자(초)
-//   - end를 빼면 영상 끝까지. 특정 날만 다른 영상을 쓰려면 video에 id를 따로 넣어도 됩니다.
 const weeklyContent = {
   "weekId": "2026-08-16",
   "sermonDate": "2026년 8월 16일 주일설교",
@@ -1402,36 +567,6 @@ const weeklyContent = {
   ]
 };
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 const weeklyArchive = [
   {
     "weekId": "2026-10-18",
@@ -1582,100 +717,40 @@ const weeklyArchive = [
   }
 ];
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+/* ===== 화면 동작 (디자인 틀) =====
+   위의 두 자료(weeklyContent, weeklyArchive)만 매주 자동으로 바뀌고, 아래 코드는 그대로 둡니다. */
 const devotions = weeklyContent.days;
-const storageKey = `personal-devotion-${weeklyContent.weekId}`;
+const storageKey = "personal-devotion-" + weeklyContent.weekId;
 const archiveEntries = normalizeArchive(weeklyArchive);
+const latestEntry = archiveEntries[0];
+const isPastWeek = Boolean(latestEntry && latestEntry.weekId !== weeklyContent.weekId);
 
-document.title = `${weeklyContent.themeTitle} | 매일 말씀 묵상`;
+document.title = weeklyContent.themeTitle + " | 매일 말씀 묵상";
 
 const mediaThemes = [
-  {
-    id: "renewal",
-    image: "../assets/devotion/warm-open-bible.png",
-    accent: "#317b65",
-    keywords: ["새 사람", "새롭게", "낡은", "벗고", "입다", "회개", "변화"]
-  },
-  {
-    id: "grace",
-    image: "../assets/devotion/warm-notebook.png",
-    accent: "#b66550",
-    keywords: ["은혜의 눈", "은혜", "사랑", "긍휼", "축복", "용서", "평안", "환영", "관계"]
-  },
-  {
-    id: "word",
-    image: "../assets/devotion/warm-pages.png",
-    accent: "#4f7fa8",
-    keywords: ["말씀", "생명", "믿음", "복음", "진리", "포도주", "본문", "호흡"]
-  },
-  {
-    id: "prayer",
-    image: "../assets/devotion/warm-candle.png",
-    accent: "#8b689d",
-    keywords: ["기도", "입술", "증인", "고백", "두려움", "담대", "충만", "예배"]
-  },
-  {
-    id: "guidance",
-    image: "../assets/devotion/warm-meadow.png",
-    accent: "#4d8a55",
-    keywords: ["새 부대", "길", "인도", "순종", "결정", "겸손", "부대", "유연", "고집"]
-  },
-  {
-    id: "gratitude",
-    image: "../assets/devotion/warm-wheat.png",
-    accent: "#b77716",
-    keywords: ["감사", "찬양", "열매", "은혜를 표시", "새 일", "가정", "교회", "지도"]
-  }
+  { id: "renewal", image: "../assets/devotion/warm-open-bible.png", accent: "#317b65", keywords: ["새 사람", "새롭게", "낡은", "벗고", "입다", "회개", "변화"] },
+  { id: "grace", image: "../assets/devotion/warm-notebook.png", accent: "#b66550", keywords: ["은혜의 눈", "은혜", "사랑", "긍휼", "축복", "용서", "평안", "환영", "관계"] },
+  { id: "word", image: "../assets/devotion/warm-pages.png", accent: "#4f7fa8", keywords: ["말씀", "생명", "믿음", "복음", "진리", "포도주", "본문", "호흡"] },
+  { id: "prayer", image: "../assets/devotion/warm-candle.png", accent: "#8b689d", keywords: ["기도", "입술", "증인", "고백", "두려움", "담대", "충만", "예배"] },
+  { id: "guidance", image: "../assets/devotion/warm-meadow.png", accent: "#4d8a55", keywords: ["새 부대", "길", "인도", "순종", "결정", "겸손", "부대", "유연", "고집"] },
+  { id: "gratitude", image: "../assets/devotion/warm-wheat.png", accent: "#b77716", keywords: ["감사", "찬양", "열매", "은혜를 표시", "새 일", "가정", "교회", "지도"] }
 ];
 
 const icons = {
-  book:
-    '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 19.5V5.75A2.75 2.75 0 0 1 6.75 3H20v16H6.75A2.75 2.75 0 0 0 4 21.75"/><path d="M8 7h8M8 11h7"/></svg>',
-  check:
-    '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20 6 9 17l-5-5"/></svg>',
-  chevronLeft:
-    '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="m15 18-6-6 6-6"/></svg>',
-  chevronRight:
-    '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="m9 18 6-6-6-6"/></svg>',
-  list:
-    '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 6h13M8 12h13M8 18h13"/><path d="M3 6h.01M3 12h.01M3 18h.01"/></svg>',
-  heart:
-    '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20.8 4.6a5.5 5.5 0 0 0-7.8 0L12 5.6l-1-1a5.5 5.5 0 0 0-7.8 7.8l1 1L12 21l7.8-7.6 1-1a5.5 5.5 0 0 0 0-7.8Z"/></svg>',
-  share:
-    '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3v13"/><path d="m7 8 5-5 5 5"/><path d="M5 13v6a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2v-6"/></svg>',
-  speaker:
-    '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M11 5 6 9H3v6h3l5 4z"/><path d="M16 9a4 4 0 0 1 0 6"/><path d="M19 6.5a8 8 0 0 1 0 11"/></svg>',
-  stop:
-    '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 7h10v10H7z"/></svg>',
-  play:
-    '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 4.5v15l13-7.5z" fill="currentColor" stroke="none"/></svg>'
+  check: '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20 6 9 17l-5-5"/></svg>',
+  left: '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="m15 18-6-6 6-6"/></svg>',
+  right: '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="m9 18 6-6-6-6"/></svg>',
+  arrow: '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg>',
+  heart: '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20.8 4.6a5.5 5.5 0 0 0-7.8 0L12 5.6l-1-1a5.5 5.5 0 0 0-7.8 7.8l1 1L12 21l7.8-7.6 1-1a5.5 5.5 0 0 0 0-7.8Z"/></svg>',
+  share: '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3v13"/><path d="m7 8 5-5 5 5"/><path d="M5 13v6a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2v-6"/></svg>',
+  speaker: '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M11 5 6 9H3v6h3l5 4z"/><path d="M16 9a4 4 0 0 1 0 6"/><path d="M19 6.5a8 8 0 0 1 0 11"/></svg>',
+  stop: '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 7h10v10H7z"/></svg>',
+  play: '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 4.5v15l13-7.5z" fill="currentColor" stroke="none"/></svg>',
+  question: '<svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M9.5 9a2.5 2.5 0 1 1 3.5 2.3c-.6.3-1 .9-1 1.6V14"/><path d="M12 17h.01"/></svg>',
+  walk: '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h14"/><path d="m13 6 6 6-6 6"/></svg>',
+  home: '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 11 12 4l9 7"/><path d="M5 10v10h14V10"/></svg>',
+  spark: '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3v4M12 17v4M3 12h4M17 12h4M6 6l2.5 2.5M15.5 15.5 18 18M6 18l2.5-2.5M15.5 8.5 18 6"/></svg>',
+  send: '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg>'
 };
 
 const $app = document.querySelector("#app");
@@ -1683,8 +758,14 @@ const saved = readState();
 const dayParam = new URLSearchParams(location.search).get("day");
 const queryDay = dayParam === null ? NaN : Number(dayParam);
 const hasQueryDay = Number.isInteger(queryDay) && queryDay >= 0 && queryDay < devotions.length;
+const inKakao = /KAKAOTALK/i.test(navigator.userAgent);
 
-// subtitle 앞부분("6.1 월요일 ...")과 weekId 연도로 각 묵상의 실제 날짜를 계산합니다.
+function esc(value) {
+  return String(value == null ? "" : value).replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
+}
+function icon(name) { return icons[name] || ""; }
+
+// subtitle 앞부분("10.19 월요일 ...")과 weekId 연도로 각 묵상의 실제 날짜를 계산합니다.
 function dayDate(devotion) {
   const token = (devotion.subtitle || "").trim().split(/\s+/)[0] || "";
   const match = token.match(/^(\d{1,2})\.(\d{1,2})$/);
@@ -1695,232 +776,193 @@ function dayDate(devotion) {
   const year = month < weekMonth ? weekYear + 1 : weekYear;
   return new Date(year, month - 1, day);
 }
-
-function ymd(date) {
-  return `${date.getFullYear()}-${date.getMonth()}-${date.getDate()}`;
-}
-
+function ymd(date) { return date.getFullYear() + "-" + date.getMonth() + "-" + date.getDate(); }
 const todayKey = ymd(new Date());
-const todayIndex = devotions.findIndex((item) => {
-  const date = dayDate(item);
-  return date && ymd(date) === todayKey;
-});
-
-const inKakao = /KAKAOTALK/i.test(navigator.userAgent);
+const todayIndex = devotions.findIndex((item) => { const d = dayDate(item); return d && ymd(d) === todayKey; });
 
 const state = {
-  selected: hasQueryDay
-    ? queryDay
-    : todayIndex >= 0
-      ? todayIndex
-      : Number.isInteger(saved.selected)
-        ? saved.selected
-        : 0,
+  selected: hasQueryDay ? queryDay : todayIndex >= 0 ? todayIndex : Number.isInteger(saved.selected) ? saved.selected : 0,
   view: hasQueryDay ? "detail" : "list",
   completed: new Set(saved.completed || []),
   entries: saved.entries || {}
 };
 
 function readState() {
-  try {
-    return JSON.parse(localStorage.getItem(storageKey)) || {};
-  } catch {
-    return {};
-  }
+  try { return JSON.parse(localStorage.getItem(storageKey)) || {}; } catch (e) { return {}; }
 }
-
 function persist() {
-  localStorage.setItem(
-    storageKey,
-    JSON.stringify({
-      selected: state.selected,
-      completed: [...state.completed],
-      entries: state.entries
-    })
-  );
+  try {
+    localStorage.setItem(storageKey, JSON.stringify({ selected: state.selected, completed: [...state.completed], entries: state.entries }));
+  } catch (e) { /* 저장 공간을 쓸 수 없는 환경 */ }
 }
 
-function icon(name) {
-  return icons[name] || "";
+function themeText(d) {
+  return [d.title, d.subtitle, d.reference, d.verse, d.reading, d.prayer, d.action].concat(d.prompts || []).join(" ");
 }
-
-function themeText(devotion) {
-  return [
-    devotion.title,
-    devotion.subtitle,
-    devotion.reference,
-    devotion.verse,
-    devotion.reading,
-    devotion.prayer,
-    devotion.action,
-    ...(devotion.prompts || [])
-  ].join(" ");
-}
-
 function scoreTheme(text, theme) {
-  return theme.keywords.reduce((score, keyword) => {
-    if (!text.includes(keyword)) return score;
-    return score + Math.max(2, Math.min(keyword.length, 6));
-  }, 0);
+  return theme.keywords.reduce((s, k) => (text.includes(k) ? s + Math.max(2, Math.min(k.length, 6)) : s), 0);
 }
-
-function autoMediaFor(devotion, index = 0) {
+function autoMediaFor(devotion, index) {
   const text = themeText(devotion);
-  const [best] = mediaThemes
-    .map((theme) => ({ theme, score: scoreTheme(text, theme) }))
-    .sort((left, right) => right.score - left.score);
-
-  const fallback = best && best.score > 0 ? best.theme : mediaThemes[index % mediaThemes.length];
-
-  return {
-    ...fallback,
-    image: devotion.image || fallback.image,
-    accent: devotion.accent || fallback.accent
-  };
+  const best = mediaThemes.map((theme) => ({ theme, score: scoreTheme(text, theme) })).sort((a, b) => b.score - a.score)[0];
+  const fallback = best && best.score > 0 ? best.theme : mediaThemes[(index || 0) % mediaThemes.length];
+  return { image: devotion.image || fallback.image, accent: devotion.accent || fallback.accent };
+}
+function metaFor(devotion, index) {
+  const i = index === undefined ? devotions.indexOf(devotion) : index;
+  const parts = (devotion.subtitle || "").split(" · ");
+  const date = parts[0] || "";
+  const navTitle = parts[1] || "말씀 묵상";
+  const dayShort = (date.split(/\s+/)[1] || "").replace("요일", "");
+  const dayNum = (date.split(/\s+/)[0] || "").split(".")[1] || "";
+  return { date, navTitle, dayShort, dayNum, media: autoMediaFor(devotion, Math.max(0, i)) };
+}
+// 큰 사진(1536px PNG) 대신 쓰는 가벼운 사진. 없으면 원본으로 돌아갑니다.
+function thumbOf(image) {
+  return /\/generated\/[^/]+\.png$/.test(image) ? image.replace("/generated/", "/thumbs/").replace(/\.png$/, ".jpg") : image;
+}
+function picture(image, alt, cls, eager) {
+  const small = thumbOf(image);
+  return '<img class="' + (cls || "") + '" src="' + esc(small) + '" data-full="' + esc(image) + '" alt="' + esc(alt || "") + '"' +
+    (eager ? ' fetchpriority="high"' : ' loading="lazy"') + ' decoding="async" onerror="if(this.src.indexOf(this.dataset.full)<0){this.src=this.dataset.full}" />';
+}
+function familyQuestionFor(devotion) {
+  if (devotion.familyQuestion) return devotion.familyQuestion;
+  const text = devotion.title + " " + devotion.reading + " " + devotion.action;
+  const matches = [
+    { keywords: ["원수", "사랑", "선대", "미움"], question: "우리 가족이 이번 주 더 넓은 사랑으로 품어야 할 사람은 누구일까요?" },
+    { keywords: ["축복", "저주", "입술", "모욕"], question: "우리 가정의 말이 축복이 되려면 오늘 어떤 표현을 바꾸면 좋을까요?" },
+    { keywords: ["들보", "판단", "정한 마음", "성찰"], question: "가족 안에서 서로를 판단하기 전에 먼저 돌아볼 내 모습은 무엇일까요?" },
+    { keywords: ["규정", "사람", "고통", "회복", "필요"], question: "우리 가족이 오늘 한 사람의 필요를 살피고 도울 수 있는 작은 일은 무엇일까요?" },
+    { keywords: ["말씀", "반석", "순종", "준행", "실천"], question: "오늘 말씀을 우리 집에서 함께 실천한다면 어떤 한 가지를 시작할 수 있을까요?" },
+    { keywords: ["기도", "성령", "인도"], question: "우리 가족이 함께 기도로 주님께 맡겨야 할 일은 무엇일까요?" }
+  ];
+  const found = matches.find((m) => m.keywords.some((k) => text.includes(k)));
+  return found ? found.question : "오늘 말씀을 우리 가족의 말과 행동으로 어떻게 실천할 수 있을까요?";
 }
 
-function metaFor(devotion, index = devotions.indexOf(devotion)) {
-  const [date = "", navTitle = "말씀 묵상"] = devotion.subtitle.split(" · ");
-  return {
-    date,
-    navTitle,
-    media: autoMediaFor(devotion, Math.max(0, index))
-  };
-}
-
-function excerpt(text) {
-  return text.length > 44 ? `${text.slice(0, 44)}...` : text;
-}
-
+// ----- 지난 설교 -----
 function currentArchiveEntry() {
-  return {
-    weekId: weeklyContent.weekId,
-    sermonDate: weeklyContent.sermonDate,
-    themeTitle: weeklyContent.themeTitle,
-    passage: weeklyContent.passage,
-    href: "./index.html"
-  };
+  return { weekId: weeklyContent.weekId, sermonDate: weeklyContent.sermonDate, themeTitle: weeklyContent.themeTitle, passage: weeklyContent.passage, href: "./index.html" };
 }
-
 function normalizeArchive(entries) {
   const byWeek = new Map();
-  [currentArchiveEntry(), ...(Array.isArray(entries) ? entries : [])].forEach((entry) => {
-    if (!entry?.weekId) return;
+  [currentArchiveEntry()].concat(Array.isArray(entries) ? entries : []).forEach((entry) => {
+    if (!entry || !entry.weekId) return;
     byWeek.set(entry.weekId, {
       weekId: entry.weekId,
       sermonDate: entry.sermonDate || entry.weekId,
       themeTitle: entry.themeTitle || "주일 말씀 묵상",
       passage: entry.passage || "",
-      href: entry.href || (entry.weekId === weeklyContent.weekId ? "./index.html" : `./archive/${entry.weekId}.html`)
+      href: entry.href || (entry.weekId === weeklyContent.weekId ? "./index.html" : "./archive/" + entry.weekId + ".html")
     });
   });
   return [...byWeek.values()].sort((a, b) => b.weekId.localeCompare(a.weekId));
 }
-
-function archiveLink(entry) {
-  return entry.href || (entry.weekId === weeklyContent.weekId ? "./index.html" : `./archive/${entry.weekId}.html`);
+function shortDate(weekId) {
+  const p = weekId.split("-").map(Number);
+  return p[1] + "." + p[2];
 }
-
+function archiveRow(entry, cls) {
+  const current = entry.weekId === weeklyContent.weekId;
+  return '<a class="' + cls + (current ? " current" : "") + '" href="' + esc(entry.href) + '"' + (current ? ' aria-current="page"' : "") + ">" +
+    "<small>" + esc(shortDate(entry.weekId)) + "</small><strong>" + esc(entry.themeTitle) + "</strong><span>" + esc(entry.passage) + "</span></a>";
+}
 function renderArchivePanel() {
-  const panel = document.querySelector("#archive-panel");
-  if (!panel) return;
-  panel.innerHTML = `
-    <h2>지난 설교 묵상</h2>
-    <p>매주 만든 묵상 페이지가 이곳에 쌓입니다.</p>
-    <div class="archive-list">
-      ${archiveEntries
-        .map((entry) => `
-          <a class="archive-item" href="${archiveLink(entry)}">
-            <small>${entry.sermonDate}</small>
-            <strong>${entry.themeTitle}</strong>
-            <span>${entry.passage}</span>
-          </a>
-        `)
-        .join("")}
-    </div>
-  `;
+  const list = document.querySelector("#archive-list");
+  if (list) list.innerHTML = archiveEntries.map((e) => archiveRow(e, "archive-item")).join("");
 }
 
-function familyQuestionFor(devotion) {
-  if (devotion.familyQuestion) return devotion.familyQuestion;
-
-  const text = `${devotion.title} ${devotion.reading} ${devotion.action}`;
-  const matches = [
-    {
-      keywords: ["원수", "사랑", "선대", "미움"],
-      question: "우리 가족이 이번 주 더 넓은 사랑으로 품어야 할 사람은 누구일까요?"
-    },
-    {
-      keywords: ["축복", "저주", "입술", "모욕"],
-      question: "우리 가정의 말이 축복이 되려면 오늘 어떤 표현을 바꾸면 좋을까요?"
-    },
-    {
-      keywords: ["들보", "판단", "정한 마음", "성찰"],
-      question: "가족 안에서 서로를 판단하기 전에 먼저 돌아볼 내 모습은 무엇일까요?"
-    },
-    {
-      keywords: ["규정", "사람", "고통", "회복", "필요"],
-      question: "우리 가족이 오늘 한 사람의 필요를 살피고 도울 수 있는 작은 일은 무엇일까요?"
-    },
-    {
-      keywords: ["말씀", "반석", "순종", "준행", "실천"],
-      question: "오늘 말씀을 우리 집에서 함께 실천한다면 어떤 한 가지를 시작할 수 있을까요?"
-    },
-    {
-      keywords: ["기도", "성령", "인도"],
-      question: "우리 가족이 함께 기도로 주님께 맡겨야 할 일은 무엇일까요?"
-    }
-  ];
-
-  return matches.find((item) => item.keywords.some((keyword) => text.includes(keyword)))?.question
-    || "오늘 말씀을 우리 가족의 말과 행동으로 어떻게 실천할 수 있을까요?";
+// ----- 화면 그리기 -----
+function render(transition) {
+  if (window.speechSynthesis) window.speechSynthesis.cancel();
+  document.body.dataset.view = state.view;
+  document.querySelector("#back-btn").hidden = state.view !== "detail";
+  $app.innerHTML = state.view === "detail" ? renderDetail(transition) : renderHome(transition);
+  window.dispatchEvent(new CustomEvent("devotion:view", { detail: { view: state.view, day: state.selected } }));
 }
 
-function render(transition = "fade") {
-  window.speechSynthesis && window.speechSynthesis.cancel();
-  const devotion = devotions[state.selected];
-  const meta = metaFor(devotion);
-  const completeCount = devotions.filter((item) => state.completed.has(item.id)).length;
-  const progress = Math.round((completeCount / devotions.length) * 100);
-
-  $app.innerHTML =
-    state.view === "detail"
-      ? renderDetail(devotion, meta, completeCount, transition)
-      : renderList(completeCount, progress, transition);
+function focusIndex() {
+  if (todayIndex >= 0) return todayIndex;
+  const firstOpen = devotions.findIndex((d) => !state.completed.has(d.id));
+  return firstOpen >= 0 ? firstOpen : 0;
 }
 
-function renderList(completeCount, progress, transition) {
-  const heroMedia = autoMediaFor(devotions[0], 0);
+function renderHome(transition) {
+  const completeCount = devotions.filter((d) => state.completed.has(d.id)).length;
+  const fi = focusIndex();
+  const focus = devotions[fi];
+  const fm = metaFor(focus, fi);
+  const videoId = parseYouTubeId(weeklyContent.sermonVideo);
+  const featureTag = todayIndex >= 0 ? "오늘의 묵상 · " + fm.date : completeCount === devotions.length ? "다시 읽기 · " + fm.date : (completeCount ? "이어서 묵상하기 · " : "첫 묵상 · ") + fm.date;
+  const pastBanner = isPastWeek
+    ? '<div class="past-banner"><span>지난 설교 묵상을 보고 계십니다.</span><a href="' + esc(latestEntry.href) + '">이번 주 묵상으로 →</a></div>'
+    : "";
 
-  return `
-    <section class="screen list-screen ${transition}">
-      <header class="hero" style="--hero-image: url('${heroMedia.image}')">
-        <div class="hero-copy">
-          <div class="church-brand">
-            <img src="../assets/brand/daejeon-full-gospel-logo.png" alt="대전순복음교회" width="748" height="274" fetchpriority="high">
-          </div>
-          <p class="sermon-date">${weeklyContent.sermonDate}</p>
-          <h1>${weeklyContent.themeTitle}</h1>
-          <p class="passage">${weeklyContent.passage}</p>
-          <div class="hero-progress" aria-label="묵상 완료율">
-            <div class="progress-track"><span style="width: ${progress}%"></span></div>
-            <strong>${progress === 100 ? "여정 완주 🌾" : `${completeCount} / ${devotions.length} 완료`}</strong>
-          </div>
-        </div>
-      </header>
+  return '<section class="screen ' + (transition || "") + '">' + pastBanner +
+    '<div class="home-top">' +
+      '<div class="intro">' +
+        '<p class="eyebrow">' + esc(weeklyContent.sermonDate) + "</p>" +
+        "<h1>" + esc(weeklyContent.themeTitle) + "</h1>" +
+        '<p class="passage">' + esc(weeklyContent.passage) + "</p>" +
+        '<div class="intro-actions">' +
+          '<button class="pill-btn primary" type="button" data-open="' + fi + '">' + (completeCount ? "묵상 이어가기" : "묵상 시작하기") + " " + icon("arrow") + "</button>" +
+          (videoId ? '<a class="pill-btn" href="https://www.youtube.com/watch?v=' + esc(videoId) + '" target="_blank" rel="noopener">' + icon("play") + " 설교 영상</a>" : "") +
+        "</div>" +
+        '<div class="week" aria-label="이번 주 묵상 진행">' +
+          '<div class="week-head"><strong>' + esc(weeklyContent.journeyTitle || "6일 말씀 묵상 여정") + "</strong><span>" + (completeCount === devotions.length ? "완주했어요 🌾" : completeCount + " / " + devotions.length + " 완료") + "</span></div>" +
+          '<div class="week-days">' + devotions.map((d, i) => {
+            const m = metaFor(d, i);
+            const done = state.completed.has(d.id);
+            return '<button class="wd' + (done ? " done" : "") + (i === todayIndex ? " today" : "") + '" type="button" data-open="' + i + '" aria-label="' + esc(m.date + " " + d.title + (done ? " 완료" : "")) + '"><b>' + esc(m.dayShort || "") + "</b><span>" + esc(m.dayNum) + "</span><i></i></button>";
+          }).join("") + "</div>" +
+        "</div>" +
+      "</div>" +
+      '<button class="feature" type="button" data-open="' + fi + '" style="--accent:' + esc(fm.media.accent) + '">' +
+        '<div class="feature-img">' + picture(fm.media.image, "", "", true) + '<span class="feature-tag">' + esc(featureTag) + "</span></div>" +
+        '<div class="feature-body">' +
+          '<p class="eyebrow">' + esc(fm.navTitle) + "</p>" +
+          "<h3>" + esc(focus.title) + "</h3>" +
+          '<p class="feature-verse">“' + esc(focus.verse) + "”</p>" +
+          '<span class="feature-cta">말씀 읽기 ' + icon("arrow") + "</span>" +
+        "</div>" +
+      "</button>" +
+    "</div>" +
 
-      <main class="journey" aria-labelledby="journey-title">
-        <div class="section-heading">
-          <p id="journey-title">${weeklyContent.journeyTitle}</p>
-        </div>
-        <div class="card-grid">
-          ${devotions
-            .map((item, index) => renderDayCard(item, index))
-            .join("")}
-        </div>
-      </main>
-    </section>
-  `;
+    '<div class="section-title"><h2>이번 주 6일 묵상</h2><span>' + esc(weeklyContent.passage) + "</span></div>" +
+    '<div class="day-list">' + devotions.map((d, i) => renderDayRow(d, i)).join("") + "</div>" +
+
+    '<div class="home-bottom">' +
+      '<section class="ask-card" aria-labelledby="ask-title">' +
+        '<p class="eyebrow">말씀 도우미</p>' +
+        '<h2 id="ask-title">설교가 궁금하거나 삶에 적용하고 싶을 때</h2>' +
+        "<p>지금까지의 주일설교와 묵상을 바탕으로 답해 드려요.</p>" +
+        '<button class="ask-input" type="button" data-ask=""><span>무엇이든 물어보세요</span><span>' + icon("send") + "</span></button>" +
+        '<div class="ask-chips">' +
+          '<button class="chip" type="button" data-ask="이번 주 설교 핵심을 세 줄로 정리해 주세요">이번 주 설교 요약</button>' +
+          '<button class="chip" type="button" data-ask="요즘 마음이 지쳐 있어요. 이번 주 말씀을 제 삶에 어떻게 적용할 수 있을까요?">내 삶에 적용하기</button>' +
+          '<button class="chip" type="button" data-ask="이번 주 설교로 소그룹 나눔 교재를 만들어 주세요">소그룹 나눔지</button>' +
+          '<button class="chip" type="button" data-ask="지금까지 설교 중에 기도에 관한 말씀을 찾아 주세요">기도에 관한 설교 찾기</button>' +
+        "</div>" +
+      "</section>" +
+      "<section>" +
+        '<div class="section-title"><h2>지난 설교 묵상</h2><button class="link-btn" type="button" data-action="archive">전체 ' + archiveEntries.length + "편 보기</button></div>" +
+        '<div class="archive-mini">' + archiveEntries.filter((e) => e.weekId !== weeklyContent.weekId).slice(0, 4).map((e) => archiveRow(e, "")).join("") + "</div>" +
+      "</section>" +
+    "</div>" +
+    '<footer class="site-foot">대전순복음교회 · 주일설교와 함께하는 매일 말씀 묵상<br />묵상 기록은 이 기기에만 저장됩니다.</footer>' +
+  "</section>";
+}
+
+function renderDayRow(d, i) {
+  const m = metaFor(d, i);
+  const done = state.completed.has(d.id);
+  return '<button class="day-row' + (done ? " done" : "") + (i === todayIndex ? " today" : "") + '" type="button" data-open="' + i + '" style="--accent:' + esc(m.media.accent) + '">' +
+    '<span class="day-thumb">' + picture(m.media.image, "") + "</span>" +
+    "<span><small>" + esc(m.date) + (i === todayIndex ? " <em>· 오늘</em>" : "") + (d.video ? ' <span class="vid">' + icon("play") + "영상</span>" : "") + "</small>" +
+    "<strong>" + esc(d.title) + '</strong><span class="nav-title">' + esc(m.navTitle) + "</span></span>" +
+    '<span class="day-status" aria-label="' + (done ? "완료" : "미완료") + '">' + icon("check") + "</span>" +
+  "</button>";
 }
 
 // 유튜브 ID 추출 (전체 URL 또는 ID 모두 허용)
@@ -1931,208 +973,180 @@ function parseYouTubeId(value) {
   const match = text.match(/(?:youtu\.be\/|v=|\/embed\/|\/live\/|\/shorts\/)([\w-]{11})/);
   return match ? match[1] : "";
 }
-
-// "12:30", "1:02:03", 750 → 초 단위 정수
+// "12:30", "1:02:03", 750 → 초
 function toSeconds(value) {
   if (value === null || value === undefined || value === "") return 0;
   if (typeof value === "number") return Math.max(0, Math.floor(value));
   const parts = String(value).trim().split(":").map(Number);
   if (parts.some((n) => Number.isNaN(n))) return 0;
-  return parts.reduce((total, n) => total * 60 + n, 0);
+  return parts.reduce((t, n) => t * 60 + n, 0);
 }
-
-function sermonClipSrc(devotion) {
+function clock(sec) {
+  const h = Math.floor(sec / 3600), m = Math.floor((sec % 3600) / 60), s = sec % 60;
+  return (h ? h + ":" + String(m).padStart(2, "0") : m) + ":" + String(s).padStart(2, "0");
+}
+function clipInfo(devotion) {
   const video = devotion.video;
-  if (!video) return "";
+  if (!video) return null;
   const id = parseYouTubeId(video.id || weeklyContent.sermonVideo);
-  if (!id) return "";
-  const params = new URLSearchParams({ rel: "0", modestbranding: "1", playsinline: "1" });
-  const start = toSeconds(video.start);
-  const end = toSeconds(video.end);
+  if (!id) return null;
+  const start = toSeconds(video.start), end = toSeconds(video.end);
+  const params = new URLSearchParams({ rel: "0", modestbranding: "1", playsinline: "1", autoplay: "1" });
   if (start > 0) params.set("start", String(start));
   if (end > start) params.set("end", String(end));
-  return `https://www.youtube.com/embed/${id}?${params.toString()}`;
+  return { id, start, end, src: "https://www.youtube.com/embed/" + id + "?" + params.toString() };
+}
+function renderClip(devotion) {
+  const c = clipInfo(devotion);
+  if (!c) return "";
+  const minutes = c.end > c.start ? Math.max(1, Math.round((c.end - c.start) / 60)) : 0;
+  return '<section class="clip"><h2 class="block-title">설교 다시 듣기</h2>' +
+    '<button class="clip-btn" type="button" data-action="play" aria-label="이 본문 설교 구간 재생">' +
+      '<img src="https://i.ytimg.com/vi/' + esc(c.id) + '/hqdefault.jpg" alt="" loading="lazy" onerror="this.remove()" />' +
+      '<span class="play"><i>' + icon("play") + "</i><b>오늘 본문 설교 구간 보기</b><small>" + clock(c.start) + (c.end > c.start ? " – " + clock(c.end) + " · 약 " + minutes + "분" : "부터") + "</small></span>" +
+    "</button></section>";
 }
 
-function renderSermonClip(devotion) {
-  const src = sermonClipSrc(devotion);
-  if (!src) return "";
-
-  return `
-    <div class="sermon-clip">
-      <span>${icon("play")} 설교 다시 듣기 · 이 본문 구간</span>
-      <div class="clip-frame">
-        <iframe
-          src="${src}"
-          title="설교 영상"
-          loading="lazy"
-          referrerpolicy="strict-origin-when-cross-origin"
-          allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-          allowfullscreen
-        ></iframe>
-      </div>
-    </div>
-  `;
-}
-
-function renderDayCard(item, index) {
-  const meta = metaFor(item, index);
-  const isDone = state.completed.has(item.id);
-  const isToday = index === todayIndex;
-
-  return `
-    <button
-      class="day-card ${isDone ? "done" : ""} ${isToday ? "today" : ""}"
-      style="--image: url('${meta.media.image}'); --accent: ${meta.media.accent}"
-      data-open="${index}"
-      type="button"
-    >
-      ${isToday ? `<span class="today-badge">오늘</span>` : ""}
-      ${isDone ? `<span class="check-badge">${icon("check")}</span>` : ""}
-      <span class="card-copy">
-        <small>${meta.date}</small>
-        ${sermonClipSrc(item) ? `<span class="card-video">${icon("play")} 설교영상</span>` : ""}
-        <strong>${meta.navTitle}</strong>
-        <span>${item.title}</span>
-        <em>${excerpt(item.reading)}</em>
-      </span>
-    </button>
-  `;
-}
-
-function renderDetail(devotion, meta, completeCount, transition) {
+function renderDetail(transition) {
+  const devotion = devotions[state.selected];
+  const meta = metaFor(devotion, state.selected);
+  const done = state.completed.has(devotion.id);
   const journal = state.entries[devotion.id] || "";
-  const isDone = state.completed.has(devotion.id);
+  const prompts = devotion.prompts || [];
+  const paragraphs = String(devotion.reading || "").split(/\n+/).filter(Boolean).map((p) => "<p>" + esc(p) + "</p>").join("");
 
-  return `
-    <section class="screen detail-screen ${transition}" style="--accent: ${meta.media.accent}; --detail-image: url('${meta.media.image}')">
-      <main class="detail-layout">
-        <article class="detail-card">
-          <p class="sermon-date">${weeklyContent.themeTitle}</p>
-          <p class="day-pill">${meta.date} · ${meta.navTitle}</p>
-          <h1>${devotion.title}</h1>
-          <p class="lead">${devotion.reading}</p>
-
-          <div class="verse-block">
-            <span>오늘 붙들 말씀 · ${devotion.reference}</span>
-            <p>“${devotion.verse}”</p>
-            <small>${devotion.passage}</small>
-            <div class="verse-actions">
-              <button class="chip" data-action="listen" type="button">${icon("speaker")} 말씀 듣기</button>
-              <button class="chip" data-action="share" type="button">${icon("share")} 말씀 나누기</button>
-            </div>
-          </div>
-
-          ${renderSermonClip(devotion)}
-
-          <div class="reflection-grid">
-            <div>
-              <span>생각할 질문</span>
-              <p>${devotion.prompts[0]}</p>
-            </div>
-            <div>
-              <span>오늘의 한 가지 적용</span>
-              <p>${devotion.action}</p>
-            </div>
-          </div>
-
-          <div class="prayer-line">
-            ${icon("heart")}
-            <p>${devotion.prayer}</p>
-          </div>
-
-          <div class="family-card">
-            <span>가정예배 질문</span>
-            <p>${familyQuestionFor(devotion)}</p>
-          </div>
-        </article>
-
-        <aside class="journal-card">
-          <div class="journal-head">
-            <p>묵상 기록</p>
-            <span>기록은 이 기기에만 저장됩니다</span>
-          </div>
-          <div class="chip-row">
-            ${devotion.prompts.slice(1).map((prompt, index) => `<button class="chip" data-prompt-index="${index}" type="button">${prompt}</button>`).join("")}
-          </div>
-          <textarea id="journal-entry" placeholder="오늘 받은 마음, 적용할 한 문장, 기도 제목을 적어보세요.">${journal}</textarea>
-        </aside>
-      </main>
-
-      <footer class="detail-bottom">
-        <button class="text-button" data-action="list" type="button">${icon("list")} 목록</button>
-        <div class="detail-nav" aria-label="묵상 이동">
-          <button class="icon-button" data-action="previous" type="button" aria-label="이전 묵상">${icon("chevronLeft")}</button>
-          <span>${state.selected + 1} / ${devotions.length}</span>
-          <button class="icon-button" data-action="next" type="button" aria-label="다음 묵상">${icon("chevronRight")}</button>
-        </div>
-        <button class="text-button complete ${isDone ? "done" : ""}" data-action="complete-day" type="button">
-          ${icon("check")} ${isDone ? "묵상 완료됨" : "묵상 완료"}
-        </button>
-      </footer>
-    </section>
-  `;
+  return '<section class="screen detail-screen ' + (transition || "") + '" style="--accent:' + esc(meta.media.accent) + '">' +
+    '<article class="reader">' +
+      '<figure class="reader-hero" style="margin-bottom:0">' + picture(meta.media.image, "", "", true) + "</figure>" +
+      '<header class="reader-head">' +
+        '<p class="eyebrow">' + esc(meta.date) + " · " + esc(meta.navTitle) + "</p>" +
+        "<h1>" + esc(devotion.title) + "</h1>" +
+        '<p class="sub">' + esc(weeklyContent.themeTitle) + " · " + esc(devotion.passage || weeklyContent.passage) + "</p>" +
+      "</header>" +
+      '<section class="verse" aria-label="오늘 붙들 말씀">' +
+        '<span class="verse-label">오늘 붙들 말씀</span>' +
+        '<p class="verse-text">“' + esc(devotion.verse) + "”</p>" +
+        '<p class="verse-ref">' + esc(devotion.reference) + "</p>" +
+        '<div class="verse-actions">' +
+          '<button class="chip" data-action="listen" type="button">' + icon("speaker") + " 말씀 듣기</button>" +
+          '<button class="chip" data-action="share" type="button">' + icon("share") + " 말씀 나누기</button>" +
+        "</div>" +
+      "</section>" +
+      '<div class="reading">' + paragraphs + "</div>" +
+      renderClip(devotion) +
+      '<h2 class="block-title">묵상과 적용</h2>' +
+      '<div class="cards">' +
+        (prompts[0] ? '<div class="card"><span>' + icon("question") + " 생각할 질문</span><p>" + esc(prompts[0]) + "</p></div>" : "") +
+        '<div class="card"><span>' + icon("walk") + " 오늘의 한 가지 적용</span><p>" + esc(devotion.action) + "</p></div>" +
+        '<div class="card prayer"><span>' + icon("heart") + " 함께 드리는 기도</span><p>" + esc(devotion.prayer) + "</p></div>" +
+        '<div class="card family"><span>' + icon("home") + " 가정예배 질문</span><p>" + esc(familyQuestionFor(devotion)) + "</p></div>" +
+      "</div>" +
+      '<button class="ask-inline" type="button" data-ask-day="' + state.selected + '"><i>' + icon("spark") + "</i><span><b>이 말씀, 내 상황에는 어떻게?</b><span>말씀 도우미에게 내 형편을 이야기하고 적용을 물어보세요</span></span></button>" +
+      '<section class="journal">' +
+        '<h2 class="block-title">묵상 기록</h2>' +
+        '<p class="journal-note">기록은 이 기기에만 저장됩니다.</p>' +
+        (prompts.length > 1 ? '<div class="chip-row">' + prompts.slice(1).map((p, i) => '<button class="chip" data-prompt-index="' + i + '" type="button">' + esc(p) + "</button>").join("") + "</div>" : "") +
+        '<label class="sr-only" for="journal-entry">묵상 기록</label>' +
+        '<textarea id="journal-entry" placeholder="오늘 받은 마음, 적용할 한 문장, 기도 제목을 적어 보세요.">' + esc(journal) + "</textarea>" +
+      "</section>" +
+      '<div class="detail-end"></div>' +
+    "</article>" +
+    '<nav class="dock" aria-label="묵상 이동">' +
+      '<div class="dock-inner">' +
+        '<button class="icon-btn" data-action="previous" type="button" aria-label="이전 날 묵상">' + icon("left") + "</button>" +
+        '<div><button class="done-btn' + (done ? " done" : "") + '" data-action="complete-day" type="button">' + icon("check") + " " + (done ? "묵상 완료됨" : "오늘 묵상 완료") + "</button>" +
+        '<span class="dock-count">' + (state.selected + 1) + " / " + devotions.length + " · " + esc(meta.date) + "</span></div>" +
+        '<button class="icon-btn" data-action="next" type="button" aria-label="다음 날 묵상">' + icon("right") + "</button>" +
+      "</div>" +
+    "</nav>" +
+  "</section>";
 }
 
-function openDetail(index, transition = "open") {
+// ----- 이동 -----
+function openDetail(index, transition) {
   state.selected = (index + devotions.length) % devotions.length;
   state.view = "detail";
   persist();
-  render(transition);
+  history.replaceState(null, "", "?day=" + state.selected);
+  render(transition || "fade");
   window.scrollTo(0, 0);
 }
-
 function openList() {
   state.view = "list";
   persist();
-  render("back");
+  history.replaceState(null, "", location.pathname);
+  render("fade");
+  window.scrollTo(0, 0);
 }
-
 function moveDetail(direction) {
   openDetail(state.selected + direction, direction > 0 ? "slide-left" : "slide-right");
+}
+function ask(question, extra) {
+  if (typeof window.openSermonAssistant === "function") window.openSermonAssistant(Object.assign({ question: question }, extra || {}));
 }
 
 $app.addEventListener("click", (event) => {
   const button = event.target.closest("button");
   if (!button) return;
-
-  if (button.dataset.open) openDetail(Number(button.dataset.open));
-  if (button.dataset.jump) openDetail(Number(button.dataset.jump), "fade");
-  if (button.dataset.action === "list") openList();
-  if (button.dataset.action === "previous") moveDetail(-1);
-  if (button.dataset.action === "next") moveDetail(1);
-  if (button.dataset.action === "listen") toggleListen(button);
-  if (button.dataset.action === "share") shareVerse();
-  if (button.dataset.action === "complete-day") {
-    const id = devotions[state.selected].id;
-    const wasAllDone = devotions.every((item) => state.completed.has(item.id));
-    if (state.completed.has(id)) state.completed.delete(id);
-    else state.completed.add(id);
-    persist();
-    const isAllDone = devotions.every((item) => state.completed.has(item.id));
-    render("fade");
-    if (isAllDone && !wasAllDone) showCelebration();
+  const ds = button.dataset;
+  if (ds.open) return openDetail(Number(ds.open));
+  if (ds.ask !== undefined) return ask(ds.ask, { autoSend: Boolean(ds.ask) });
+  if (ds.askDay !== undefined) return ask("", { day: Number(ds.askDay), placeholder: "예) 직장에서 억울한 일이 있었어요. 오늘 말씀을 어떻게 붙들 수 있을까요?" });
+  if (ds.action === "archive") return openArchive();
+  if (ds.action === "previous") return moveDetail(-1);
+  if (ds.action === "next") return moveDetail(1);
+  if (ds.action === "listen") return toggleListen(button);
+  if (ds.action === "share") return shareVerse();
+  if (ds.action === "play") {
+    const c = clipInfo(devotions[state.selected]);
+    if (!c) return;
+    const frame = document.createElement("iframe");
+    frame.src = c.src;
+    frame.title = "설교 영상";
+    frame.allow = "accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share";
+    frame.allowFullscreen = true;
+    frame.referrerPolicy = "strict-origin-when-cross-origin";
+    button.replaceWith(frame);
+    return;
   }
-  if (button.dataset.promptIndex) {
-    const devotion = devotions[state.selected];
-    const prompt = devotion.prompts[Number(button.dataset.promptIndex) + 1];
-    const current = state.entries[devotion.id] || "";
-    state.entries[devotion.id] = current.includes(prompt) ? current : `${current}${current ? "\n" : ""}${prompt}`;
+  if (ds.action === "complete-day") {
+    const id = devotions[state.selected].id;
+    const wasAllDone = devotions.every((d) => state.completed.has(d.id));
+    if (state.completed.has(id)) state.completed.delete(id); else state.completed.add(id);
     persist();
-    render("fade");
-    document.querySelector("#journal-entry")?.focus();
+    const isAllDone = devotions.every((d) => state.completed.has(d.id));
+    const y = window.scrollY;
+    render("");
+    window.scrollTo(0, y);
+    if (isAllDone && !wasAllDone) showCelebration();
+    else if (state.completed.has(id)) toast("오늘의 묵상을 마쳤어요. 은혜로운 하루 되세요.");
+    return;
+  }
+  if (ds.promptIndex) {
+    const devotion = devotions[state.selected];
+    const prompt = devotion.prompts[Number(ds.promptIndex) + 1];
+    const area = document.querySelector("#journal-entry");
+    const current = area ? area.value : state.entries[devotion.id] || "";
+    const next = current.includes(prompt) ? current : current + (current ? "\n" : "") + prompt + " : ";
+    state.entries[devotion.id] = next;
+    persist();
+    if (area) { area.value = next; area.focus(); area.setSelectionRange(next.length, next.length); }
   }
 });
-
 $app.addEventListener("input", (event) => {
   if (event.target.id !== "journal-entry") return;
-
-  const devotion = devotions[state.selected];
-  state.entries[devotion.id] = event.target.value;
+  state.entries[devotions[state.selected].id] = event.target.value;
   persist();
 });
+document.querySelector("#back-btn").addEventListener("click", openList);
+document.querySelector("#brand-btn").addEventListener("click", () => {
+  if (isPastWeek && state.view === "list") location.href = latestEntry.href; else openList();
+});
+window.addEventListener("scroll", () => {
+  document.querySelector("#topbar").classList.toggle("scrolled", window.scrollY > 8);
+}, { passive: true });
 
-// --- 토스트 알림 ---
+// ----- 토스트 · 공유 · 듣기 -----
 let toastTimer;
 function toast(message) {
   const el = document.querySelector("#toast");
@@ -2142,156 +1156,107 @@ function toast(message) {
   clearTimeout(toastTimer);
   toastTimer = setTimeout(() => el.classList.remove("show"), 2800);
 }
-
-// --- 공유 / 복사 ---
 function pageUrl(day) {
   const base = location.origin + location.pathname;
-  return Number.isInteger(day) ? `${base}?day=${day}` : base;
+  return Number.isInteger(day) ? base + "?day=" + day : base;
 }
-
 async function shareOut(text, url) {
   if (navigator.share) {
-    try {
-      await navigator.share(url ? { text, url } : { text });
-    } catch (error) {
-      /* 사용자가 공유를 취소한 경우 무시 */
-    }
+    try { await navigator.share(url ? { text, url } : { text }); } catch (e) { /* 공유 취소 */ }
     return;
   }
-  const payload = url ? `${text}\n${url}` : text;
   try {
-    await navigator.clipboard.writeText(payload);
-    toast("복사되었습니다. 카카오톡에 붙여넣어 나눠보세요.");
-  } catch (error) {
+    await navigator.clipboard.writeText(url ? text + "\n" + url : text);
+    toast("복사되었습니다. 카카오톡에 붙여넣어 나눠 보세요.");
+  } catch (e) {
     toast("복사가 지원되지 않는 환경이에요.");
   }
 }
-
 function shareVerse() {
-  const devotion = devotions[state.selected];
-  const text = `“${devotion.verse}”\n(${devotion.reference})\n\n${weeklyContent.themeTitle}`;
-  shareOut(text, pageUrl(state.selected));
+  const d = devotions[state.selected];
+  shareOut("“" + d.verse + "”\n(" + d.reference + ")\n\n" + weeklyContent.themeTitle, pageUrl(state.selected));
 }
-
-// --- 말씀 듣기 (음성) ---
 function setListenLabel(button, speaking) {
-  button.innerHTML = speaking ? `${icon("stop")} 그만 듣기` : `${icon("speaker")} 말씀 듣기`;
+  button.innerHTML = speaking ? icon("stop") + " 그만 듣기" : icon("speaker") + " 말씀 듣기";
 }
-
 function toggleListen(button) {
   const synth = window.speechSynthesis;
-  if (!synth || typeof SpeechSynthesisUtterance === "undefined") {
-    toast("이 브라우저에서는 음성 듣기를 지원하지 않아요.");
-    return;
-  }
-  if (synth.speaking) {
-    synth.cancel();
-    setListenLabel(button, false);
-    return;
-  }
-  const devotion = devotions[state.selected];
-  const utterance = new SpeechSynthesisUtterance(`${devotion.verse}. ${devotion.reading}`);
-  utterance.lang = "ko-KR";
-  utterance.rate = 0.95;
-  utterance.onend = () => setListenLabel(button, false);
-  utterance.onerror = () => {
-    setListenLabel(button, false);
-    if (inKakao) toast("카카오톡 안에서는 음성이 막힐 수 있어요. 우측 상단 ⋮ → 다른 브라우저로 열기.");
-  };
+  if (!synth || typeof SpeechSynthesisUtterance === "undefined") { toast("이 브라우저에서는 음성 듣기를 지원하지 않아요."); return; }
+  if (synth.speaking) { synth.cancel(); setListenLabel(button, false); return; }
+  const d = devotions[state.selected];
+  const u = new SpeechSynthesisUtterance(d.verse + ". " + d.reading);
+  u.lang = "ko-KR";
+  u.rate = 0.95;
+  u.onend = () => setListenLabel(button, false);
+  u.onerror = () => { setListenLabel(button, false); if (inKakao) toast("카카오톡 안에서는 음성이 막힐 수 있어요. 우측 상단 ⋮ → 다른 브라우저로 열기."); };
   synth.cancel();
-  synth.speak(utterance);
+  synth.speak(u);
   setListenLabel(button, true);
-  if (inKakao) toast("소리가 안 나오면 우측 상단 ⋮ → 다른 브라우저로 열기를 눌러주세요.");
+  if (inKakao) toast("소리가 안 나오면 우측 상단 ⋮ → 다른 브라우저로 열기를 눌러 주세요.");
 }
-
-// --- 6일 완주 축하 ---
 function showCelebration() {
   if (document.querySelector(".celebrate")) return;
   const wrap = document.createElement("div");
   wrap.className = "celebrate";
-  wrap.innerHTML = `
-    <div class="celebrate-card" role="dialog" aria-modal="true" aria-label="완주 축하">
-      <p class="celebrate-kicker">${weeklyContent.sermonDate}</p>
-      <div class="celebrate-mark">${icon("check")}</div>
-      <h2>6일 묵상 여정을<br />완주했습니다</h2>
-      <p class="celebrate-theme">${weeklyContent.themeTitle}</p>
-      <p class="celebrate-sub">한 주 동안 말씀을 듣고 마음에 새기셨습니다.</p>
-      <div class="celebrate-actions">
-        <button class="text-button complete done" data-cel="share" type="button">${icon("share")} 완주 소식 나누기</button>
-        <button class="text-button" data-cel="close" type="button">닫기</button>
-      </div>
-    </div>
-  `;
+  wrap.innerHTML = '<div class="celebrate-card" role="dialog" aria-modal="true" aria-label="완주 축하">' +
+    '<p class="eyebrow">' + esc(weeklyContent.sermonDate) + "</p>" +
+    '<div class="celebrate-mark">' + icon("check") + "</div>" +
+    "<h2>6일 묵상 여정을<br />완주했습니다</h2>" +
+    "<p>" + esc(weeklyContent.themeTitle) + "</p>" +
+    '<p style="margin-top:6px;font-size:.9rem;color:var(--ink-3)">한 주 동안 말씀을 듣고 마음에 새기셨습니다.</p>' +
+    '<div class="celebrate-actions">' +
+      '<button class="done-btn" data-cel="share" type="button">' + icon("share") + " 완주 소식 나누기</button>" +
+      '<button class="pill-btn" style="justify-content:center" data-cel="close" type="button">닫기</button>' +
+    "</div></div>";
   wrap.addEventListener("click", (event) => {
-    if (event.target === wrap || event.target.closest('[data-cel="close"]')) {
-      wrap.remove();
-      return;
-    }
-    if (event.target.closest('[data-cel="share"]')) {
-      shareOut(`${weeklyContent.themeTitle}\n6일 말씀 묵상 여정을 완주했습니다! 🌾`, pageUrl());
-    }
+    if (event.target === wrap || event.target.closest('[data-cel="close"]')) { wrap.remove(); return; }
+    if (event.target.closest('[data-cel="share"]')) shareOut(weeklyContent.themeTitle + "\n6일 말씀 묵상 여정을 완주했습니다! 🌾", pageUrl());
   });
   document.body.appendChild(wrap);
 }
 
-// --- 지난 설교 / 글자 크기 조절 ---
-function setArchiveOpen(open) {
-  const panel = document.querySelector("#archive-panel");
-  const button = document.querySelector("#archive-toggle");
-  if (!panel || !button) return;
-  panel.hidden = !open;
-  button.setAttribute("aria-expanded", String(open));
+// ----- 지난 설교 시트 -----
+const archiveDialog = document.querySelector("#archive-panel");
+function openArchive() {
+  if (archiveDialog.showModal) archiveDialog.showModal(); else archiveDialog.setAttribute("open", "");
 }
-
+document.querySelector("#archive-toggle").addEventListener("click", openArchive);
+archiveDialog.addEventListener("click", (event) => {
+  if (event.target === archiveDialog || event.target.closest("[data-close]")) archiveDialog.close();
+});
 renderArchivePanel();
 
-document.querySelector("#archive-toggle")?.addEventListener("click", (event) => {
-  event.stopPropagation();
-  const panel = document.querySelector("#archive-panel");
-  setArchiveOpen(panel?.hidden !== false);
-});
-
-document.addEventListener("click", (event) => {
-  if (event.target.closest("#archive-panel") || event.target.closest("#archive-toggle")) return;
-  setArchiveOpen(false);
-});
-
-document.addEventListener("keydown", (event) => {
-  if (event.key === "Escape") setArchiveOpen(false);
-});
-
+// ----- 글씨 크기 -----
 const fontKey = "devotion-font-scale";
 const fontScales = [1, 1.12, 1.24];
-let scaleIndex = Number(localStorage.getItem(fontKey));
-if (!Number.isInteger(scaleIndex) || scaleIndex < 0 || scaleIndex >= fontScales.length) {
-  scaleIndex = 0;
-}
-
+let scaleIndex = 0;
+try { scaleIndex = Number(localStorage.getItem(fontKey)); } catch (e) { scaleIndex = 0; }
+if (!Number.isInteger(scaleIndex) || scaleIndex < 0 || scaleIndex >= fontScales.length) scaleIndex = 0;
 function applyFontScale() {
-  document.documentElement.style.fontSize = `${fontScales[scaleIndex] * 100}%`;
-  localStorage.setItem(fontKey, String(scaleIndex));
+  document.documentElement.style.fontSize = fontScales[scaleIndex] * 100 + "%";
+  try { localStorage.setItem(fontKey, String(scaleIndex)); } catch (e) { /* 무시 */ }
   const button = document.querySelector("#font-toggle");
-  if (!button) return;
-  button.textContent = scaleIndex === 0 ? "글씨 크게" : scaleIndex === 1 ? "더 크게" : "기본 글씨";
   button.setAttribute("aria-pressed", String(scaleIndex > 0));
+  button.setAttribute("aria-label", scaleIndex === 0 ? "글씨 크게" : scaleIndex === 1 ? "글씨 더 크게" : "기본 글씨로");
+  button.innerHTML = scaleIndex === 2 ? "가<small>−</small>" : "가<small>+</small>";
 }
-
-document.querySelector("#font-toggle")?.addEventListener("click", () => {
+document.querySelector("#font-toggle").addEventListener("click", () => {
   scaleIndex = (scaleIndex + 1) % fontScales.length;
   applyFontScale();
+  toast(scaleIndex === 0 ? "기본 글씨 크기" : scaleIndex === 1 ? "글씨를 크게 했어요" : "글씨를 더 크게 했어요");
 });
-
 applyFontScale();
 
-render();
+// 말씀 도우미가 현재 보고 있는 주와 요일을 알 수 있게 합니다.
+window.devotionPage = {
+  weekId: weeklyContent.weekId,
+  get view() { return state.view; },
+  get day() { return state.selected; },
+  get isPastWeek() { return isPastWeek; }
+};
 
-// 첫 진입 시 목록이면 오늘 묵상 카드로 부드럽게 이동
-if (state.view === "list" && todayIndex >= 0) {
-  requestAnimationFrame(() => {
-    document.querySelector(".day-card.today")?.scrollIntoView({ behavior: "smooth", block: "center" });
-  });
-}
-
+render(hasQueryDay ? "fade" : "");
     </script>
+    <script type="module" src="../assets/sermon-assistant/widget.mjs"></script>
   </body>
 </html>
