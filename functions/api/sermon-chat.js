@@ -189,6 +189,13 @@ export async function onRequest({ request, env }) {
     } catch { /* 자막 없이 진행 */ }
   }
   const found = selected || retrieve(data, { question, history, week, contextWeek });
+  // 예전 화면(브라우저에 남아 있던 옛 버전)이 보낸 질문이라도 특정 주 질문이면 자막을 붙여 줍니다.
+  if (!data.transcripts && found.scope === "week") {
+    try {
+      const res = await env.ASSETS.fetch(new URL("/assets/sermon-assistant/transcripts.json", request.url));
+      if (res.ok) data.transcripts = (await res.json()).transcripts || {};
+    } catch { /* 자막 없이 진행 */ }
+  }
   const sources = buildSources(data, found);
   const fallback = (reason) => json({ ai: false, reason, answer: localAnswer(data, question, found, sources), sources });
 

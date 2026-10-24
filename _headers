@@ -1,0 +1,6 @@
+/assets/sermon-assistant/*
+  Cache-Control: no-cache
+/sw.js
+  Cache-Control: no-cache
+/manifest.webmanifest
+  Cache-Control: no-cache
