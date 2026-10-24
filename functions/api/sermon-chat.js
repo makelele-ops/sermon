@@ -3,7 +3,7 @@
 //   ANTHROPIC_API_KEY  — Claude (권장)
 //   OPENAI_API_KEY     — OpenAI
 // 선택: AI_MODEL(모델 이름 바꾸기), AI_ENABLED=false(잠시 끄기), CHAT_LIMITS(D1, 하루 사용량 제한을 더 정확하게)
-import { retrieve, buildSources, buildContext, localAnswer } from "../../assets/sermon-assistant/core.mjs";
+import { retrieve, buildSources, buildContext, buildCatalog, localAnswer, validSelection } from "../../assets/sermon-assistant/core.mjs";
 
 const LIMITS = { perMinute: 6, perDayPerPerson: 40, perDayTotal: 400 };
 const ANTHROPIC_MODELS = ["claude-haiku-4-5", "claude-sonnet-4-5"];
@@ -12,11 +12,13 @@ const OPENAI_MODELS = ["gpt-4.1-mini", "gpt-4o-mini"];
 const SYSTEM = `당신은 대전순복음교회 성도들을 돕는 "말씀 도우미"입니다. 주일설교와 그 설교로 만든 6일 묵상을 바탕으로, 성도가 말씀을 이해하고 삶에 적용하도록 돕습니다.
 
 [근거]
-- 사용자 메시지의 <자료>만 사실의 근거로 씁니다. 자료에는 (1) 교회가 정리한 "설교 요약 원고", (2) 설교로 만든 요일별 "묵상문", (3) 있을 경우 "자동 자막"이 들어 있습니다.
-- 설교 내용을 말할 때는 "설교에서는 ~라고 전했습니다"처럼 요약해 전합니다. 따옴표로 직접 인용하는 것은 자료에 그대로 있는 문장만 허용합니다. 목사님이 하지 않은 말을 지어내지 않습니다.
+- 사실의 근거는 아래 "전체 설교 목록"과 사용자 메시지의 <자료>뿐입니다. <자료>에는 (1) "실제 설교 자막"(담임목사님이 실제로 하신 말씀, 유튜브 자동 자막이라 받아쓰기 오류와 띄어쓰기 오류가 있음), (2) 교회가 정리한 "설교 요약 원고", (3) 설교로 만든 요일별 "묵상문"이 들어 있습니다.
+- 실제 설교 자막에 있는 내용은 "설교에서 목사님은 ~라고 말씀하셨습니다"처럼 전할 수 있습니다. 직접 인용할 때는 뜻을 바꾸지 말고 명백한 받아쓰기 오류만 자연스럽게 바로잡습니다. 자막·원고에 없는 말을 목사님 말씀으로 지어내지 않습니다.
+- 예화, 이야기, 간증, 비유를 물으면 자막에서 찾아 구체적으로(누가, 무엇을, 어떤 결론으로) 소개합니다.
 - 근거로 쓴 자료 뒤에 [1], [2]처럼 자료 번호를 붙입니다. 링크 주소는 쓰지 않습니다(화면이 자동으로 붙입니다).
-- 자료에 없는 내용(교회 일정, 행사, 연락처, 다른 날 설교의 세부 내용 등)은 추측하지 말고 "등록된 자료에서는 확인되지 않는다"고 말합니다. 교회 일정·운영은 교회 사무실이나 담당 교역자에게 확인하도록 안내합니다.
-- 전체 설교 목록에 있는 제목·본문은 안내할 수 있지만, 자세한 내용이 자료에 없으면 그 주 페이지를 열어 보도록 권합니다.
+- 질문에 꼭 맞는 내용이 자료에 없으면, 먼저 자료 중 가장 가까운 내용으로 성실히 답하고, 마지막에 한 문장으로만 "더 자세한 내용은 ○월 ○일 설교 영상에서 들으실 수 있어요"처럼 안내합니다. "업로드되지 않았다", "자료가 없다", "확인되지 않는다"로 답을 시작하지 않습니다.
+- 교회 일정, 행사, 연락처 같은 운영 정보는 자료에 없으므로 추측하지 말고 교회 사무실이나 담당 교역자에게 확인하도록 안내합니다.
+- 사용자가 지금 열어 둔 페이지는 참고일 뿐입니다. 질문이 다른 주제나 다른 주의 설교를 묻는다면 그 페이지와 상관없이 <자료>에 있는 해당 설교로 답합니다.
 
 [답하는 방식]
 - 한국어 존댓말로, 따뜻하고 차분하게 답합니다. 휴대폰에서 읽기 쉽게 짧은 문단으로 씁니다.
@@ -99,18 +101,22 @@ function cleanHistory(history) {
 }
 
 // 공급자별 스트리밍 요청
-function providerRequest(keys, model, messages) {
+function providerRequest(keys, model, messages, catalogText) {
   if (keys.anthropic) {
     return fetch("https://api.anthropic.com/v1/messages", {
       method: "POST",
       headers: { "x-api-key": keys.anthropic, "anthropic-version": "2023-06-01", "content-type": "application/json" },
-      body: JSON.stringify({ model, max_tokens: 1600, temperature: 0.4, system: SYSTEM, messages, stream: true })
+      body: JSON.stringify({
+        model, max_tokens: 1600, temperature: 0.4, messages, stream: true,
+        // 설교 목록은 매번 같으므로 저장해 두고 다시 써서(프롬프트 캐시) 비용을 줄입니다.
+        system: [{ type: "text", text: SYSTEM }, { type: "text", text: catalogText, cache_control: { type: "ephemeral" } }]
+      })
     });
   }
   return fetch("https://api.openai.com/v1/responses", {
     method: "POST",
     headers: { Authorization: `Bearer ${keys.openai}`, "Content-Type": "application/json" },
-    body: JSON.stringify({ model, instructions: SYSTEM, input: messages, max_output_tokens: 1600, store: false, stream: true })
+    body: JSON.stringify({ model, instructions: SYSTEM + "\n\n" + catalogText, input: messages, max_output_tokens: 1600, store: false, stream: true })
   });
 }
 function textFromEvent(keys, event) {
@@ -118,11 +124,11 @@ function textFromEvent(keys, event) {
   return event.type === "response.output_text.delta" ? event.delta || "" : "";
 }
 
-async function openStream(env, keys, messages) {
+async function openStream(env, keys, messages, catalogText) {
   const custom = typeof env.AI_MODEL === "string" && env.AI_MODEL.trim();
   const list = custom ? [custom, ...(keys.anthropic ? ANTHROPIC_MODELS : OPENAI_MODELS)] : keys.anthropic ? ANTHROPIC_MODELS : OPENAI_MODELS;
   for (const model of list) {
-    const res = await providerRequest(keys, model, messages);
+    const res = await providerRequest(keys, model, messages, catalogText);
     if (res.ok && res.body) return res;
     // 모델 이름이 없어졌으면 다음 후보로
     if (res.status === 404 || res.status === 400) continue;
@@ -174,7 +180,15 @@ export async function onRequest({ request, env }) {
     return json({ error: "설교 자료를 불러오지 못했습니다." }, 503);
   }
 
-  const found = retrieve(data, { question, history, week, contextWeek });
+  // 검색은 성도님 브라우저가 해서 고른 자료 번호만 보냅니다(서버 부담을 줄이기 위해). 없으면 서버가 간단히 찾습니다.
+  const selected = validSelection(data, body.selection);
+  if (selected && (selected.scope === "week" || selected.paras.length)) {
+    try {
+      const res = await env.ASSETS.fetch(new URL("/assets/sermon-assistant/transcripts.json", request.url));
+      if (res.ok) data.transcripts = (await res.json()).transcripts || {};
+    } catch { /* 자막 없이 진행 */ }
+  }
+  const found = selected || retrieve(data, { question, history, week, contextWeek });
   const sources = buildSources(data, found);
   const fallback = (reason) => json({ ai: false, reason, answer: localAnswer(data, question, found, sources), sources });
 
@@ -182,24 +196,13 @@ export async function onRequest({ request, env }) {
   if (!(keys.anthropic || keys.openai) || String(env.AI_ENABLED || "").trim().toLowerCase() === "false") return fallback("not_configured");
   if (!(await allow(env, request))) return fallback("rate_limited");
 
-  // 자막이 있는 주는 함께 넘깁니다.
-  const transcripts = {};
-  for (const s of sources.filter((x) => !x.day)) {
-    const meta = data.sermons.find((x) => x.id === s.week);
-    if (!meta?.transcript) continue;
-    try {
-      const t = await env.ASSETS.fetch(new URL(`/assets/sermon-assistant/transcripts/${s.week}.txt`, request.url));
-      if (t.ok) transcripts[s.week] = await t.text();
-    } catch { /* 자막 없이 진행 */ }
-  }
-
-  const context = buildContext(data, found, sources, { transcripts });
-  const page = contextWeek ? `사용자가 지금 보고 있는 페이지: ${contextWeek} 주일설교 묵상${Number.isInteger(body.day) ? ` (${["월", "화", "수", "목", "금", "토"][body.day] || ""}요일)` : ""}\n` : "";
+  const context = buildContext(data, found, sources, { catalog: false });
+  const page = contextWeek ? `(참고: 사용자가 지금 열어 둔 페이지는 ${contextWeek} 주일설교 묵상${Number.isInteger(body.day) ? ` ${["월", "화", "수", "목", "금", "토"][body.day] || ""}요일` : ""}입니다.)\n` : "";
   const messages = [...history, { role: "user", content: `<자료>\n${context}\n</자료>\n\n${page}질문: ${question}` }];
 
   let upstream;
   try {
-    upstream = await openStream(env, keys, messages);
+    upstream = await openStream(env, keys, messages, buildCatalog(data));
   } catch {
     upstream = null;
   }

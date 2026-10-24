@@ -1,5 +1,5 @@
 // 말씀 도우미 화면. 모든 묵상 페이지 맨 아래에서 불러옵니다.
-import { retrieve, buildSources, localAnswer } from "./core.mjs";
+import { retrieve, buildSources, localAnswer, compactSelection } from "./core.mjs";
 
 const base = new URL(".", import.meta.url);
 const DAY_KO = ["월", "화", "수", "목", "금", "토"];
@@ -7,7 +7,7 @@ const STORE = "sermon-assistant-chat-v2";
 
 const css = document.createElement("link");
 css.rel = "stylesheet";
-css.href = new URL("widget.css?v=2", base);
+css.href = new URL("widget.css?v=3", base);
 document.head.append(css);
 
 const page = () => window.devotionPage || {};
@@ -104,7 +104,7 @@ function renderMarkdown(text, sources) {
   return html;
 }
 function shortDate(id) { const [, m, d] = id.split("-").map(Number); return `${m}.${d}`; }
-function sourceLabel(s) { return `${shortDate(s.week)} 「${s.sermon}」${s.day ? " · " + s.day : ""}`; }
+function sourceLabel(s) { return `${shortDate(s.week)} 「${s.sermon}」${s.day ? " · " + s.day : s.label ? " · " + s.label : ""}`; }
 
 // ---------- 메시지 그리기 ----------
 function intro() {
@@ -170,12 +170,21 @@ function setBusy(on) {
 }
 
 // ---------- 보내기 ----------
-async function getLocalData() {
-  if (localData) return localData;
-  const res = await fetch(new URL("data.json", base));
-  if (!res.ok) throw new Error("data");
-  localData = await res.json();
-  return localData;
+// 설교 자료와 자막을 한 번만 받아 두고, 질문에 맞는 자료를 이 기기에서 고릅니다.
+let loading = null;
+function getLocalData() {
+  if (localData) return Promise.resolve(localData);
+  if (!loading) {
+    loading = Promise.all([
+      fetch(new URL("data.json", base)).then((r) => { if (!r.ok) throw new Error("data"); return r.json(); }),
+      fetch(new URL("transcripts.json", base)).then((r) => (r.ok ? r.json() : {})).catch(() => ({}))
+    ]).then(([data, tx]) => {
+      data.transcripts = tx.transcripts || {};
+      localData = data;
+      return data;
+    }).catch((e) => { loading = null; throw e; });
+  }
+  return loading;
 }
 
 async function send(text) {
@@ -197,6 +206,12 @@ async function send(text) {
     week: state.pin ? contextWeek() : "",
     day: state.pin && Number.isInteger(state.pin.day) ? state.pin.day : page().view === "detail" ? page().day : undefined
   };
+  let found = null;
+  try {
+    const data = await getLocalData();
+    found = retrieve(data, { question, history, week: body.week, contextWeek: body.contextWeek });
+    body.selection = compactSelection(found);
+  } catch { /* 자료를 못 받으면 서버가 직접 찾습니다 */ }
   try {
     if (location.protocol === "file:") throw new Error("local");
     const res = await fetch("/api/sermon-chat", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(body), signal: busy.signal });
@@ -237,7 +252,7 @@ async function send(text) {
       // 서버가 없을 때(미리보기, 오프라인)는 이 기기에서 자료를 찾아 답합니다.
       try {
         const data = await getLocalData();
-        const found = retrieve(data, { question, history, week: body.week, contextWeek: body.contextWeek });
+        found = found || retrieve(data, { question, history, week: body.week, contextWeek: body.contextWeek });
         const sources = buildSources(data, found);
         Object.assign(answer, { content: localAnswer(data, question, found, sources), sources, mode: "local", reason: "offline" });
       } catch {
@@ -261,6 +276,7 @@ function open(options = {}) {
   }
   updateScope();
   draw();
+  getLocalData().catch(() => {});
   if (!dialog.open) dialog.showModal();
   document.documentElement.classList.add("sa-open");
   input.placeholder = options.placeholder || "설교나 말씀에 대해 물어보세요";

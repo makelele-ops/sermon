@@ -107,14 +107,14 @@
 
   <h2>5. 말씀 도우미가 아는 것</h2>
   <ul>
-    <li>2026년 5월 31일부터 모든 주일설교의 <b>요약 원고</b>(6/7부터 20편)와 <b>요일별 묵상 126개</b></li>
+    <li>2026년 5월 31일부터 모든 주일설교의 <b>실제 설교 자막</b>(21편), <b>요약 원고</b>(20편), <b>요일별 묵상 126개</b> — 목사님이 하신 예화와 표현까지 찾아 답해요</li>
     <li>"이번 주", "지난주", "지지난주", "10월 11일", "9/20" 같은 날짜 표현 — 지난 보관함 페이지에서는 그 주 설교가 기준입니다.</li>
     <li>묵상 화면의 "이 말씀, 내 상황에는 어떻게?"를 누르면 그 요일 묵상을 기준으로 대화합니다.</li>
     <li>모든 답에 근거한 설교·요일 번호와 해당 영상 구간 링크가 붙습니다. 목사님이 하지 않은 말은 지어내지 않도록 지시했습니다.</li>
   </ul>
   <div class="card warn">
-    <p><b>더 좋아지게 하려면 (선택):</b> 지금은 설교 <b>요약 원고</b>까지만 압니다. 코덱스 예약작업 지시문 끝에 아래 한 줄을 추가하면, 매주 설교 <b>자막 전체</b>도 함께 보관되어 "목사님이 실제로 뭐라고 하셨는지"까지 답할 수 있게 됩니다. 나머지는 자동으로 연결됩니다.</p>
-    <div class="copy" id="tline">설교 단독 영상의 자동 자막 전문(시간 표시 없이 문장만)을 content/transcripts/설교날짜(예: 2026-10-25).txt 로 UTF-8로 저장하고 함께 커밋한다. 다른 파일과 디자인(tools/page-template.html, index.html의 weeklyContent 바깥 코드)은 수정하지 않는다.<button type="button" onclick="navigator.clipboard.writeText(document.getElementById('tline').firstChild.textContent);this.textContent='복사됨'">복사</button></div>
+    <p><b>매주 자막도 쌓이게 하기 (꼭 해 주세요):</b> 2026년 5월 31일~10월 18일 21편의 설교 자막은 모두 넣어 두었어요. 앞으로의 설교도 자막이 쌓이도록, 코덱스 예약작업 지시문 끝에 아래 문단을 붙여 넣어 주세요.</p>
+    <div class="copy" id="tline">설교 자막 보관: 설교 구간(묵상 6일 구간의 시작~끝)의 유튜브 자동 자막 전문을 content/transcripts/설교날짜(예: 2026-10-25).txt 로 UTF-8로 저장한다. 약 90초마다 빈 줄로 문단을 나누고, 각 문단 맨 앞에 영상 시각을 [4:38:01] 또는 [12:30] 처럼 대괄호로 적는다. 요약하거나 고치지 말고 자막 그대로 둔다. 그다음 node tools/cloudflare-sync.mjs 를 실행해 함께 커밋한다. 다른 파일과 디자인(tools/page-template.html, index.html의 weeklyContent 바깥 코드)은 수정하지 않는다.<button type="button" onclick="navigator.clipboard.writeText(document.getElementById('tline').firstChild.textContent);this.textContent='복사됨'">복사</button></div>
   </div>
 
   <h2>6. 디자인을 또 바꾸고 싶을 때</h2>

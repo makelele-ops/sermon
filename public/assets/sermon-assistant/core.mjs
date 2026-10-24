@@ -68,6 +68,15 @@ function dayText(s, d) {
   return [d.title, d.navTitle, d.reference, d.verse, d.reading, d.action, d.prayer, d.familyQuestion].join(" ");
 }
 
+// 설교 자막을 문단(약 1분 30초 단위, [시각] 표시)으로 나눕니다. 서버와 브라우저가 같은 번호를 씁니다.
+export function splitParas(text) {
+  return String(text || "").split(/\r?\n/).filter((l) => !l.startsWith("#")).join("\n").split(/\n{2,}/).map((p) => p.trim()).filter(Boolean);
+}
+function paraTime(p) {
+  const m = p.match(/^\[(\d+(?::\d{2}){1,2})\]/);
+  return m ? m[1] : "";
+}
+
 function counts(text) {
   const map = new Map();
   for (const word of normalize(text).split(" ")) {
@@ -79,9 +88,11 @@ function counts(text) {
 const cache = new WeakMap();
 function index(data) {
   if (cache.has(data)) return cache.get(data);
+  const tx = data.transcripts || {};
   const docs = data.sermons.map((s) => ({
     s,
-    tf: counts(sermonText(s)),
+    tf: counts(sermonText(s) + " " + (tx[s.id] || "")),
+    paras: splitParas(tx[s.id]).map((text, i) => ({ i, tf: counts(text) })),
     title: counts(s.title + " " + s.days.map((d) => d.title).join(" ")),
     days: s.days.map((d) => ({ tf: counts(dayText(s, d)), title: counts(d.title + " " + (d.navTitle || "")) }))
   }));
@@ -93,6 +104,8 @@ function index(data) {
   cache.set(data, value);
   return value;
 }
+
+const EMPTY = new Map();
 
 // 질문에 맞는 설교와 묵상 날짜를 고릅니다.
 export function retrieve(data, { question = "", history = [], week = "", contextWeek = "" } = {}) {
@@ -135,10 +148,20 @@ export function retrieve(data, { question = "", history = [], week = "", context
     });
   }
   hits.sort((a, b) => b.score - a.score);
+  // 자막 문단: 주제 검색일 때 질문과 가까운 대목을 고릅니다 (특정 주 질문은 자막 전체를 씁니다)
+  const paras = [];
+  if (!scope && q.length) {
+    for (const r of picked) for (const p of r.doc.paras) {
+      const m = measure(p.tf, EMPTY);
+      if (m.cover >= 0.4) paras.push({ week: r.doc.s.id, i: p.i, score: m.strength });
+    }
+    paras.sort((a, b) => b.score - a.score);
+  }
   return {
     scope: scope ? "week" : picked.length ? "search" : "none",
     sermons: picked.map((r) => r.doc.s.id),
-    hits: hits.filter((h) => scope || h.cover >= 0.3).slice(0, scope ? 6 : 5)
+    hits: hits.filter((h) => scope || h.cover >= 0.3).slice(0, scope ? 6 : 5),
+    paras: paras.slice(0, 6).map(({ week, i }) => ({ week, i }))
   };
 }
 
@@ -183,22 +206,47 @@ export function buildSources(data, found) {
     const s = sermonById(data, h.week);
     if (s && list.length < 8) push(s, h.dayIndex);
   }
+  const tx = data.transcripts || {};
+  for (const p of found.paras || []) {
+    const s = sermonById(data, p.week);
+    const text = s && splitParas(tx[s.id])[p.i];
+    if (!text || list.length >= 11) continue;
+    const time = paraTime(text);
+    list.push({
+      n: list.length + 1, week: s.id, sermon: s.title, passage: s.passage, day: "", para: p.i,
+      label: `설교 중 ${time || ""}`.trim(), href: pageLink(s), video: videoLink(s, { start: time })
+    });
+  }
   return list;
 }
 
+// 전체 설교 목록 (AI가 항상 함께 보는 지도)
+export function buildCatalog(data) {
+  return "## 지금까지의 주일설교 전체 목록 (최근순)\n" + data.sermons.map((s) => {
+    const points = (s.notes || "").split("\n").map((l) => l.trim()).filter((l) => /^(첫째|둘째|셋째|넷째|다섯째)/.test(l)).map((l) => l.replace(/\s+/g, " ").slice(0, 70));
+    return `- ${s.id} 「${s.title}」 ${s.passage}` + (points.length ? `\n  대지: ${points.join(" / ")}` : "") + `\n  월~토 묵상: ${s.days.map((d) => d.title).join(" / ")}`;
+  }).join("\n");
+}
+
 // AI에게 넘길 자료 묶음
-export function buildContext(data, found, sources, { transcripts = {} } = {}) {
+export function buildContext(data, found, sources, { catalog = true } = {}) {
   const parts = [];
-  parts.push("## 전체 설교 목록 (최근순)\n" + data.sermons.map((s) => `- ${s.id} 「${s.title}」 ${s.passage} — 월~토 묵상: ${s.days.map((d) => d.title).join(" / ")}`).join("\n"));
+  if (catalog) parts.push(buildCatalog(data));
+  const tx = data.transcripts || {};
   const full = found.scope === "week";
   for (const src of sources) {
     const s = sermonById(data, src.week);
     if (!s) continue;
-    if (!src.day) {
-      const notes = clip(s.notes || "", full ? 7000 : 3200);
+    if (Number.isInteger(src.para)) {
+      const text = splitParas(tx[s.id])[src.para];
+      if (text) parts.push(`## [${src.n}] ${s.id} 설교 「${s.title}」 실제 설교 자막 한 대목 (영상 시각 ${paraTime(text) || "?"})\n${clip(text, 1800)}`);
+    } else if (!src.day) {
+      const notes = clip(s.notes || "", full ? 6000 : 2500);
+      const transcript = full && tx[s.id] ? splitParas(tx[s.id]).join("\n\n") : "";
       parts.push(`## [${src.n}] ${s.id} 주일설교 「${s.title}」 (${s.passage})\n` +
-        (notes ? `### 설교 요약 원고\n${notes}` : "### 설교 요약 원고\n(이 주는 요약 원고가 없습니다. 아래 묵상문만 참고하세요.)") +
-        (transcripts[s.id] ? `\n### 설교 자동 자막 일부 (오탈자 가능)\n${clip(transcripts[s.id], full ? 6000 : 2500)}` : ""));
+        (notes ? `### 설교 요약 원고\n${notes}` : "") +
+        (transcript ? `\n### 실제 설교 자막 전체 (목사님이 하신 말씀. 자동 자막이라 오탈자 있음. [시각]은 영상 시각)\n${clip(transcript, 20000)}` : "") +
+        (!notes && !transcript ? "(이 주는 요약 원고와 자막이 없어 아래 묵상문으로 안내합니다.)" : ""));
     } else {
       const i = DAY_KO.indexOf(src.day[0]);
       const d = s.days[i];
@@ -243,4 +291,21 @@ export function localAnswer(data, question, found, sources) {
     }
   }
   return lines.join("\n");
+}
+
+// 브라우저가 고른 자료(번호만)를 서버로 보냅니다.
+export function compactSelection(found) {
+  return { scope: found.scope, sermons: found.sermons, hits: found.hits.map(({ week, dayIndex }) => ({ week, dayIndex })), paras: found.paras || [] };
+}
+// 서버: 브라우저가 보낸 번호가 실제 자료에 있는지 확인하고 받아들입니다.
+export function validSelection(data, sel) {
+  if (!sel || typeof sel !== "object") return null;
+  const ids = new Set(data.sermons.map((s) => s.id));
+  const scope = ["week", "search", "none", "missing"].includes(sel.scope) ? sel.scope : null;
+  if (!scope) return null;
+  const sermons = Array.isArray(sel.sermons) ? sel.sermons.filter((id) => typeof id === "string" && ids.has(id)).slice(0, scope === "week" ? 1 : 3) : [];
+  const hits = Array.isArray(sel.hits) ? sel.hits.filter((h) => h && ids.has(h.week) && Number.isInteger(h.dayIndex) && h.dayIndex >= 0 && h.dayIndex < 6).slice(0, 6) : [];
+  const paras = Array.isArray(sel.paras) ? sel.paras.filter((p) => p && ids.has(p.week) && Number.isInteger(p.i) && p.i >= 0 && p.i < 200).slice(0, 6) : [];
+  if (scope === "week" && !sermons.length) return null;
+  return { scope, sermons, hits, paras };
 }

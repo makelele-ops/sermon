@@ -2,10 +2,12 @@
 // 실제 AI 요청은 보내지 않습니다(가짜 응답으로 시험).
 import assert from "node:assert/strict";
 import { readFile } from "node:fs/promises";
-import { retrieve, buildSources, localAnswer, buildContext, findWeekInQuestion } from "../assets/sermon-assistant/core.mjs";
+import { retrieve, buildSources, localAnswer, buildContext, findWeekInQuestion, compactSelection, validSelection, splitParas } from "../assets/sermon-assistant/core.mjs";
 import { onRequest } from "../functions/api/sermon-chat.js";
 
 const data = JSON.parse(await readFile("assets/sermon-assistant/data.json", "utf8"));
+const txFile = JSON.parse(await readFile("assets/sermon-assistant/transcripts.json", "utf8"));
+const withTx = { ...data, transcripts: txFile.transcripts };
 const latest = data.sermons[0].id;
 const second = data.sermons[1].id;
 assert(data.sermons.length >= 21, "설교 수");
@@ -34,15 +36,27 @@ const none = retrieve(data, { question: "우주왕복선 정비 매뉴얼", cont
 assert.equal(buildSources(data, none).length, 0);
 assert(localAnswer(data, "x", none, []).includes("찾지 못했어요"));
 
-// 자료 묶음 크기(비용) 확인
+// 자막: 주제 질문은 관련 대목을, 특정 주 질문은 자막 전체를 넘깁니다
+assert(Object.keys(txFile.transcripts).length >= 21, "자막 수");
+const forgive = retrieve(withTx, { question: "용서에 대해 설교에서 뭐라고 하셨어요?", contextWeek: latest });
+assert(forgive.paras.length > 0, "자막 대목 검색");
+const fSources = buildSources(withTx, forgive);
+assert(fSources.some((s) => Number.isInteger(s.para) && s.video), "자막 대목 출처");
 for (const q of ["이번 주 설교 요약", "용서하는 것이 힘들어요"]) {
-  const f = retrieve(data, { question: q, contextWeek: latest });
-  const ctx = buildContext(data, f, buildSources(data, f));
-  assert(ctx.length < 20000, `자료가 너무 깁니다: ${ctx.length}`);
+  const f = retrieve(withTx, { question: q, contextWeek: latest });
+  const ctx = buildContext(withTx, f, buildSources(withTx, f), { catalog: false });
+  assert(ctx.length < 26000, `자료가 너무 깁니다: ${ctx.length}`);
+  if (f.scope === "week") assert(ctx.includes("실제 설교 자막 전체"), "주 질문에 자막 포함");
 }
+// 브라우저가 보낸 선택은 실제 자료 번호만 받아들입니다
+const sel = JSON.parse(JSON.stringify(compactSelection(forgive)));
+assert.deepEqual(validSelection(data, sel).sermons, forgive.sermons);
+assert.equal(validSelection(data, { scope: "week", sermons: ["1999-01-01"] }), null);
+assert.equal(validSelection(data, { scope: "hack" }), null);
+assert(splitParas(txFile.transcripts[latest]).length > 5);
 
 // 서버
-const assets = { fetch: async (url) => new URL(url).pathname.endsWith("data.json") ? Response.json(data) : new Response("", { status: 404 }) };
+const assets = { fetch: async (url) => { const p = new URL(url).pathname; return p.endsWith("data.json") ? Response.json(data) : p.endsWith("transcripts.json") ? Response.json(txFile) : new Response("", { status: 404 }); } };
 const req = (body, origin = "https://sermon.example") => new Request("https://sermon.example/api/sermon-chat", { method: "POST", headers: { Origin: origin, "Content-Type": "application/json" }, body: JSON.stringify(body) });
 assert.equal((await onRequest({ request: req({ question: "a" }, "https://evil.example"), env: { ASSETS: assets } })).status, 403);
 assert.equal((await onRequest({ request: req({ question: "" }), env: { ASSETS: assets } })).status, 400);
@@ -74,6 +88,13 @@ try {
   assert.equal(sent.messages[0].role, "user", "대화는 사용자 말로 시작");
   assert.deepEqual(sent.messages.map((m) => m.role), ["user", "assistant", "user"]);
   assert(sent.messages.at(-1).content.includes("<자료>"));
+  assert(Array.isArray(sent.system) && sent.system[1].cache_control, "설교 목록 캐시");
+
+  // 브라우저 선택을 받은 경우: 자막 대목이 자료에 들어갑니다
+  calls.length = 0;
+  res = await onRequest({ request: req({ question: "용서에 대해 설교에서 뭐라고 하셨어요?", contextWeek: latest, selection: sel }), env });
+  await res.text();
+  assert(calls[0].body.messages.at(-1).content.includes("실제 설교 자막 한 대목"), "선택한 자막 대목 전달");
   assert(!JSON.stringify(sent).includes("test-only"), "키가 본문에 섞이지 않음");
 
   // 사용량 제한 (분당 6회)
@@ -94,4 +115,4 @@ try {
 } finally {
   globalThis.fetch = original;
 }
-console.log("PASS: 말씀 도우미 — 날짜·이번주 인식, 주제 검색, 자료 크기, 출처, 서버 보안, AI 스트리밍, 사용량 제한, 오류 시 대체 답변");
+console.log("PASS: 말씀 도우미 — 날짜·이번주 인식, 주제 검색, 설교 자막 검색, 자료 크기, 출처, 서버 보안, AI 스트리밍, 사용량 제한, 오류 시 대체 답변");

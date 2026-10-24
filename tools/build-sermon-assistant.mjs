@@ -1,9 +1,9 @@
 // 말씀 도우미 자료(assets/sermon-assistant/data.json)를 만듭니다.
 // - index.html과 archive/*.html에서 주간 묵상문을 모읍니다.
 // - content/sermon-notes/날짜.txt (설교 요약 원고)를 붙입니다. 이번 주 새본문.txt는 자동으로 여기에 보관됩니다.
-// - content/transcripts/날짜.txt (설교 자막, 있으면)는 assets/sermon-assistant/transcripts/로 복사해 서버만 읽습니다.
+// - content/transcripts/날짜.txt (설교 자막, 있으면)를 모아 assets/sermon-assistant/transcripts.json을 만듭니다.
 // cloudflare-sync.mjs가 매주 자동으로 실행합니다.
-import { readFile, readdir, writeFile, mkdir, copyFile } from "node:fs/promises";
+import { readFile, readdir, writeFile, mkdir } from "node:fs/promises";
 import { existsSync } from "node:fs";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
@@ -53,7 +53,8 @@ export async function buildAssistant(root = process.cwd()) {
   const transcriptsDir = path.join(root, "content", "transcripts");
   const outDir = path.join(root, "assets", "sermon-assistant");
   await mkdir(notesDir, { recursive: true });
-  await mkdir(path.join(outDir, "transcripts"), { recursive: true });
+  await mkdir(outDir, { recursive: true });
+  const transcripts = {};
 
   // 이번 주 새본문.txt를 날짜별 설교 원고로 보관 (자동화가 매주 새본문.txt를 바꿔도 지난 원고가 남도록)
   const current = literal(await readFile(path.join(root, "index.html"), "utf8"), "weeklyContent");
@@ -74,8 +75,8 @@ export async function buildAssistant(root = process.cwd()) {
     const transcriptFile = path.join(transcriptsDir, `${w.weekId}.txt`);
     let transcript = false;
     if (existsSync(transcriptFile)) {
-      await copyFile(transcriptFile, path.join(outDir, "transcripts", `${w.weekId}.txt`));
-      transcript = true;
+      const text = terms((await readFile(transcriptFile, "utf8")).replace(/^\uFEFF/, "")).trim();
+      if (text.length > 500) { transcripts[w.weekId] = text; transcript = true; }
     }
     sermons.set(w.weekId, {
       id: w.weekId,
@@ -107,6 +108,7 @@ export async function buildAssistant(root = process.cwd()) {
 
   const data = { version: 2, builtAt: new Date().toISOString(), church, sermons: [...sermons.values()].sort((a, b) => b.id.localeCompare(a.id)) };
   await writeFile(path.join(outDir, "data.json"), JSON.stringify(data) + "\n", "utf8");
+  await writeFile(path.join(outDir, "transcripts.json"), JSON.stringify({ builtAt: data.builtAt, transcripts }) + "\n", "utf8");
   const withNotes = data.sermons.filter((s) => s.notes).length;
   console.log(`말씀 도우미 자료: 설교 ${data.sermons.length}편 (요약 원고 ${withNotes}편, 자막 ${data.sermons.filter((s) => s.transcript).length}편), 묵상 ${data.sermons.reduce((n, s) => n + s.days.length, 0)}개`);
   return data;
