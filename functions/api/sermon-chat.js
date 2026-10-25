@@ -125,17 +125,35 @@ function textFromEvent(keys, event) {
   return event.type === "response.output_text.delta" ? event.delta || "" : "";
 }
 
+// 마지막 AI 오류(점검 화면에 표시). 키나 질문 내용은 남기지 않습니다.
+let lastError = null;
+async function noteError(model, res) {
+  let detail = "";
+  try { const j = await res.json(); detail = j?.error?.message || j?.error?.type || ""; } catch { /* 무시 */ }
+  lastError = { at: new Date(Date.now() + 9 * 3600e3).toISOString().slice(0, 16).replace("T", " "), model, status: res.status, detail: String(detail).slice(0, 200) };
+}
+
 async function openStream(env, keys, messages, catalogText) {
   const custom = typeof env.AI_MODEL === "string" && env.AI_MODEL.trim();
   const list = custom ? [custom, ...(keys.anthropic ? ANTHROPIC_MODELS : OPENAI_MODELS)] : keys.anthropic ? ANTHROPIC_MODELS : OPENAI_MODELS;
   for (const model of list) {
-    const res = await providerRequest(keys, model, messages, catalogText);
-    if (res.ok && res.body) return res;
+    let res = await providerRequest(keys, model, messages, catalogText);
+    // 잠깐 붐비는 경우(429·5xx·529)는 한 번 더 시도
+    if (!res.ok && (res.status === 429 || res.status >= 500)) {
+      await noteError(model, res);
+      await new Promise((r) => setTimeout(r, 1200));
+      res = await providerRequest(keys, model, messages, catalogText);
+    }
+    if (res.ok && res.body) return { res };
+    await noteError(model, res);
     // 모델 이름이 없어졌으면 다음 후보로
-    if (res.status === 404 || res.status === 400) continue;
-    return null;
+    if (res.status === 404 || (res.status === 400 && /model/i.test(lastError.detail))) continue;
+    // 크레딧 부족·키 오류는 따로 알려 줍니다
+    if (res.status === 401 || res.status === 403) return { reason: "key_problem" };
+    if (/credit|balance|billing|quota/i.test(lastError.detail)) return { reason: "no_credit" };
+    return { reason: "upstream_unavailable" };
   }
-  return null;
+  return { reason: "upstream_unavailable" };
 }
 
 export async function onRequest({ request, env, waitUntil }) {
@@ -149,7 +167,8 @@ export async function onRequest({ request, env, waitUntil }) {
       aiEnabledSetting: env.AI_ENABLED === undefined ? "(설정 안 함)" : String(env.AI_ENABLED),
       model: env.AI_MODEL || "(기본값)",
       variableNames: names.length ? names : "(서버에 설정된 변수가 하나도 없습니다)",
-      limits: env.CHAT_LIMITS ? "D1 사용" : "기본(서버 기억)"
+      limits: env.CHAT_LIMITS ? "D1 사용" : "기본(서버 기억)",
+      lastError: lastError || "(이 서버에서 아직 오류 없음)"
     });
   }
   if (request.method !== "POST") return json({ error: "POST only" }, 405);
@@ -217,11 +236,13 @@ export async function onRequest({ request, env, waitUntil }) {
 
   let upstream;
   try {
-    upstream = await openStream(env, keys, messages, buildCatalog(data));
-  } catch {
-    upstream = null;
+    const opened = await openStream(env, keys, messages, buildCatalog(data));
+    if (!opened.res) return fallback(opened.reason);
+    upstream = opened.res;
+  } catch (error) {
+    lastError = { at: new Date(Date.now() + 9 * 3600e3).toISOString().slice(0, 16).replace("T", " "), status: "network", detail: String(error?.message || error).slice(0, 200) };
+    return fallback("upstream_unavailable");
   }
-  if (!upstream) return fallback("upstream_unavailable");
   tally("ask_ai");
 
   const encoder = new TextEncoder();

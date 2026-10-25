@@ -127,7 +127,15 @@ function messageHtml(m, i) {
   if (m.role === "user") return `<div class="sa-msg sa-user"><p>${esc(m.content)}</p></div>`;
   const cited = new Set((m.content.match(/\[(\d{1,2})\]/g) || []).map((x) => Number(x.slice(1, -1))));
   const shown = (m.sources || []).filter((s) => (cited.size ? cited.has(s.n) : true)).slice(0, 5);
-  const note = m.mode === "local" ? `<p class="sa-mode">${m.reason === "rate_limited" ? "질문이 많아 잠시 등록된 묵상 자료에서 찾아 드렸어요." : "AI 연결 전이라 등록된 설교·묵상 자료에서 찾아 드렸어요."}</p>` : "";
+  const reasons = {
+    rate_limited: "질문이 많아 잠시 등록된 설교·묵상 자료에서 찾아 드렸어요. 1분쯤 뒤 다시 물어봐 주세요.",
+    upstream_unavailable: "AI가 잠시 응답하지 못해 등록된 설교·묵상 자료에서 찾아 드렸어요. 잠시 후 다시 물어봐 주세요.",
+    no_credit: "AI 사용 한도에 닿아 등록된 설교·묵상 자료에서 찾아 드렸어요.",
+    key_problem: "AI 연결 설정을 확인하는 중이라 등록된 설교·묵상 자료에서 찾아 드렸어요.",
+    offline: "인터넷 연결이 불안정해 이 기기에 있는 설교·묵상 자료에서 찾아 드렸어요.",
+    not_configured: "AI 연결 전이라 등록된 설교·묵상 자료에서 찾아 드렸어요."
+  };
+  const note = m.mode === "local" ? `<p class="sa-mode">${reasons[m.reason] || reasons.upstream_unavailable}</p>` : "";
   return `<div class="sa-msg sa-ai${m.pending ? " sa-typing" : ""}" data-i="${i}">
     ${note}<div class="sa-text">${m.content ? renderMarkdown(m.content, m.sources) : '<span class="sa-dots"><i></i><i></i><i></i></span>'}</div>
     ${!m.pending && shown.length ? `<div class="sa-sources"><span>참고한 설교·묵상</span>${shown.map((s) => `
