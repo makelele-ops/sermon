@@ -70,7 +70,19 @@ function dayText(s, d) {
 
 // 설교 자막을 문단(약 1분 30초 단위, [시각] 표시)으로 나눕니다. 서버와 브라우저가 같은 번호를 씁니다.
 export function splitParas(text) {
-  return String(text || "").split(/\r?\n/).filter((l) => !l.startsWith("#")).join("\n").split(/\n{2,}/).map((p) => p.trim()).filter(Boolean);
+  const blocks = String(text || "").split(/\r?\n/).filter((l) => !l.startsWith("#")).join("\n").split(/\n{2,}/).map((p) => p.trim()).filter(Boolean);
+  // 문단 나눔 없이 한 줄씩 저장된 자막도 약 1,200자씩 묶어 문단으로 만듭니다.
+  const out = [];
+  for (const block of blocks) {
+    if (block.length <= 2500) { out.push(block.replace(/\n/g, " ")); continue; }
+    let chunk = "";
+    for (const line of block.split(/\n|(?<=[.?!])\s+/)) {
+      if (chunk && chunk.length + line.length > 1200) { out.push(chunk.trim()); chunk = ""; }
+      chunk += (chunk ? " " : "") + line.trim();
+    }
+    if (chunk.trim()) out.push(chunk.trim());
+  }
+  return out;
 }
 function paraTime(p) {
   const m = p.match(/^\[(\d+(?::\d{2}){1,2})\]/);

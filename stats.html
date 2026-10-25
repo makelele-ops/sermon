@@ -1,0 +1,145 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<meta name="robots" content="noindex, nofollow" />
+<title>묵상 방문 집계</title>
+<link rel="icon" type="image/png" href="/assets/brand/favicon-48.png" />
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css" />
+<style>
+:root { --paper:#f6f1e8; --card:#fdfaf4; --ink:#2a231d; --ink2:#5d5348; --ink3:#8a7f72; --line:#e4dacb; --brand:#24584a; --brand2:#e3ece6; --gold:#9c6b14; --bar:#24584a; --bar2:#c9b99d; }
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) { --paper:#171412; --card:#211d19; --ink:#f0e9df; --ink2:#cdc2b4; --ink3:#9d9183; --line:#3a332b; --brand:#86c4ab; --brand2:#1f322b; --gold:#dcae55; --bar:#86c4ab; --bar2:#5a4f40; } }
+* { box-sizing: border-box; }
+body { margin: 0; background: var(--paper); color: var(--ink); font: 16px/1.6 "Pretendard Variable", Pretendard, "Malgun Gothic", sans-serif; word-break: keep-all; }
+main { max-width: 900px; margin: 0 auto; padding: 28px 16px 64px; }
+h1 { margin: 4px 0 6px; font-size: 1.7rem; letter-spacing: -0.03em; }
+h2 { margin: 36px 0 12px; font-size: 1.15rem; }
+.kicker { color: var(--gold); font-weight: 800; font-size: .85rem; }
+.lead { margin: 0; color: var(--ink2); }
+.cards { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 10px; margin-top: 18px; }
+.card { background: var(--card); border: 1px solid var(--line); border-radius: 16px; padding: 14px 16px; }
+.card span { display: block; color: var(--ink3); font-size: .8rem; font-weight: 700; }
+.card b { display: block; font-size: 1.9rem; line-height: 1.2; margin-top: 4px; font-variant-numeric: tabular-nums; }
+.card small { color: var(--ink3); font-size: .78rem; }
+.wrap { overflow-x: auto; background: var(--card); border: 1px solid var(--line); border-radius: 16px; }
+table { width: 100%; border-collapse: collapse; font-size: .9rem; min-width: 640px; }
+th, td { padding: 10px 10px; border-bottom: 1px solid var(--line); text-align: center; font-variant-numeric: tabular-nums; }
+th { color: var(--ink3); font-size: .78rem; font-weight: 800; background: color-mix(in srgb, var(--paper) 60%, transparent); }
+td:first-child, th:first-child { text-align: left; }
+td.t small { display: block; color: var(--ink3); font-size: .75rem; }
+td .done { color: var(--brand); font-weight: 800; }
+tr:last-child td { border-bottom: 0; }
+.chart { display: flex; align-items: flex-end; gap: 4px; height: 160px; padding: 14px 12px 0; background: var(--card); border: 1px solid var(--line); border-radius: 16px 16px 0 0; }
+.col { flex: 1; display: flex; flex-direction: column; justify-content: flex-end; align-items: center; height: 100%; min-width: 0; }
+.col i { display: block; width: 100%; max-width: 22px; background: var(--bar); border-radius: 5px 5px 0 0; min-height: 2px; }
+.col.sun i { background: var(--gold); }
+.col em { font-style: normal; font-size: .68rem; color: var(--ink2); margin-bottom: 2px; }
+.axis { display: flex; gap: 4px; padding: 6px 12px 10px; background: var(--card); border: 1px solid var(--line); border-top: 0; border-radius: 0 0 16px 16px; }
+.axis span { flex: 1; text-align: left; font-size: .7rem; color: var(--ink3); min-width: 0; overflow: visible; white-space: nowrap; }
+.note { margin-top: 28px; padding: 16px; border-radius: 14px; background: var(--brand2); color: var(--ink2); font-size: .88rem; }
+.note b { color: var(--ink); }
+.setup { background: var(--card); border: 1px solid var(--line); border-radius: 16px; padding: 18px 20px; margin-top: 18px; }
+.setup ol { margin: 8px 0 0; padding-left: 1.3em; color: var(--ink2); }
+.setup li { margin: 6px 0; }
+code { background: var(--paper); border: 1px solid var(--line); border-radius: 6px; padding: 1px 6px; font-size: .88em; color: var(--ink); }
+.muted { color: var(--ink3); }
+</style>
+</head>
+<body>
+<main>
+  <p class="kicker">대전순복음교회 · 매일 말씀 묵상</p>
+  <h1>방문 집계</h1>
+  <p class="lead" id="lead">불러오는 중…</p>
+  <div id="out"></div>
+  <div class="note">
+    <b>어떻게 세나요?</b> 이름·연락처·IP 같은 개인 정보는 저장하지 않고 숫자만 셉니다. 한 휴대폰에서 같은 주를 여러 번 열어도 <b>1명</b>으로 세고, 같은 사람이 휴대폰과 PC로 보면 2명으로 셉니다. 말씀 도우미 질문은 횟수만 세고 질문 내용은 저장하지 않습니다.
+  </div>
+</main>
+<script>
+const DAY = ["월", "화", "수", "목", "금", "토"];
+const $ = (s) => document.querySelector(s);
+const esc = (t) => String(t ?? "").replace(/[&<>"]/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]));
+const md = (id) => { const [, m, d] = id.split("-").map(Number); return m + "." + d; };
+
+async function load() {
+  let stats, data = { sermons: [] };
+  try {
+    [stats, data] = await Promise.all([
+      fetch("/api/stats", { cache: "no-store" }).then((r) => r.json()),
+      fetch("/assets/sermon-assistant/data.json").then((r) => r.json()).catch(() => ({ sermons: [] }))
+    ]);
+  } catch (e) {
+    $("#lead").textContent = "집계를 불러오지 못했습니다. 잠시 후 다시 열어 주세요.";
+    return;
+  }
+  if (!stats.enabled) {
+    $("#lead").textContent = "아직 집계 저장소가 연결되지 않았습니다.";
+    $("#out").innerHTML = `<div class="setup"><b>한 번만 연결하면 그때부터 숫자가 쌓여요 (약 3분)</b><ol>
+      <li>클라우드플레어 → <b>Storage &amp; Databases → D1 SQL Database → Create</b> → 이름 <code>sermon-stats</code> → 만들기</li>
+      <li>묵상 사이트 프로젝트 → <b>Settings → Bindings → Add → D1 database</b></li>
+      <li>Variable name: <code>STATS</code> / Database: <code>sermon-stats</code> → 저장</li>
+      <li><b>Deployments</b>에서 맨 위 배포 <b>⋯ → Retry deployment</b></li>
+      <li>1~2분 뒤 이 페이지를 새로고침하면 "연결됨"으로 바뀝니다.</li></ol></div>`;
+    return;
+  }
+  if (stats.error) { $("#lead").textContent = stats.error; return; }
+
+  const titles = Object.fromEntries((data.sermons || []).map((s) => [s.id, s.title]));
+  const byWeek = new Map();
+  for (const r of stats.weeks) {
+    if (!byWeek.has(r.week)) byWeek.set(r.week, { visit: 0, ask: 0, ask_ai: 0, nudge: 0, app_open: 0, install: 0, open: Array(6).fill(0), done: Array(6).fill(0) });
+    const w = byWeek.get(r.week);
+    if (r.event === "day_open" && r.day >= 0) w.open[r.day] += r.n;
+    else if (r.event === "complete" && r.day >= 0) w.done[r.day] += r.n;
+    else if (r.event in w) w[r.event] += r.n;
+  }
+  const weeks = [...byWeek.keys()].sort().reverse();
+  if (!weeks.length) {
+    $("#lead").textContent = "연결됨 — 아직 쌓인 숫자가 없습니다. 사이트에 방문이 생기면 여기에 나타나요.";
+    return;
+  }
+  const latest = (data.sermons && data.sermons[0] && data.sermons[0].id) || weeks[0];
+  const cur = byWeek.get(latest) || byWeek.get(weeks[0]);
+  const curId = byWeek.has(latest) ? latest : weeks[0];
+  const sum = (a) => a.reduce((x, y) => x + y, 0);
+  const finishers = Math.min(...cur.done);
+  $("#lead").innerHTML = `이번 주 <b>${md(curId)} 「${esc(titles[curId] || "")}」</b> 기준`;
+
+  let html = `<div class="cards">
+    <div class="card"><span>방문한 사람</span><b>${cur.visit}</b><small>이번 주 페이지를 연 휴대폰·PC 수</small></div>
+    <div class="card"><span>묵상을 읽은 횟수</span><b>${sum(cur.open)}</b><small>월~토 묵상을 연 횟수(사람×요일)</small></div>
+    <div class="card"><span>묵상 완료</span><b>${sum(cur.done)}</b><small>"묵상 완료"를 누른 횟수</small></div>
+    <div class="card"><span>6일 모두 완주</span><b>${finishers}</b><small>여섯 날을 모두 마친 사람(추정)</small></div>
+    <div class="card"><span>말씀 도우미 질문</span><b>${cur.ask}</b><small>그중 AI 답변 ${cur.ask_ai}번</small></div>
+    <div class="card"><span>완료 뒤 도우미로 이어감</span><b>${cur.nudge}</b><small>"내 상황에 적용해 보기"를 누른 수</small></div>
+    <div class="card"><span>홈 화면 앱으로 연 사람</span><b>${cur.app_open}</b><small>새로 설치 ${cur.install}</small></div>
+  </div>`;
+
+  html += `<h2>주별 요약</h2><div class="wrap"><table><thead><tr><th>설교</th><th>방문</th>${DAY.map((d) => `<th>${d}<br><span class="muted">읽음/완료</span></th>`).join("")}<th>질문</th></tr></thead><tbody>`;
+  for (const id of weeks) {
+    const w = byWeek.get(id);
+    html += `<tr><td class="t">${md(id)}<small>${esc(titles[id] || "")}</small></td><td><b>${w.visit}</b></td>` +
+      DAY.map((_, i) => `<td>${w.open[i]} / <span class="done">${w.done[i]}</span></td>`).join("") + `<td>${w.ask}</td></tr>`;
+  }
+  html += `</tbody></table></div>`;
+
+  // 최근 4주 날짜별 활동(방문 + 묵상 열기)
+  const daily = new Map();
+  for (const r of stats.days) {
+    if (r.event !== "visit" && r.event !== "day_open") continue;
+    daily.set(r.date, (daily.get(r.date) || 0) + r.n);
+  }
+  const dates = [];
+  const today = new Date(Date.now() + 9 * 3600e3);
+  for (let i = 27; i >= 0; i--) dates.push(new Date(today - i * 864e5).toISOString().slice(0, 10));
+  const max = Math.max(1, ...dates.map((d) => daily.get(d) || 0));
+  html += `<h2>최근 4주 날짜별 활동 <span class="muted" style="font-size:.8rem;font-weight:500">(방문 + 묵상 열기, 금색은 주일)</span></h2>
+    <div class="chart">${dates.map((d) => { const n = daily.get(d) || 0; const sun = new Date(d + "T00:00:00Z").getUTCDay() === 0; return `<div class="col${sun ? " sun" : ""}" title="${d}: ${n}">${n ? `<em>${n}</em>` : ""}<i style="height:${(n / max) * 100}%"></i></div>`; }).join("")}</div>
+    <div class="axis">${dates.map((d, i) => `<span>${i % 7 === 0 || i === dates.length - 1 ? md(d) : ""}</span>`).join("")}</div>`;
+  $("#out").innerHTML = html;
+}
+load();
+</script>
+</body>
+</html>

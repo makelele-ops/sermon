@@ -117,6 +117,18 @@
     <div class="copy" id="tline">설교 자막 보관: 설교 구간(묵상 6일 구간의 시작~끝)의 유튜브 자동 자막 전문을 content/transcripts/설교날짜(예: 2026-10-25).txt 로 UTF-8로 저장한다. 약 90초마다 빈 줄로 문단을 나누고, 각 문단 맨 앞에 영상 시각을 [4:38:01] 또는 [12:30] 처럼 대괄호로 적는다. 요약하거나 고치지 말고 자막 그대로 둔다. 그다음 node tools/cloudflare-sync.mjs 를 실행해 함께 커밋한다. 다른 파일과 디자인(tools/page-template.html, index.html의 weeklyContent 바깥 코드)은 수정하지 않는다.<button type="button" onclick="navigator.clipboard.writeText(document.getElementById('tline').firstChild.textContent);this.textContent='복사됨'">복사</button></div>
   </div>
 
+  <h2>방문 집계 보기</h2>
+  <p>주소 뒤에 <code>/stats</code>를 붙여 열면(예: <code>sermon-5ow.pages.dev/stats</code>) 이번 주 방문한 사람 수, 요일별로 묵상을 읽고 완료한 수, 말씀 도우미 질문 수, 홈 화면 앱 사용자가 보여요. 이름·연락처·IP는 저장하지 않고 숫자만 셉니다.</p>
+  <div class="card warn">
+    <p><b>처음 한 번만 연결 (약 3분):</b></p>
+    <ol>
+      <li>클라우드플레어 → <b>Storage &amp; Databases → D1 SQL Database → Create</b> → 이름 <code>sermon-stats</code></li>
+      <li>묵상 사이트 프로젝트 → <b>Settings → Bindings → Add → D1 database</b> → Variable name <code>STATS</code>, Database <code>sermon-stats</code> → 저장</li>
+      <li><b>Deployments → 맨 위 배포 ⋯ → Retry deployment</b></li>
+    </ol>
+    <p>연결 전에도 사이트는 그대로 작동하고, 연결한 순간부터 숫자가 쌓여요. (원하시면 같은 데이터베이스를 <code>CHAT_LIMITS</code> 이름으로 한 번 더 연결해 말씀 도우미 사용량 제한도 더 정확하게 할 수 있어요.)</p>
+  </div>
+
   <h2>6. 디자인을 또 바꾸고 싶을 때</h2>
   <p>디자인의 원본은 <code>tools/page-template.html</code> 하나입니다. 이 파일을 고친 뒤 아래 두 줄을 실행하면 이번 주와 지난 보관함 전체에 한 번에 적용됩니다.</p>
   <div class="copy">node tools/apply-page-template.mjs

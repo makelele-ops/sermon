@@ -22,7 +22,7 @@ if (existsSync(varsFile)) {
   }
 }
 async function fileResponse(pathname) {
-  const file = path.resolve(root, "." + (pathname === "/" ? "/index.html" : pathname));
+  const file = path.resolve(root, "." + (pathname === "/" ? "/index.html" : pathname === "/stats" ? "/stats.html" : pathname));
   if (!file.startsWith(root + path.sep) && file !== root) return new Response("Forbidden", { status: 403 });
   try {
     if (!(await stat(file)).isFile()) throw new Error();
@@ -33,6 +33,13 @@ async function fileResponse(pathname) {
 }
 env.ASSETS = { fetch: (url) => fileResponse(new URL(url).pathname) };
 const { onRequest } = await import(pathToFileURL(path.join(project, "functions/api/sermon-chat.js")).href);
+const stats = await import(pathToFileURL(path.join(project, "functions/api/stats.js")).href);
+// 방문 집계 시험용: 메모리 안의 임시 데이터베이스(창을 닫으면 사라짐)
+try {
+  const { DatabaseSync } = await import("node:sqlite");
+  const db = new DatabaseSync(":memory:");
+  env.STATS = { prepare: (sql) => { const st = db.prepare(sql); const make = (args) => ({ run: async () => st.run(...args), first: async () => st.get(...args) || null, all: async () => ({ results: st.all(...args) }) }); return { bind: (...args) => make(args), ...make([]) }; } };
+} catch { /* node:sqlite가 없으면 집계 없이 미리보기 */ }
 
 http.createServer(async (req, res) => {
   try {
@@ -41,11 +48,12 @@ http.createServer(async (req, res) => {
     let response;
     if (pathname === "/_assistant-preview-health") {
       response = new Response("sermon-assistant-preview");
-    } else if (pathname === "/api/sermon-chat") {
+    } else if (pathname === "/api/sermon-chat" || pathname === "/api/stats") {
       const chunks = [];
       for await (const c of req) chunks.push(c);
       const request = new Request(url, { method: req.method, headers: req.headers, body: req.method === "POST" ? Buffer.concat(chunks) : undefined });
-      response = await onRequest({ request, env });
+      const handler = pathname === "/api/stats" ? stats.onRequest : onRequest;
+      response = await handler({ request, env, waitUntil: () => {} });
     } else {
       response = await fileResponse(pathname);
     }

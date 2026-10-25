@@ -3,6 +3,7 @@
 //   ANTHROPIC_API_KEY  — Claude (권장)
 //   OPENAI_API_KEY     — OpenAI
 // 선택: AI_MODEL(모델 이름 바꾸기), AI_ENABLED=false(잠시 끄기), CHAT_LIMITS(D1, 하루 사용량 제한을 더 정확하게)
+import { countEvent } from "./stats.js";
 import { retrieve, buildSources, buildContext, buildCatalog, localAnswer, validSelection } from "../../assets/sermon-assistant/core.mjs";
 
 const LIMITS = { perMinute: 6, perDayPerPerson: 40, perDayTotal: 400 };
@@ -137,7 +138,7 @@ async function openStream(env, keys, messages, catalogText) {
   return null;
 }
 
-export async function onRequest({ request, env }) {
+export async function onRequest({ request, env, waitUntil }) {
   if (request.method === "GET") {
     // 점검용: 키 값은 보여 주지 않고, 서버가 어떤 이름의 설정을 보고 있는지만 알려 줍니다.
     const keys = resolveKeys(env);
@@ -170,6 +171,13 @@ export async function onRequest({ request, env }) {
   const week = dateOk(body.week) ? body.week : "";
   const contextWeek = dateOk(body.contextWeek) ? body.contextWeek : "";
   const history = cleanHistory(body.history);
+  // 익명 집계: 질문 횟수만 셉니다(질문 내용은 저장하지 않음)
+  const tally = (event) => {
+    if (!env.STATS || !contextWeek) return;
+    const work = countEvent(env.STATS, contextWeek, Number.isInteger(body.day) && body.day >= 0 && body.day < 6 ? body.day : -1, event).catch(() => {});
+    if (waitUntil) waitUntil(work);
+  };
+  tally("ask");
 
   let data;
   try {
@@ -214,6 +222,7 @@ export async function onRequest({ request, env }) {
     upstream = null;
   }
   if (!upstream) return fallback("upstream_unavailable");
+  tally("ask_ai");
 
   const encoder = new TextEncoder();
   const decoder = new TextDecoder();

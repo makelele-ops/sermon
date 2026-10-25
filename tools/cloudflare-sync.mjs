@@ -62,6 +62,7 @@ await copyIfExists(path.join(root, "_headers"), path.join(publicDir, "_headers")
 await copyIfExists(path.join(root, "_routes.json"), path.join(publicDir, "_routes.json"));
 await copyIfExists(path.join(root, "manifest.webmanifest"), path.join(publicDir, "manifest.webmanifest"));
 await copyIfExists(path.join(root, "sw.js"), path.join(publicDir, "sw.js"));
+await copyIfExists(path.join(root, "stats.html"), path.join(publicDir, "stats.html"));
 
 console.log("Cloudflare Pages public folder updated.");
 console.log(`Output directory: ${path.relative(root, publicDir) || "public"}`);
